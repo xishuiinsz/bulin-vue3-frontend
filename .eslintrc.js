@@ -1,3 +1,4 @@
 module.exports = {
-    "extends": "standard"
-};
+  extends: 'standard',
+  parser: 'vue-eslint-parser'
+}
