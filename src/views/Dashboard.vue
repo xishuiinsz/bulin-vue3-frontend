@@ -34,41 +34,6 @@
         </el-card>
       </el-col>
       <el-col :span="16">
-        <el-row :gutter="20" class="mgb20">
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-1">
-                <i class="el-icon-user-solid grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">1234</div>
-                  <div>用户访问量</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <i class="el-icon-message-solid grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">321</div>
-                  <div>系统消息</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-3">
-                <i class="el-icon-s-goods grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">5000</div>
-                  <div>数量</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
         <el-card shadow="hover" style="height: 403px">
           <template #header>
             <div class="clearfix">
@@ -79,31 +44,9 @@
             </div>
           </template>
 
-          <div class="entry-content">
+          <div class="change-log">
             <div v-highlight v-html="logs" class="markdown-content"></div>
           </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <el-card shadow="hover">
-          <schart
-            ref="bar"
-            class="schart"
-            canvasId="bar"
-            :options="options"
-          ></schart>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card shadow="hover">
-          <schart
-            ref="line"
-            class="schart"
-            canvasId="line"
-            :options="options2"
-          ></schart>
         </el-card>
       </el-col>
     </el-row>
@@ -119,7 +62,7 @@ export default {
   name: 'dashboard',
   components: { Schart },
   setup() {
-    const name = localStorage.getItem('ms_username')
+    const name = window.localStorage.getItem('ms_username')
     const role = name === 'admin' ? '超级管理员' : '普通用户'
     const logs = ref('')
     const data = reactive([
@@ -346,7 +289,24 @@ export default {
   width: 100%;
   height: 300px;
 }
-.markdown-content > ul > li > ul {
-  padding-left: 12px;
+</style>
+<style lang="scss">
+.change-log {
+  .markdown-content {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    h3 {
+      margin-top: 20px;
+      &:nth-of-type(1) {
+        margin-top: 0;
+      }
+    }
+    > ul {
+      padding-left: 20px;
+      > li > ul {
+        padding-left: 20px;
+      }
+    }
+  }
 }
 </style>

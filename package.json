@@ -30,6 +30,7 @@
     "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "^9.3.0",
+    "sass": "^1.54.5",
     "vite": "2.3.7"
   },
   "browserslist": [
