@@ -5,9 +5,11 @@ import router from './router'
 import installElementPlus from './plugins/element'
 import './assets/css/icon.css'
 import hljs from 'highlight.js'
+import VueKonva from 'vue-konva'
 import 'highlight.js/styles/atom-one-dark.css' // 样式
 
 const app = createApp(App)
+app.use(VueKonva, { prefix: 'k' })
 // 创建v-highlight全局指令
 app.directive('highlight', function (el) {
   const blocks = el.querySelectorAll('pre code')
