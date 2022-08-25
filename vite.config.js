@@ -14,5 +14,8 @@ export default {
         replacement: resolve(__dirname, 'src')
       }
     ]
+  },
+  server: {
+    host: 'localhost.china.com'
   }
 }
