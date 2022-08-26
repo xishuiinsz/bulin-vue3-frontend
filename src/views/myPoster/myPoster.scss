@@ -1,0 +1,18 @@
+.my-poster-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    .poster-tool-list {
+        flex-basis: 200px;
+        height: 100%;
+        background-color: green;
+    }
+
+    .poster-work-behch {
+        margin-left: 20px;
+        background-color: pink;
+        flex: 1;
+        height: 100%;
+    }
+}

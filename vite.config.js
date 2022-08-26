@@ -1,9 +1,10 @@
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 const { resolve } = require('path')
 
 export default {
   base: './',
-  plugins: [vue()],
+  plugins: [vue(), vueJsx()],
   optimizeDeps: {
     include: ['schart.js']
   },
@@ -16,6 +17,7 @@ export default {
     ]
   },
   server: {
-    host: 'localhost.china.com'
+    host: 'localhost.china.com',
+    port: 3000
   }
 }
