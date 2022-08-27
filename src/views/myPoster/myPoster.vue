@@ -2,7 +2,7 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar :id="currentId" :shape="currentShape" />
+        <toolbar @destroyTransformer="destroyTransformerEvt" :id="currentId" :shape="currentShape" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
         <k-stage @click="handleStageClick" :config="configKonva">
@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import { onMounted, reactive, ref, shallowRef } from 'vue'
+import { onMounted, reactive, ref, shallowRef, provide } from 'vue'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerData from './layerData'
@@ -38,6 +38,8 @@ const configKonva = reactive({
 })
 const list = reactive(layerData)
 const currentShape = shallowRef(null)
+provide('currentShape', currentShape)
+provide('layerList', list)
 // Stage点击事件
 function handleStageClick (e) {
   if (this === e.target) {
@@ -64,6 +66,12 @@ function updateTransformer (selectedNode) {
   }
 }
 
+// 销毁矩形选择框
+const destroyTransformerEvt = () => {
+  const transformerNode = refTransformer.value.getNode();
+  transformerNode.nodes([]);
+}
+
 // 生命钩子函数
 onMounted(() => {
   setTimeout(() => {
@@ -72,7 +80,7 @@ onMounted(() => {
       configKonva.width = container.offsetWidth
       configKonva.height = container.offsetHeight
     }
-    var imageObj = new Image();
+    const imageObj = new Image();
     imageObj.onload = function () {
       const [findedRow] = list.filter(item => item.attrs.id === '3')
       if (findedRow) {
