@@ -1,9 +1,6 @@
 <template>
     <div class="toolbar-generic-container">
-        <span v-if="nodeType === 'Stage'">画布</span>
-        <span v-if="nodeType === 'Circle'">圆形</span>
-        <span v-if="nodeType === 'Text'">文本</span>
-        <span v-if="nodeType === 'Image'">图片</span>
+        <component @moveToTop="moveToTopHandler" :is="currentComp" />
     </div>
 </template>
 <script>
@@ -12,20 +9,30 @@ export default {
 }
 </script>
 <script setup>
-import { computed } from 'vue';
+import { computed, shallowRef } from 'vue';
 import layerData from './layerData';
+import stageTool from './stageTool.vue'
+import circleTool from './circleTool.vue'
+import imageTool from './imageTool.vue'
+import textTool from './textTool.vue'
 const props = defineProps({
-    id: String
+    id: String,
+    shape: Object
 })
-
-const nodeType = computed(() => {
-    let nodeType = 'Stage'
+const currentComp = computed(() => {
     if (props.id) {
         const [findedRow] = layerData.filter(item => item.attrs.id === props.id)
         if (findedRow) {
-            nodeType = findedRow.type
+            if (findedRow.type === 'Text') return textTool
+            if (findedRow.type === 'Image') return imageTool
+            if (findedRow.type === 'Circle') return circleTool
         }
     }
-    return nodeType
+    return stageTool
 })
+
+// 置顶事件
+const moveToTopHandler = () => {
+    props.shape.moveToTop()
+}
 </script>

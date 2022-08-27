@@ -13,6 +13,7 @@ export default [
       width: 300,
       padding: 20,
       align: 'center',
+      zIndex: 3,
       draggable: true
     }
   },
@@ -26,6 +27,7 @@ export default [
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
+      zIndex: 2,
       draggable: true
     }
   },
@@ -38,6 +40,7 @@ export default [
       image: null,
       width: 300,
       height: 400,
+      zIndex: 1,
       draggable: true
     }
   }

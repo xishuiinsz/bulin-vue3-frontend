@@ -2,7 +2,7 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar :id="currentId" />
+        <toolbar :id="currentId" :shape="currentShape" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
         <k-stage @click="handleStageClick" :config="configKonva">
