@@ -1,6 +1,6 @@
 export default [
   {
-    type: 'text',
+    type: 'Text',
     attrs: {
       id: '1',
       x: 20,
@@ -17,7 +17,7 @@ export default [
     }
   },
   {
-    type: 'circle',
+    type: 'Circle',
     attrs: {
       id: '2',
       x: 150,
@@ -30,7 +30,7 @@ export default [
     }
   },
   {
-    type: 'image',
+    type: 'Image',
     attrs: {
       id: '3',
       x: 250,

@@ -1,7 +1,7 @@
 <template>
-    <k-circle v-if="type === 'circle'" :config="attrs"></k-circle>
-    <k-text v-if="type === 'text'" :config="attrs"></k-text>
-    <k-image v-if="type === 'image'" :config="attrs"></k-image>
+    <k-circle v-if="type === 'Circle'" :config="attrs"></k-circle>
+    <k-text v-if="type === 'Text'" :config="attrs"></k-text>
+    <k-image v-if="type === 'Image'" :config="attrs"></k-image>
 </template>
 <script setup>
 const props = defineProps({
