@@ -1,7 +1,9 @@
 <template>
     <div class="toolbar-generic-container">
-        <el-button @click="moveToTopHandler" type="primary">置顶</el-button>
-        <el-button @click="deleteHandler" type="primary">删除</el-button>
+        <el-button-group v-show="isShowCommonTool">
+            <el-button @click="moveToTopHandler" type="primary">置顶</el-button>
+            <el-button @click="deleteHandler" type="primary">删除</el-button>
+        </el-button-group>
         <component :is="currentComp" />
     </div>
 </template>
@@ -19,8 +21,7 @@ import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
 const emit = defineEmits(['destroyTransformer'])
 const props = defineProps({
-    id: String,
-    shape: Object
+    id: String
 })
 const currentComp = computed(() => {
     if (props.id) {
@@ -34,11 +35,20 @@ const currentComp = computed(() => {
     return stageTool
 })
 const layerList = inject('layerList')
+const shape = inject('currentShape')
+// 判断是否显示公共工具条
+const isShowCommonTool = computed(() => {
+    let flag = false
+    if (shape.value && shape.value.nodeType !== 'Stage') {
+        flag = true
+    }
+    return flag
+})
 // 置顶事件
 const moveToTopHandler = () => {
-    props.shape.moveToTop()
+    shape.value.moveToTop()
 }
-// 删除事件
+// 删除shape事件
 const deleteHandler = () => {
     const index = layerList.findIndex(item => item.attrs.id === props.id)
     if (index > -1) {
