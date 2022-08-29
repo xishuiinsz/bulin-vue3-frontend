@@ -5,7 +5,7 @@
         <toolbar @destroyTransformer="destroyTransformerEvt" :id="currentId" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage @click="handleStageClick" :config="configKonva">
+        <k-stage @mousedown="handleStageClick" :config="configKonva">
           <k-layer>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="{ type: item.type, attrs: item.attrs }">
             </layerList>
@@ -33,20 +33,22 @@ const currentId = ref('0')
 const refTransformer = ref(null)
 const refWorkbenchContainer = ref(null)
 const configKonva = reactive({
-  width: 200,
-  height: 200
+  width: 800,
+  height: 600
 })
 const list = reactive(layerData)
 const currentShape = shallowRef(null)
 provide('currentShape', currentShape)
 provide('layerList', list)
+provide('configKonva', configKonva)
 // Stage点击事件
 function handleStageClick (e) {
   if (this === e.target) {
     updateTransformer()
     currentId.value = '0'
   } else {
-    updateTransformer(e.target)
+    e.target.moveToTop()
+    updateTransformer(e.target).moveToTop()
     const id = get(e, 'target.attrs.id')
     if (id) {
       currentId.value = id
@@ -64,6 +66,7 @@ function updateTransformer (selectedNode) {
   } else {
     transformerNode.nodes([]);
   }
+  return transformerNode
 }
 
 // 销毁矩形选择框
@@ -75,11 +78,11 @@ const destroyTransformerEvt = () => {
 // 生命钩子函数
 onMounted(() => {
   setTimeout(() => {
-    const container = document.querySelector('.poster-work-behch')
-    if (container) {
-      configKonva.width = container.offsetWidth
-      configKonva.height = container.offsetHeight
-    }
+    // const container = document.querySelector('.poster-work-behch')
+    // if (container) {
+    //   configKonva.width = container.offsetWidth
+    //   configKonva.height = container.offsetHeight
+    // }
     const imageObj = new Image();
     imageObj.onload = function () {
       const [findedRow] = list.filter(item => item.attrs.id === '3')

@@ -1,7 +1,6 @@
 <template>
     <div class="toolbar-generic-container">
         <el-button-group v-show="isShowCommonTool">
-            <el-button @click="moveToTopHandler" type="primary">置顶</el-button>
             <el-button @click="deleteHandler" type="primary">删除</el-button>
         </el-button-group>
         <component :is="currentComp" />
@@ -44,10 +43,6 @@ const isShowCommonTool = computed(() => {
     }
     return flag
 })
-// 置顶事件
-const moveToTopHandler = () => {
-    shape.value.moveToTop()
-}
 // 删除shape事件
 const deleteHandler = () => {
     const index = layerList.findIndex(item => item.attrs.id === props.id)

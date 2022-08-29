@@ -11,8 +11,16 @@
 
     .poster-work-behch {
         margin-left: 20px;
-        background-color: pink;
+        background-color: #fff;
         flex: 1;
         height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .konvajs-content {
+            margin: 0 auto;
+            background-color: rgb(50, 65, 87);
+        }
     }
 }
