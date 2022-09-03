@@ -1,18 +1,13 @@
 export default [
   {
-    type: 'Text',
+    type: 'Image',
     attrs: {
-      id: '1',
-      x: 20,
-      y: 60,
-      text: '你好，中国！',
-      fontSize: 18,
-      fontFamily:
-        "'PingFang SC', 'Helvetica Neue', Helvetica, 'microsoft yahei', arial, STHeiTi, sans-serif",
-      fill: '#555',
+      id: '3',
+      x: 250,
+      y: 250,
+      image: null,
       width: 300,
-      padding: 20,
-      align: 'center',
+      height: 400,
       draggable: true
     }
   },
@@ -30,14 +25,19 @@ export default [
     }
   },
   {
-    type: 'Image',
+    type: 'Text',
     attrs: {
-      id: '3',
-      x: 250,
-      y: 250,
-      image: null,
+      id: '1',
+      x: 20,
+      y: 60,
+      text: '你好，中国！',
+      fontSize: 18,
+      fontFamily:
+        "'PingFang SC', 'Helvetica Neue', Helvetica, 'microsoft yahei', arial, STHeiTi, sans-serif",
+      fill: '#555',
       width: 300,
-      height: 400,
+      padding: 20,
+      align: 'center',
       draggable: true
     }
   }

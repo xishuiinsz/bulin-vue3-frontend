@@ -2,11 +2,12 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar @destroyTransformer="destroyTransformerEvt" :id="currentId" />
+        <toolbar @destroyTransformer="destroyTransformerEvt" @layerCanvasUpdate="layerCanvasUpdateEvt"
+          :id="currentId" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage @mousedown="handleStageClick" :config="configKonva">
-          <k-layer>
+        <k-stage :key="key" @dragend="dragendEvt" @mousedown="handleStageClick" :config="configKonva">
+          <k-layer :key="keyMainCanvas">
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="{ type: item.type, attrs: item.attrs }">
             </layerList>
             <k-transformer ref="refTransformer"></k-transformer>
@@ -20,7 +21,7 @@
 import { onMounted, reactive, ref, shallowRef, provide } from 'vue'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
-import layerData from './layerData'
+import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
 import get from 'lodash/get'
 import('./myPoster.scss')
@@ -30,13 +31,14 @@ export default {
 </script>
 <script setup>
 const currentId = ref('0')
+const keyMainCanvas = ref(0)
 const refTransformer = ref(null)
 const refWorkbenchContainer = ref(null)
 const configKonva = reactive({
   width: 800,
   height: 600
 })
-const list = reactive(layerData)
+const list = reactive(layerRawData)
 const currentShape = shallowRef(null)
 provide('currentShape', currentShape)
 provide('layerList', list)
@@ -47,8 +49,7 @@ function handleStageClick (e) {
     updateTransformer()
     currentId.value = '0'
   } else {
-    e.target.moveToTop()
-    updateTransformer(e.target).moveToTop()
+    updateTransformer(e.target)
     const id = get(e, 'target.attrs.id')
     if (id) {
       currentId.value = id
@@ -73,6 +74,22 @@ function updateTransformer (selectedNode) {
 const destroyTransformerEvt = () => {
   const transformerNode = refTransformer.value.getNode();
   transformerNode.nodes([]);
+}
+
+// canvas强制更新
+const layerCanvasUpdateEvt = () => {
+  keyMainCanvas.value++
+}
+
+function dragendEvt ({ target }) {
+  const { id } = target.attrs
+  const [shapgeData] = layerRawData.filter(item => item.attrs.id === id)
+  if (shapgeData) {
+    Object.assign(shapgeData.attrs, {
+      x: target.attrs.x,
+      y: target.attrs.y
+    })
+  }
 }
 
 // 生命钩子函数
