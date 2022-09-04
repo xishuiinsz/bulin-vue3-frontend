@@ -6,7 +6,7 @@
           :id="currentId" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage :key="key" @dragend="dragendEvt" @mousedown="handleStageClick" :config="configKonva">
+        <k-stage @dragend="dragendEvt" @mousedown="handleStageClick" :config="configKonva">
           <k-layer :key="keyMainCanvas">
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="{ type: item.type, attrs: item.attrs }">
             </layerList>
@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import { onMounted, reactive, ref, shallowRef, provide } from 'vue'
+import { onMounted, reactive, ref, shallowRef, provide, nextTick } from 'vue'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
@@ -79,6 +79,10 @@ const destroyTransformerEvt = () => {
 // canvas强制更新
 const layerCanvasUpdateEvt = () => {
   keyMainCanvas.value++
+  nextTick(() => {
+    updateTransformer(currentShape.value)
+  })
+
 }
 
 function dragendEvt ({ target }) {

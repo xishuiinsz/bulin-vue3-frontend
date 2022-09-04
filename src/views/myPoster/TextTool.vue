@@ -15,6 +15,9 @@
             <el-form-item label="文本颜色">
                 <el-color-picker v-model="colorValue" @change="colorChange"></el-color-picker>
             </el-form-item>
+            <el-form-item label="文本大小">
+                <el-input-number v-model="fontSize" :min="10" :max="100" @change="fontSizeChange" />
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -25,6 +28,7 @@ const shape = inject('currentShape')
 const layerList = inject('layerList')
 const textContent = ref(shape.value.attrs.text)
 const colorValue = ref(shape.value.attrs.fill)
+const fontSize = ref(shape.value.attrs.fontSize)
 // 置顶事件
 const moveToTopEvt = () => {
     shape.value.moveToTop()
@@ -37,6 +41,7 @@ const input = (value) => {
         Object.assign(currentShapeRow.attrs, { text: value })
     }
 }
+// 文本对齐方式
 const setTextAlign = (align) => {
     const { id } = shape.value.attrs
     const [currentShapeRow] = layerList.filter(item => item.attrs.id === id)
@@ -45,11 +50,20 @@ const setTextAlign = (align) => {
     }
 }
 
+// 颜色改变事件
 const colorChange = value => {
     const { id } = shape.value.attrs
     const [currentShapeRow] = layerList.filter(item => item.attrs.id === id)
     if (currentShapeRow) {
         Object.assign(currentShapeRow.attrs, { fill: value })
+    }
+}
+// 字体大小改变事件
+const fontSizeChange = value => {
+    const { id } = shape.value.attrs
+    const [currentShapeRow] = layerList.filter(item => item.attrs.id === id)
+    if (currentShapeRow) {
+        Object.assign(currentShapeRow.attrs, { fontSize: value })
     }
 }
 </script>

@@ -2,7 +2,8 @@
     <div class="toolbar-generic-container">
         <el-button-group class="common-btn-actions" v-show="isShowCommonTool">
             <el-button @click="deleteHandler" type="primary">删除</el-button>
-            <el-button @click="moveToUpEvt" type="primary">上移</el-button>
+            <el-button @click="moveToUpEvt" type="primary">上移一层</el-button>
+            <el-button @click="moveToDownEvt" type="primary">下移一层</el-button>
             <el-button @click="moveToTopEvt" type="primary">置顶</el-button>
         </el-button-group>
         <component :is="currentComp" />
@@ -64,9 +65,23 @@ const moveToUpEvt = () => {
         emit('layerCanvasUpdate')
     }
 }
+// 下移一层
+const moveToDownEvt = () => {
+    const index = layerList.findIndex(item => item.attrs.id === props.id)
+    if (index > -1) {
+        const [el] = layerList.splice(index, 1)
+        layerList.splice(index - 1, 0, el)
+        emit('layerCanvasUpdate')
+    }
+}
 // 置顶
 const moveToTopEvt = () => {
-    console.log('置顶');
+    const index = layerList.findIndex(item => item.attrs.id === props.id)
+    if (index !== layerList.length - 1) {
+        const [el] = layerList.splice(index, 1)
+        layerList.push(el)
+        emit('layerCanvasUpdate')
+    }
 }
 </script>
 <style lang="scss" scoped>
