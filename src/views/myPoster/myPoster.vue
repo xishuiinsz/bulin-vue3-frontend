@@ -10,7 +10,8 @@
           <k-layer :key="keyMainCanvas">
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="{ type: item.type, attrs: item.attrs }">
             </layerList>
-            <k-transformer ref="refTransformer"></k-transformer>
+            <k-transformer @transform="transitionendEvt" ref="refTransformer">
+            </k-transformer>
           </k-layer>
         </k-stage>
       </el-main>
@@ -45,6 +46,8 @@ provide('layerList', list)
 provide('configKonva', configKonva)
 // Stage点击事件
 function handleStageClick (e) {
+  // 点击对象为选择框的小矩形
+  if(e.target.getParent() === refTransformer.value.getNode()) return
   if (this === e.target) {
     updateTransformer()
     currentId.value = '0'
@@ -64,6 +67,7 @@ function updateTransformer (selectedNode) {
   const transformerNode = refTransformer.value.getNode();
   if (selectedNode) {
     transformerNode.nodes([selectedNode]);
+    transformerNode.moveToTop()
   } else {
     transformerNode.nodes([]);
   }
@@ -87,13 +91,29 @@ const layerCanvasUpdateEvt = () => {
 
 function dragendEvt ({ target }) {
   const { id } = target.attrs
-  const [shapgeData] = layerRawData.filter(item => item.attrs.id === id)
-  if (shapgeData) {
-    Object.assign(shapgeData.attrs, {
+  const [shapeData] = layerRawData.filter(item => item.attrs.id === id)
+  if (shapeData) {
+    Object.assign(shapeData.attrs, {
       x: target.attrs.x,
       y: target.attrs.y
     })
   }
+}
+
+// 矩形选择框变形完成事件
+function transitionendEvt () {
+  const transformerNode = refTransformer.value.getNode();
+  const shapes = transformerNode.getNodes()
+  shapes.forEach(shape =>{
+    const { id } = shape.attrs
+    const [shapeData] = layerRawData.filter(item => item.attrs.id === id)
+    if (shapeData) {
+      Object.assign(shapeData.attrs, {
+        scaleX: shape.attrs.scaleX,
+        scaleY: shape.attrs.scaleY
+      })
+    }
+    })
 }
 
 // 生命钩子函数
