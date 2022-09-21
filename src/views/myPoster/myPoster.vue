@@ -15,11 +15,7 @@
           :config="configKonva"
         >
           <k-layer :key="keyMainCanvas">
-            <layerList
-              v-for="item in list"
-              :key="item.attrs.id"
-              v-bind="{ type: item.type, attrs: item.attrs }"
-            >
+            <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
             </layerList>
             <k-transformer @transform="transitionendEvt" ref="refTransformer">
             </k-transformer>
@@ -63,8 +59,14 @@ function handleStageClick(e) {
     updateTransformer()
     currentId.value = '0'
   } else {
-    updateTransformer(e.target)
-    const id = get(e, 'target.attrs.id')
+    let nodeEle
+    if (e.target.getParent().nodeType === 'Group') {
+      nodeEle = e.target.getParent()
+    } else {
+      nodeEle = e.target
+    }
+    updateTransformer(nodeEle)
+    const id = get(nodeEle, 'attrs.id')
     if (id) {
       currentId.value = id
     }

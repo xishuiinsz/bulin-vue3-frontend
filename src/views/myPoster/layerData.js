@@ -1,6 +1,6 @@
 export default [
   {
-    type: 'image',
+    type: 'Image',
     attrs: {
       id: '3',
       x: 250,
@@ -12,7 +12,7 @@ export default [
     }
   },
   {
-    type: 'circle',
+    type: 'Circle',
     attrs: {
       id: '2',
       x: 150,
@@ -25,7 +25,7 @@ export default [
     }
   },
   {
-    type: 'text',
+    type: 'Text',
     attrs: {
       id: '1',
       x: 20,
@@ -39,5 +39,43 @@ export default [
       align: 'center',
       draggable: true
     }
+  },
+  {
+    type: 'Group',
+    attrs: {
+      id: '4',
+      draggable: true
+    },
+    children: [
+      {
+        type: 'Circle',
+        attrs: {
+          id: '5',
+          x: 150,
+          y: 150,
+          radius: 70,
+          fill: 'pink',
+          stroke: 'black',
+          strokeWidth: 4,
+          draggable: false
+        }
+      },
+      {
+        type: 'Text',
+        attrs: {
+          id: '6',
+          x: 70,
+          y: 150,
+          text: '你好，我在组合里',
+          fontSize: 18,
+          fontFamily:
+            "'PingFang SC', 'Helvetica Neue', Helvetica, 'microsoft yahei', arial, STHeiTi, sans-serif",
+          fill: 'blue',
+          width: 200,
+          align: 'center',
+          draggable: false
+        }
+      }
+    ]
   }
 ]

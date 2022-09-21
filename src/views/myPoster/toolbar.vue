@@ -17,6 +17,7 @@ import stageTool from './stageTool.vue'
 import circleTool from './circleTool.vue'
 import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
+import GroupTool from './GroupTool.vue'
 const emit = defineEmits(['destroyTransformer', 'layerCanvasUpdate'])
 const props = defineProps({
   id: String
@@ -30,6 +31,7 @@ const currentComp = computed(() => {
       if (findedRow.type === 'Text') return textTool
       if (findedRow.type === 'Image') return imageTool
       if (findedRow.type === 'Circle') return circleTool
+      if (findedRow.type === 'Group') return GroupTool
     }
   }
   return stageTool
