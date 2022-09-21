@@ -1,12 +1,11 @@
-<template>
-    <k-circle v-if="type === 'Circle'" :config="attrs"></k-circle>
-    <k-text v-if="type === 'Text'" :config="attrs"></k-text>
-    <k-image v-if="type === 'Image'" :config="attrs"></k-image>
-</template>
+<template><konva-comp /></template>
 <script setup>
+import { h, resolveComponent } from 'vue'
 const props = defineProps({
-    type: String,
-    attrs: Object
+  type: String,
+  attrs: Object
+})
+const KonvaComp = h(resolveComponent(`k-${props.type}`), {
+  config: props.attrs
 })
 </script>
-

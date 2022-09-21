@@ -2,13 +2,24 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar @destroyTransformer="destroyTransformerEvt" @layerCanvasUpdate="layerCanvasUpdateEvt"
-          :id="currentId" />
+        <toolbar
+          @destroyTransformer="destroyTransformerEvt"
+          @layerCanvasUpdate="layerCanvasUpdateEvt"
+          :id="currentId"
+        />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage @dragend="dragendEvt" @mousedown="handleStageClick" :config="configKonva">
+        <k-stage
+          @dragend="dragendEvt"
+          @mousedown="handleStageClick"
+          :config="configKonva"
+        >
           <k-layer :key="keyMainCanvas">
-            <layerList v-for="item in list" :key="item.attrs.id" v-bind="{ type: item.type, attrs: item.attrs }">
+            <layerList
+              v-for="item in list"
+              :key="item.attrs.id"
+              v-bind="{ type: item.type, attrs: item.attrs }"
+            >
             </layerList>
             <k-transformer @transform="transitionendEvt" ref="refTransformer">
             </k-transformer>
@@ -45,9 +56,9 @@ provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
 // Stage点击事件
-function handleStageClick (e) {
+function handleStageClick(e) {
   // 点击对象为选择框的小矩形
-  if(e.target.getParent() === refTransformer.value.getNode()) return
+  if (e.target.getParent() === refTransformer.value.getNode()) return
   if (this === e.target) {
     updateTransformer()
     currentId.value = '0'
@@ -61,23 +72,22 @@ function handleStageClick (e) {
   currentShape.value = e.target
 }
 
-
 // 绘制变形选择框
-function updateTransformer (selectedNode) {
-  const transformerNode = refTransformer.value.getNode();
+function updateTransformer(selectedNode) {
+  const transformerNode = refTransformer.value.getNode()
   if (selectedNode) {
-    transformerNode.nodes([selectedNode]);
+    transformerNode.nodes([selectedNode])
     transformerNode.moveToTop()
   } else {
-    transformerNode.nodes([]);
+    transformerNode.nodes([])
   }
   return transformerNode
 }
 
 // 销毁矩形选择框
 const destroyTransformerEvt = () => {
-  const transformerNode = refTransformer.value.getNode();
-  transformerNode.nodes([]);
+  const transformerNode = refTransformer.value.getNode()
+  transformerNode.nodes([])
 }
 
 // canvas强制更新
@@ -86,12 +96,11 @@ const layerCanvasUpdateEvt = () => {
   nextTick(() => {
     updateTransformer(currentShape.value)
   })
-
 }
 
-function dragendEvt ({ target }) {
+function dragendEvt({ target }) {
   const { id } = target.attrs
-  const [shapeData] = layerRawData.filter(item => item.attrs.id === id)
+  const [shapeData] = layerRawData.filter((item) => item.attrs.id === id)
   if (shapeData) {
     Object.assign(shapeData.attrs, {
       x: target.attrs.x,
@@ -101,19 +110,19 @@ function dragendEvt ({ target }) {
 }
 
 // 矩形选择框变形完成事件
-function transitionendEvt () {
-  const transformerNode = refTransformer.value.getNode();
+function transitionendEvt() {
+  const transformerNode = refTransformer.value.getNode()
   const shapes = transformerNode.getNodes()
-  shapes.forEach(shape =>{
+  shapes.forEach((shape) => {
     const { id } = shape.attrs
-    const [shapeData] = layerRawData.filter(item => item.attrs.id === id)
+    const [shapeData] = layerRawData.filter((item) => item.attrs.id === id)
     if (shapeData) {
       Object.assign(shapeData.attrs, {
         scaleX: shape.attrs.scaleX,
         scaleY: shape.attrs.scaleY
       })
     }
-    })
+  })
 }
 
 // 生命钩子函数
@@ -124,9 +133,9 @@ onMounted(() => {
     //   configKonva.width = container.offsetWidth
     //   configKonva.height = container.offsetHeight
     // }
-    const imageObj = new Image();
+    const imageObj = new Image()
     imageObj.onload = function () {
-      const [findedRow] = list.filter(item => item.attrs.id === '3')
+      const [findedRow] = list.filter((item) => item.attrs.id === '3')
       if (findedRow) {
         findedRow.attrs.image = this
       }

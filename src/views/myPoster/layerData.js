@@ -1,6 +1,6 @@
 export default [
   {
-    type: 'Image',
+    type: 'image',
     attrs: {
       id: '3',
       x: 250,
@@ -12,7 +12,7 @@ export default [
     }
   },
   {
-    type: 'Circle',
+    type: 'circle',
     attrs: {
       id: '2',
       x: 150,
@@ -25,7 +25,7 @@ export default [
     }
   },
   {
-    type: 'Text',
+    type: 'text',
     attrs: {
       id: '1',
       x: 20,
@@ -34,9 +34,8 @@ export default [
       fontSize: 18,
       fontFamily:
         "'PingFang SC', 'Helvetica Neue', Helvetica, 'microsoft yahei', arial, STHeiTi, sans-serif",
-      fill: '#555',
-      width: 300,
-      padding: 20,
+      fill: '#fff',
+      width: 200,
       align: 'center',
       draggable: true
     }
