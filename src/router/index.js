@@ -33,7 +33,7 @@ const routes = [
         path: '/myPoster',
         name: 'MyPoster',
         meta: {
-          title: '易图海报'
+          title: '在线海报'
         },
         component: () =>
           import(

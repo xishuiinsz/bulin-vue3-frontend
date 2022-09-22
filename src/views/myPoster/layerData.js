@@ -51,7 +51,7 @@ export default [
         type: 'Circle',
         attrs: {
           id: '5',
-          x: 150,
+          x: 500,
           y: 150,
           radius: 70,
           fill: 'pink',
@@ -64,7 +64,7 @@ export default [
         type: 'Text',
         attrs: {
           id: '6',
-          x: 70,
+          x: 400,
           y: 150,
           text: '你好，我在组合里',
           fontSize: 18,

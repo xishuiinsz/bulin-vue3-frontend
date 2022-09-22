@@ -1,0 +1,14 @@
+export const getShageOptionById = (id, shageList) => {
+  let option
+  for (let index = 0; index < shageList.length; index++) {
+    const element = shageList[index]
+    if (element.attrs && element.attrs.id === id) {
+      option = element
+      break
+    }
+    if (element.children && element.children.length) {
+      return getShageOptionById(id, element.children)
+    }
+  }
+  return option
+}

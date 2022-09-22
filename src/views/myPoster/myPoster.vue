@@ -32,6 +32,7 @@ import layerList from './layerList.vue'
 import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
 import get from 'lodash/get'
+import { getShageOptionById } from './utils'
 import('./myPoster.scss')
 export default {
   name: 'MyPosterPage'
@@ -100,19 +101,38 @@ const layerCanvasUpdateEvt = () => {
   })
 }
 
+// transformer 拖拽完成事件
 function dragendEvt({ target }) {
-  const { id } = target.attrs
-  const [shapeData] = layerRawData.filter((item) => item.attrs.id === id)
-  if (shapeData) {
-    Object.assign(shapeData.attrs, {
-      x: target.attrs.x,
-      y: target.attrs.y
-    })
+  // 甄别 group容器
+  if (target.nodeType === 'Group' && target.className !== 'Transformer') {
+    const { children } = target
+    if (children && children.length) {
+      children.forEach((child) => {
+        const { id } = child.attrs
+        const shapeData = getShageOptionById(id, layerRawData)
+        if (shapeData) {
+          Object.assign(shapeData.attrs, {
+            x: child.getAbsolutePosition().x,
+            y: child.getAbsolutePosition().y
+          })
+        }
+      })
+    }
+  } else {
+    const { id } = target.attrs
+    const shapeData = getShageOptionById(id, layerRawData)
+    if (shapeData) {
+      Object.assign(shapeData.attrs, {
+        x: target.attrs.x,
+        y: target.attrs.y
+      })
+    }
   }
 }
 
 // 矩形选择框变形完成事件
-function transitionendEvt() {
+function transitionendEvt(e) {
+  console.log(e)
   const transformerNode = refTransformer.value.getNode()
   const shapes = transformerNode.getNodes()
   shapes.forEach((shape) => {
