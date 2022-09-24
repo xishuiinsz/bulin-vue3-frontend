@@ -150,14 +150,9 @@ function transitionendEvt(e) {
 // 生命钩子函数
 onMounted(() => {
   setTimeout(() => {
-    // const container = document.querySelector('.poster-work-behch')
-    // if (container) {
-    //   configKonva.width = container.offsetWidth
-    //   configKonva.height = container.offsetHeight
-    // }
-    const imageObj = new Image()
+    const imageObj = new window.Image()
     imageObj.onload = function () {
-      const [findedRow] = list.filter((item) => item.attrs.id === '3')
+      const [findedRow] = list.filter((item) => item.type === 'Image')
       if (findedRow) {
         findedRow.attrs.image = this
       }

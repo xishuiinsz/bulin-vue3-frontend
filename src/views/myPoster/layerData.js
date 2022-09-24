@@ -1,8 +1,8 @@
-export default [
+const list = [
   {
     type: 'Image',
     attrs: {
-      id: '3',
+      id: String(Date.now()),
       x: 250,
       y: 250,
       image: null,
@@ -14,7 +14,7 @@ export default [
   {
     type: 'Circle',
     attrs: {
-      id: '2',
+      id: String(Date.now()),
       x: 150,
       y: 150,
       radius: 70,
@@ -27,7 +27,7 @@ export default [
   {
     type: 'Text',
     attrs: {
-      id: '1',
+      id: String(Date.now()),
       x: 20,
       y: 60,
       text: '你好，中国！',
@@ -43,14 +43,14 @@ export default [
   {
     type: 'Group',
     attrs: {
-      id: '4',
+      id: String(Date.now()),
       draggable: true
     },
     children: [
       {
         type: 'Circle',
         attrs: {
-          id: '5',
+          id: String(Date.now()),
           x: 500,
           y: 150,
           radius: 70,
@@ -63,7 +63,7 @@ export default [
       {
         type: 'Text',
         attrs: {
-          id: '6',
+          id: String(Date.now()),
           x: 400,
           y: 150,
           text: '你好，我在组合里',
@@ -79,3 +79,5 @@ export default [
     ]
   }
 ]
+
+export default list

@@ -18,6 +18,6 @@ export default {
   },
   server: {
     host: 'localhost.china.com',
-    port: 3000
+    port: 8080
   }
 }
