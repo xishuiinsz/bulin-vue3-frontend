@@ -2,22 +2,18 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar
-          @destroyTransformer="destroyTransformerEvt"
-          @layerCanvasUpdate="layerCanvasUpdateEvt"
-          :id="currentId"
-        />
+        <toolbar @destroyTransformer="destroyTransformerEvt" :id="currentId" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage
-          @dragend="dragendEvt"
-          @mousedown="handleStageClick"
-          :config="configKonva"
-        >
-          <k-layer :key="keyMainCanvas">
+        <k-stage @mousedown="handleStageClick" :config="configKonva">
+          <k-layer>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
             </layerList>
-            <k-transformer @transform="transitionendEvt" ref="refTransformer">
+            <k-transformer
+              @dragend="dragendEvt"
+              @transform="transitionendEvt"
+              ref="refTransformer"
+            >
             </k-transformer>
           </k-layer>
         </k-stage>
@@ -27,6 +23,7 @@
 </template>
 <script>
 import { onMounted, reactive, ref, shallowRef, provide, nextTick } from 'vue'
+import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
@@ -40,7 +37,6 @@ export default {
 </script>
 <script setup>
 const currentId = ref('0')
-const keyMainCanvas = ref(0)
 const refTransformer = ref(null)
 const refWorkbenchContainer = ref(null)
 const configKonva = reactive({
@@ -93,46 +89,34 @@ const destroyTransformerEvt = () => {
   transformerNode.nodes([])
 }
 
-// canvas强制更新
-const layerCanvasUpdateEvt = () => {
-  keyMainCanvas.value++
-  nextTick(() => {
-    updateTransformer(currentShape.value)
-  })
-}
-
 // transformer 拖拽完成事件
 function dragendEvt({ target }) {
-  // 甄别 group容器
-  if (target.nodeType === 'Group' && target.className !== 'Transformer') {
-    const { children } = target
-    if (children && children.length) {
-      children.forEach((child) => {
-        const { id } = child.attrs
-        const shapeData = getShageOptionById(id, layerRawData)
-        if (shapeData) {
-          Object.assign(shapeData.attrs, {
-            x: child.getAbsolutePosition().x,
-            y: child.getAbsolutePosition().y
-          })
-        }
+  const [shape] = target.getNodes()
+  let shapes = [shape]
+  if (shape instanceof Konva.Group) {
+    const groupData = getShageOptionById(shape.attrs.id, layerRawData)
+    groupData &&
+      Object.assign(groupData.attrs, {
+        x: target.x(),
+        y: target.y()
       })
-    }
-  } else {
-    const { id } = target.attrs
-    const shapeData = getShageOptionById(id, layerRawData)
-    if (shapeData) {
-      Object.assign(shapeData.attrs, {
-        x: target.attrs.x,
-        y: target.attrs.y
-      })
-    }
+    shapes = shape.children
   }
+  shapes.length &&
+    shapes.forEach((shape) => {
+      const { id } = shape.attrs
+      const shapeData = getShageOptionById(id, layerRawData)
+      console.log(shapeData)
+      shapeData &&
+        Object.assign(shapeData.attrs, {
+          x: shape.getAbsolutePosition().x,
+          y: shape.getAbsolutePosition().y
+        })
+    })
 }
 
 // 矩形选择框变形完成事件
 function transitionendEvt(e) {
-  console.log(e)
   const transformerNode = refTransformer.value.getNode()
   const shapes = transformerNode.getNodes()
   shapes.forEach((shape) => {

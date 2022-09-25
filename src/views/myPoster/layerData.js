@@ -2,7 +2,7 @@ const list = [
   {
     type: 'Image',
     attrs: {
-      id: String(Date.now()),
+      id: '1',
       x: 250,
       y: 250,
       image: null,
@@ -14,7 +14,7 @@ const list = [
   {
     type: 'Circle',
     attrs: {
-      id: String(Date.now()),
+      id: '2',
       x: 150,
       y: 150,
       radius: 70,
@@ -27,7 +27,7 @@ const list = [
   {
     type: 'Text',
     attrs: {
-      id: String(Date.now()),
+      id: '3',
       x: 20,
       y: 60,
       text: '你好，中国！',
@@ -43,14 +43,14 @@ const list = [
   {
     type: 'Group',
     attrs: {
-      id: String(Date.now()),
+      id: '4',
       draggable: true
     },
     children: [
       {
         type: 'Circle',
         attrs: {
-          id: String(Date.now()),
+          id: '5',
           x: 500,
           y: 150,
           radius: 70,
@@ -63,7 +63,7 @@ const list = [
       {
         type: 'Text',
         attrs: {
-          id: String(Date.now()),
+          id: '6',
           x: 400,
           y: 150,
           text: '你好，我在组合里',

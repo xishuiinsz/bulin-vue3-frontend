@@ -5,7 +5,7 @@
       <el-button @click="moveToUpEvt" type="primary">上移一层</el-button>
       <el-button @click="moveToDownEvt" type="primary">下移一层</el-button>
       <el-button @click="moveToTopEvt" type="primary">置顶</el-button>
-      <el-button @click="moveToDownpEvt" type="primary">置地</el-button>
+      <el-button @click="moveToDownpEvt" type="primary">置底</el-button>
       <el-button v-if="isShowLock" @click="lockModify" type="primary"
         >锁定 | 取消锁定</el-button
       >
@@ -21,7 +21,7 @@ import circleTool from './circleTool.vue'
 import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
 import GroupTool from './GroupTool.vue'
-const emit = defineEmits(['destroyTransformer', 'layerCanvasUpdate'])
+const emit = defineEmits(['destroyTransformer'])
 const props = defineProps({
   id: String
 })
@@ -41,7 +41,6 @@ const currentComp = computed(() => {
 })
 
 const isShowLock = computed(() => {
-  console.log(shape)
   return true
 })
 
@@ -74,7 +73,6 @@ const moveToUpEvt = () => {
   if (index !== layerList.length - 1) {
     const [el] = layerList.splice(index, 1)
     layerList.splice(index + 1, 0, el)
-    emit('layerCanvasUpdate')
   }
 }
 // 下移一层
@@ -83,7 +81,6 @@ const moveToDownEvt = () => {
   if (index > -1) {
     const [el] = layerList.splice(index, 1)
     layerList.splice(index - 1, 0, el)
-    emit('layerCanvasUpdate')
   }
 }
 // 置顶
@@ -92,7 +89,6 @@ const moveToTopEvt = () => {
   if (index !== layerList.length - 1) {
     const [el] = layerList.splice(index, 1)
     layerList.push(el)
-    emit('layerCanvasUpdate')
   }
 }
 
