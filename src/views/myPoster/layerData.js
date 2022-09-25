@@ -44,7 +44,7 @@ const list = [
     type: 'Group',
     attrs: {
       id: '4',
-      draggable: true
+      draggable: false
     },
     children: [
       {

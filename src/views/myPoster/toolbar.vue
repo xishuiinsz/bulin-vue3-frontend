@@ -6,15 +6,15 @@
       <el-button @click="moveToDownEvt" type="primary">下移一层</el-button>
       <el-button @click="moveToTopEvt" type="primary">置顶</el-button>
       <el-button @click="moveToDownpEvt" type="primary">置底</el-button>
-      <el-button v-if="isShowLock" @click="lockModify" type="primary"
-        >锁定 | 取消锁定</el-button
-      >
+      <el-button v-if="textLock" @click="lockModify" type="primary">{{
+        textLock
+      }}</el-button>
     </el-button-group>
     <component :is="currentComp" />
   </div>
 </template>
 <script setup name="DesignToolbar">
-import { computed, inject, watch } from 'vue'
+import { computed, inject, ref, watchEffect } from 'vue'
 import { getShageOptionById } from './utils'
 import stageTool from './stageTool.vue'
 import circleTool from './circleTool.vue'
@@ -40,16 +40,14 @@ const currentComp = computed(() => {
   return stageTool
 })
 
-const isShowLock = computed(() => {
-  return true
-})
+const textLock = ref('')
 
-watch(
-  () => props.id,
-  () => {
-    console.log('props.id', props.id)
+watchEffect(() => {
+  const [shapeData] = layerList.filter((item) => item.attrs.id === props.id)
+  if (shapeData && shapeData.attrs) {
+    textLock.value = shapeData.attrs.draggable ? '锁定' : '解锁'
   }
-)
+})
 
 // 判断是否显示公共工具条
 const isShowCommonTool = computed(() => {
@@ -101,8 +99,8 @@ const moveToDownpEvt = () => {
 
 // 锁定|解锁
 const lockModify = () => {
-  const index = layerList.findIndex((item) => item.attrs.id === props.id)
-  const { attrs } = layerList[index]
+  const shapeData = getShageOptionById(props.id, layerList)
+  const { attrs } = shapeData
   Object.assign(attrs, {
     draggable: !attrs.draggable
   })

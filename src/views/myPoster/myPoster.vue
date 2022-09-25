@@ -13,6 +13,7 @@
               @dragend="dragendEvt"
               @transform="transitionendEvt"
               ref="refTransformer"
+              :config="configTransformer"
             >
             </k-transformer>
           </k-layer>
@@ -22,7 +23,7 @@
   </div>
 </template>
 <script>
-import { onMounted, reactive, ref, shallowRef, provide, nextTick } from 'vue'
+import { onMounted, reactive, ref, shallowRef, provide } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
@@ -45,6 +46,9 @@ const configKonva = reactive({
 })
 const list = reactive(layerRawData)
 const currentShape = shallowRef(null)
+const configTransformer = reactive({
+  listening: true
+})
 provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
@@ -55,20 +59,21 @@ function handleStageClick(e) {
   if (this === e.target) {
     updateTransformer()
     currentId.value = '0'
-  } else {
-    let nodeEle
-    if (e.target.getParent().nodeType === 'Group') {
-      nodeEle = e.target.getParent()
-    } else {
-      nodeEle = e.target
-    }
-    updateTransformer(nodeEle)
-    const id = get(nodeEle, 'attrs.id')
-    if (id) {
-      currentId.value = id
-    }
+    currentShape.value = this
+    return
   }
-  currentShape.value = e.target
+  let nodeEle
+  if (e.target.getParent() instanceof Konva.Group) {
+    nodeEle = e.target.getParent()
+  } else {
+    nodeEle = e.target
+  }
+  updateTransformer(nodeEle)
+  const id = get(nodeEle, 'attrs.id')
+  if (id) {
+    currentId.value = id
+  }
+  currentShape.value = nodeEle
 }
 
 // 绘制变形选择框
@@ -77,6 +82,9 @@ function updateTransformer(selectedNode) {
   if (selectedNode) {
     transformerNode.nodes([selectedNode])
     transformerNode.moveToTop()
+    if (!selectedNode.attrs.draggable) {
+      transformerNode.stopTransform()
+    }
   } else {
     transformerNode.nodes([])
   }
@@ -106,7 +114,6 @@ function dragendEvt({ target }) {
     shapes.forEach((shape) => {
       const { id } = shape.attrs
       const shapeData = getShageOptionById(id, layerRawData)
-      console.log(shapeData)
       shapeData &&
         Object.assign(shapeData.attrs, {
           x: shape.getAbsolutePosition().x,
