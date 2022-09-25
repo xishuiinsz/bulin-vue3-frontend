@@ -1,20 +1,52 @@
 <template>
   <div class="toolbar-generic-container">
     <el-button-group class="common-btn-actions" v-show="isShowCommonTool">
-      <el-button @click="deleteHandler" type="primary">删除</el-button>
-      <el-button @click="moveToUpEvt" type="primary">上移一层</el-button>
-      <el-button @click="moveToDownEvt" type="primary">下移一层</el-button>
-      <el-button @click="moveToTopEvt" type="primary">置顶</el-button>
-      <el-button @click="moveToDownpEvt" type="primary">置底</el-button>
       <el-button v-if="textLock" @click="lockModify" type="primary">{{
         textLock
       }}</el-button>
+      <el-button
+        :disabled="textLock === '解锁'"
+        @click="deleteHandler"
+        type="primary"
+        >删除</el-button
+      >
+      <el-button
+        :disabled="textLock === '解锁'"
+        @click="moveToUpEvt"
+        type="primary"
+        >上移一层</el-button
+      >
+      <el-button
+        :disabled="textLock === '解锁'"
+        @click="moveToDownEvt"
+        type="primary"
+        >下移一层</el-button
+      >
+      <el-button
+        :disabled="textLock === '解锁'"
+        @click="moveToTopEvt"
+        type="primary"
+        >置顶</el-button
+      >
+      <el-button
+        :disabled="textLock === '解锁'"
+        @click="moveToDownpEvt"
+        type="primary"
+        >置底</el-button
+      >
+      <el-button
+        :disabled="textLock === '解锁'"
+        v-if="textGroup"
+        @click="groupModify(textGroup)"
+        type="primary"
+        >{{ textGroup }}</el-button
+      >
     </el-button-group>
     <component :is="currentComp" />
   </div>
 </template>
 <script setup name="DesignToolbar">
-import { computed, inject, ref, watchEffect } from 'vue'
+import { computed, inject, ref, watch, watchEffect } from 'vue'
 import { getShageOptionById } from './utils'
 import stageTool from './stageTool.vue'
 import circleTool from './circleTool.vue'
@@ -40,14 +72,35 @@ const currentComp = computed(() => {
   return stageTool
 })
 
+// 锁定
 const textLock = ref('')
-
 watchEffect(() => {
   const [shapeData] = layerList.filter((item) => item.attrs.id === props.id)
   if (shapeData && shapeData.attrs) {
     textLock.value = shapeData.attrs.draggable ? '锁定' : '解锁'
   }
 })
+
+// 组合
+const textGroup = ref('')
+watch(
+  () => props.id,
+  () => {
+    const [shapeData] = layerList.filter((item) => item.attrs.id === props.id)
+    if (shapeData && shapeData.type === 'Group') {
+      textGroup.value = '取消组合'
+    } else {
+      textGroup.value = ''
+    }
+  }
+)
+const groupModify = (text) => {
+  if (text === '取消组合') {
+    const index = layerList.findIndex((item) => item.attrs.id === props.id)
+    const [groupData] = layerList.splice(index, 1)
+    layerList.splice(index, 0, ...groupData.children)
+  }
+}
 
 // 判断是否显示公共工具条
 const isShowCommonTool = computed(() => {

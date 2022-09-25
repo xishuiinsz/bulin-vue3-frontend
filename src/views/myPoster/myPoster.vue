@@ -102,12 +102,6 @@ function dragendEvt({ target }) {
   const [shape] = target.getNodes()
   let shapes = [shape]
   if (shape instanceof Konva.Group) {
-    const groupData = getShageOptionById(shape.attrs.id, layerRawData)
-    groupData &&
-      Object.assign(groupData.attrs, {
-        x: target.x(),
-        y: target.y()
-      })
     shapes = shape.children
   }
   shapes.length &&
