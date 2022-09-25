@@ -53,6 +53,7 @@ import circleTool from './circleTool.vue'
 import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
 import GroupTool from './GroupTool.vue'
+import Konva from 'konva'
 const emit = defineEmits(['destroyTransformer'])
 const props = defineProps({
   id: String
@@ -84,13 +85,19 @@ watchEffect(() => {
 // 组合
 const textGroup = ref('')
 watch(
-  () => props.id,
-  () => {
-    const [shapeData] = layerList.filter((item) => item.attrs.id === props.id)
-    if (shapeData && shapeData.type === 'Group') {
-      textGroup.value = '取消组合'
-    } else {
-      textGroup.value = ''
+  () => shape.value,
+  (newShape) => {
+    console.log(newShape)
+    if (newShape.length === 1) {
+      const [shape] = newShape
+      if (shape instanceof Konva.Group) {
+        textGroup.value = '取消组合'
+      } else {
+        textGroup.value = ''
+      }
+    }
+    if (newShape.length > 1) {
+      textGroup.value = '组合'
     }
   }
 )

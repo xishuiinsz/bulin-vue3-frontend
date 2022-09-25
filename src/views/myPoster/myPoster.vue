@@ -45,7 +45,7 @@ const configKonva = reactive({
   height: 600
 })
 const list = reactive(layerRawData)
-const currentShape = shallowRef(null)
+const currentShape = shallowRef([])
 const configTransformer = reactive({
   listening: true
 })
@@ -57,9 +57,9 @@ function handleStageClick(e) {
   // 点击对象为选择框的小矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
   if (this === e.target) {
-    updateTransformer()
     currentId.value = '0'
-    currentShape.value = this
+    currentShape.value = []
+    updateTransformer()
     return
   }
   let nodeEle
@@ -68,26 +68,19 @@ function handleStageClick(e) {
   } else {
     nodeEle = e.target
   }
-  updateTransformer(nodeEle)
-  const id = get(nodeEle, 'attrs.id')
-  if (id) {
-    currentId.value = id
+  if (e.evt.ctrlKey) {
+    currentShape.value.push(nodeEle)
+  } else {
+    currentShape.value = [nodeEle]
   }
-  currentShape.value = nodeEle
+
+  updateTransformer()
 }
 
 // 绘制变形选择框
-function updateTransformer(selectedNode) {
+function updateTransformer() {
   const transformerNode = refTransformer.value.getNode()
-  if (selectedNode) {
-    transformerNode.nodes([selectedNode])
-    transformerNode.moveToTop()
-    if (!selectedNode.attrs.draggable) {
-      transformerNode.stopTransform()
-    }
-  } else {
-    transformerNode.nodes([])
-  }
+  transformerNode.nodes(currentShape.value)
   return transformerNode
 }
 
