@@ -104,6 +104,26 @@ const groupModify = (text) => {
     layerList.splice(index, 0, ...groupData.children)
     shape.value = []
   }
+  if (text === '组合') {
+    let indexArray = shape.value
+      .map((s) => s.attrs.id)
+      .map((id) => layerList.findIndex((item) => item.attrs.id === id))
+    // 从大到小排序，先切割索引大的元素，后切割索引小的元素
+    indexArray = indexArray.sort((a, b) => b - a)
+    let shapesGroup = indexArray.map((index) => layerList.splice(index, 1))
+    shapesGroup = shapesGroup.reduce((a, b) => a.concat(b))
+    shapesGroup.forEach((item) => (item.attrs.draggable = false))
+    const group = {
+      type: 'Group',
+      attrs: {
+        id: '40',
+        draggable: true
+      },
+      children: shapesGroup
+    }
+    const [index] = indexArray
+    layerList.splice(index, 0, group)
+  }
 }
 
 // 判断是否显示公共工具条
