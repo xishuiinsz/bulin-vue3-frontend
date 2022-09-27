@@ -83,29 +83,25 @@ watchEffect(() => {
 })
 
 // 组合
-const textGroup = ref('')
-watch(
-  () => shape.value,
-  (newShape) => {
-    console.log(newShape)
-    if (newShape.length === 1) {
-      const [shape] = newShape
-      if (shape instanceof Konva.Group) {
-        textGroup.value = '取消组合'
-      } else {
-        textGroup.value = ''
-      }
-    }
-    if (newShape.length > 1) {
-      textGroup.value = '组合'
+const textGroup = computed(() => {
+  let _textGroup = ''
+  if (shape.value.length === 1) {
+    const [instanceShape] = shape.value
+    if (instanceShape instanceof Konva.Group) {
+      _textGroup = '取消组合'
     }
   }
-)
+  if (shape.value.length > 1) {
+    _textGroup = '组合'
+  }
+  return _textGroup
+})
 const groupModify = (text) => {
   if (text === '取消组合') {
     const index = layerList.findIndex((item) => item.attrs.id === props.id)
     const [groupData] = layerList.splice(index, 1)
     layerList.splice(index, 0, ...groupData.children)
+    shape.value = []
   }
 }
 

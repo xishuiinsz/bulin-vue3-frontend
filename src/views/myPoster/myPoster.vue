@@ -45,7 +45,7 @@ const configKonva = reactive({
   height: 600
 })
 const list = reactive(layerRawData)
-const currentShape = shallowRef([])
+const currentShape = ref([])
 const configTransformer = reactive({
   listening: true
 })
