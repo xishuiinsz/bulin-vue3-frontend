@@ -96,6 +96,7 @@ const textGroup = computed(() => {
   }
   return _textGroup
 })
+// 组合|取消组合 公共事件
 const groupModify = (text) => {
   if (text === '取消组合') {
     const index = layerList.findIndex((item) => item.attrs.id === props.id)
