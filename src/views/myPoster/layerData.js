@@ -77,6 +77,20 @@ const list = [
         }
       }
     ]
+  },
+  {
+    type: 'Rect',
+    attrs: {
+      id: '8',
+      x: 600,
+      y: 350,
+      width: 300,
+      height: 200,
+      fill: 'blue',
+      stroke: 'gray',
+      strokeWidth: 1,
+      draggable: true
+    }
   }
 ]
 

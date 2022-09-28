@@ -1,19 +1,16 @@
 <template>
   <div class="toolbar-generic-container">
     <el-button-group class="common-btn-actions" v-show="isShowCommonTool">
-      <el-button v-if="textLock" @click="lockModify" type="primary">{{
+      <el-button v-if="textLock" @click="lockModify(textLock)" type="primary">{{
         textLock
       }}</el-button>
       <el-button
         :disabled="textLock === '解锁'"
-        @click="deleteHandler"
+        @click="deleteShapeHandler"
         type="primary"
         >删除</el-button
       >
-      <el-button
-        :disabled="textLock === '解锁'"
-        @click="moveToUpEvt"
-        type="primary"
+      <el-button :disabled="validMoveup" @click="moveToUpEvt" type="primary"
         >上移一层</el-button
       >
       <el-button
@@ -46,7 +43,7 @@
   </div>
 </template>
 <script setup name="DesignToolbar">
-import { computed, inject, ref, watch, watchEffect } from 'vue'
+import { computed, inject } from 'vue'
 import { getShageOptionById } from './utils'
 import stageTool from './stageTool.vue'
 import circleTool from './circleTool.vue'
@@ -54,6 +51,7 @@ import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
 import GroupTool from './GroupTool.vue'
 import Konva from 'konva'
+import last from 'lodash/last'
 const emit = defineEmits(['destroyTransformer'])
 const props = defineProps({
   id: String
@@ -74,13 +72,51 @@ const currentComp = computed(() => {
 })
 
 // 锁定
-const textLock = ref('')
-watchEffect(() => {
-  const [shapeData] = layerList.filter((item) => item.attrs.id === props.id)
-  if (shapeData && shapeData.attrs) {
-    textLock.value = shapeData.attrs.draggable ? '锁定' : '解锁'
+const textLock = computed(() => {
+  const _textLock = ''
+  if (shape.value.length === 1) {
+    const [instanceShape] = shape.value
+    return instanceShape.attrs.draggable ? '锁定' : '解锁'
   }
+  return _textLock
 })
+// 锁定|解锁
+const lockModify = (text) => {
+  const [instanceShape] = shape.value
+  const [shapeData] = layerList.filter(
+    (item) => item.attrs.id === instanceShape.attrs.id
+  )
+  if (text === '锁定') {
+    shapeData.attrs.draggable = false
+  }
+  if (text === '解锁') {
+    shapeData.attrs.draggable = true
+  }
+}
+
+// 上一步是否可用
+const validMoveup = computed(() => {
+  let flag = false
+  if (shape.value.length === 1) {
+    const [instanceShape] = shape.value
+    if (!instanceShape.attrs.draggable) {
+      flag = true
+    }
+    if (last(layerList).attrs.id === instanceShape.attrs.id) {
+      flag = true
+    }
+  }
+  return flag
+})
+// 上移一层
+const moveToUpEvt = () => {
+  const [instanceShape] = shape.value
+  const index = layerList.findIndex(
+    (item) => item.attrs.id === instanceShape.attrs.id
+  )
+  const [el] = layerList.splice(index, 1)
+  layerList.splice(index + 1, 0, el)
+}
 
 // 组合
 const textGroup = computed(() => {
@@ -98,8 +134,11 @@ const textGroup = computed(() => {
 })
 // 组合|取消组合 公共事件
 const groupModify = (text) => {
+  const [instanceShape] = shape.value
   if (text === '取消组合') {
-    const index = layerList.findIndex((item) => item.attrs.id === props.id)
+    const index = layerList.findIndex(
+      (item) => item.attrs.id === instanceShape.attrs.id
+    )
     const [groupData] = layerList.splice(index, 1)
     layerList.splice(index, 0, ...groupData.children)
     shape.value = []
@@ -135,21 +174,19 @@ const isShowCommonTool = computed(() => {
   return flag
 })
 // 删除shape事件
-const deleteHandler = () => {
-  const index = layerList.findIndex((item) => item.attrs.id === props.id)
-  if (index > -1) {
-    layerList.splice(index, 1)
-    emit('destroyTransformer')
-  }
+const deleteShapeHandler = () => {
+  shape.value
+    .map((item) => item.attrs.id)
+    .sort((a, b) => b - a)
+    .forEach((id) => {
+      const index = layerList.findIndex((item) => item.attrs.id === id)
+      if (index > -1) {
+        layerList.splice(index, 1)
+        emit('destroyTransformer')
+      }
+    })
 }
-// 上移一层
-const moveToUpEvt = () => {
-  const index = layerList.findIndex((item) => item.attrs.id === props.id)
-  if (index !== layerList.length - 1) {
-    const [el] = layerList.splice(index, 1)
-    layerList.splice(index + 1, 0, el)
-  }
-}
+
 // 下移一层
 const moveToDownEvt = () => {
   const index = layerList.findIndex((item) => item.attrs.id === props.id)
@@ -172,15 +209,6 @@ const moveToDownpEvt = () => {
   const index = layerList.findIndex((item) => item.attrs.id === props.id)
   const [shapeData] = layerList.splice(index, 1)
   layerList.unshift(shapeData)
-}
-
-// 锁定|解锁
-const lockModify = () => {
-  const shapeData = getShageOptionById(props.id, layerList)
-  const { attrs } = shapeData
-  Object.assign(attrs, {
-    draggable: !attrs.draggable
-  })
 }
 </script>
 <style lang="scss" scoped>

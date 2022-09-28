@@ -23,13 +23,12 @@
   </div>
 </template>
 <script>
-import { onMounted, reactive, ref, shallowRef, provide } from 'vue'
+import { onMounted, reactive, ref, provide } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
-import get from 'lodash/get'
 import { getShageOptionById } from './utils'
 import('./myPoster.scss')
 export default {
@@ -41,8 +40,8 @@ const currentId = ref('0')
 const refTransformer = ref(null)
 const refWorkbenchContainer = ref(null)
 const configKonva = reactive({
-  width: 800,
-  height: 600
+  width: 1000,
+  height: 800
 })
 const list = reactive(layerRawData)
 const currentShape = ref([])
