@@ -2,7 +2,7 @@
   <div class="my-poster-container">
     <el-container>
       <el-aside class="poster-tool-list" width="200px">
-        <toolbar @destroyTransformer="destroyTransformerEvt" :id="currentId" />
+        <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
         <k-stage @mousedown="handleStageClick" :config="configKonva">
@@ -36,7 +36,6 @@ export default {
 }
 </script>
 <script setup>
-const currentId = ref('0')
 const refTransformer = ref(null)
 const refWorkbenchContainer = ref(null)
 const configKonva = reactive({
@@ -56,7 +55,6 @@ function handleStageClick(e) {
   // 点击对象为选择框的小矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
   if (this === e.target) {
-    currentId.value = '0'
     currentShape.value = []
     updateTransformer()
     return

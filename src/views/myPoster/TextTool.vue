@@ -46,14 +46,15 @@
 import { ref, inject } from 'vue'
 import { getShageOptionById } from './utils'
 const shape = inject('currentShape')
+const [instanceText] = shape.value
 const layerList = inject('layerList')
-const textContent = ref(shape.value.attrs.text)
-const colorValue = ref(shape.value.attrs.fill)
-const fontSize = ref(shape.value.attrs.fontSize)
+const textContent = ref(instanceText.attrs.text)
+const colorValue = ref(instanceText.attrs.fill)
+const fontSize = ref(instanceText.attrs.fontSize)
 
 // 输入框input事件
 const input = (value) => {
-  const { id } = shape.value.attrs
+  const { id } = instanceText.attrs
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { text: value })
@@ -61,8 +62,7 @@ const input = (value) => {
 }
 // 文本对齐方式
 const setTextAlign = (align) => {
-  const { id } = shape.value.attrs
-  const currentShapeRow = getShageOptionById(id, layerList)
+  const currentShapeRow = getShageOptionById(instanceText.attrs.id, layerList)
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { align })
   }
@@ -70,7 +70,7 @@ const setTextAlign = (align) => {
 
 // 颜色改变事件
 const colorChange = (value) => {
-  const { id } = shape.value.attrs
+  const { id } = instanceText.attrs
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { fill: value })
@@ -78,7 +78,7 @@ const colorChange = (value) => {
 }
 // 字体大小改变事件
 const fontSizeChange = (value) => {
-  const { id } = shape.value.attrs
+  const { id } = instanceText.attrs
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { fontSize: value })
