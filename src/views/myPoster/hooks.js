@@ -2,10 +2,35 @@ import { computed } from 'vue'
 import last from 'lodash/last'
 import first from 'lodash/first'
 import Konva from 'konva'
+
+// 图层删除hook
+export const useLayerDelete = (shape, layerList, cb) => {
+  const availableDeleteLayer = computed(() => {
+    return shape.value.some((s) => !s.attrs.draggable)
+  })
+  // 删除shape事件
+  const deleteLayerHandler = () => {
+    shape.value
+      .map((item) => item.attrs.id)
+      .sort((a, b) => b - a)
+      .forEach((id) => {
+        const index = layerList.findIndex((item) => item.attrs.id === id)
+        if (index > -1) {
+          layerList.splice(index, 1)
+          typeof cb === 'function' && cb()
+        }
+      })
+  }
+  return {
+    availableDeleteLayer,
+    deleteLayerHandler
+  }
+}
 // 上移一层
 export const useMoveupLayer = (shape, layerList) => {
   // 上移一层 是否可用
   const availableMoveup = computed(() => {
+    if (shape.value.length > 1) return true
     let flag = true
     if (shape.value.length === 1) {
       const [instanceShape] = shape.value
@@ -13,7 +38,7 @@ export const useMoveupLayer = (shape, layerList) => {
         instanceShape.attrs.draggable &&
         last(layerList).attrs.id !== instanceShape.attrs.id
       ) {
-        flag = true
+        flag = false
       }
     }
     return flag
@@ -52,8 +77,9 @@ export const useMovedownLayer = (shape, layerList) => {
 
   // 下移一层
   const moveTodownEvt = () => {
+    const [instanceShape] = shape.value
     const index = layerList.findIndex(
-      (item) => item.attrs.id === shape.attrs.id
+      (item) => item.attrs.id === instanceShape.attrs.id
     )
     if (index > -1) {
       const [el] = layerList.splice(index, 1)
@@ -64,6 +90,67 @@ export const useMovedownLayer = (shape, layerList) => {
   return {
     availableMovedown,
     moveTodownEvt
+  }
+}
+
+// 置顶hook
+export const useMoveToTop = (shape, layerList) => {
+  const availableMoveToTop = computed(() => {
+    if (shape.value.length > 1) return true
+    let flag = true
+    if (shape.value.length === 1) {
+      const [instanceShape] = shape.value
+      if (
+        instanceShape.attrs.draggable &&
+        last(layerList).attrs.id !== instanceShape.attrs.id
+      ) {
+        flag = false
+      }
+    }
+    return flag
+  })
+  // 置顶
+  const moveToTopEvt = () => {
+    const index = layerList.findIndex(
+      (item) => item.attrs.id === shape.attrs.id
+    )
+    if (index !== layerList.length - 1) {
+      const [el] = layerList.splice(index, 1)
+      layerList.push(el)
+    }
+  }
+  return {
+    availableMoveToTop,
+    moveToTopEvt
+  }
+}
+
+// 置底hook
+export const useMoveToBottom = (shape, layerList) => {
+  const availableMoveToBottom = computed(() => {
+    let flag = true
+    if (shape.value.length === 1) {
+      const [instanceShape] = shape.value
+      if (
+        instanceShape.attrs.draggable &&
+        first(layerList).attrs.id !== instanceShape.attrs.id
+      ) {
+        flag = false
+      }
+    }
+    return flag
+  })
+  // 置底
+  const moveToBottomEvt = () => {
+    const index = layerList.findIndex(
+      (item) => item.attrs.id === shape.attrs.id
+    )
+    const [shapeData] = layerList.splice(index, 1)
+    layerList.unshift(shapeData)
+  }
+  return {
+    availableMoveToBottom,
+    moveToBottomEvt
   }
 }
 

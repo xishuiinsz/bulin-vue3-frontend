@@ -5,8 +5,8 @@
         textLock
       }}</el-button>
       <el-button
-        :disabled="textLock === '解锁'"
-        @click="deleteShapeHandler"
+        :disabled="availableDeleteLayer"
+        @click="deleteLayerHandler"
         type="primary"
         >删除</el-button
       >
@@ -20,13 +20,13 @@
         >下移一层</el-button
       >
       <el-button
-        :disabled="textLock === '解锁'"
+        :disabled="availableMoveToTop"
         @click="moveToTopEvt"
         type="primary"
         >置顶</el-button
       >
       <el-button
-        :disabled="textLock === '解锁'"
+        :disabled="availableMoveToBottom"
         @click="moveToBottomEvt"
         type="primary"
         >置底</el-button
@@ -51,10 +51,13 @@ import textTool from './textTool.vue'
 import groupTool from './GroupTool.vue'
 import Konva from 'konva'
 import {
+  useLayerDelete,
   useMoveupLayer,
   useMovedownLayer,
   useLockModify,
-  useGroupModify
+  useGroupModify,
+  useMoveToTop,
+  useMoveToBottom
 } from './hooks'
 const emit = defineEmits(['destroyTransformer'])
 const layerList = inject('layerList')
@@ -73,6 +76,29 @@ const currentComp = computed(() => {
   return stageTool
 })
 
+// 计算是否显示公共工具条
+const isShowCommonTool = computed(() => {
+  if (shape.value.length > 1) {
+    return true
+  }
+  let flag = false
+  if (shape.value.length === 1) {
+    const [instanceShape] = shape.value
+    if (instanceShape.nodeType !== 'Stage') {
+      flag = true
+    }
+  }
+  return flag
+})
+
+// 删除图层hook
+const { availableDeleteLayer, deleteLayerHandler } = useLayerDelete(
+  shape,
+  layerList,
+  () => {
+    emit('destroyTransformer')
+  }
+)
 // 锁定hook
 const { textLock, lockModify } = useLockModify(shape, layerList)
 
@@ -85,43 +111,13 @@ const { availableMovedown, moveTodownEvt } = useMovedownLayer(shape, layerList)
 // 组合hook
 const { textGroup, groupModify } = useGroupModify(shape, layerList)
 
-// 判断是否显示公共工具条
-const isShowCommonTool = computed(() => {
-  let flag = false
-  if (shape.value && shape.value.nodeType !== 'Stage') {
-    flag = true
-  }
-  return flag
-})
-// 删除shape事件
-const deleteShapeHandler = () => {
-  shape.value
-    .map((item) => item.attrs.id)
-    .sort((a, b) => b - a)
-    .forEach((id) => {
-      const index = layerList.findIndex((item) => item.attrs.id === id)
-      if (index > -1) {
-        layerList.splice(index, 1)
-        emit('destroyTransformer')
-      }
-    })
-}
-
-// 置顶
-const moveToTopEvt = () => {
-  const index = layerList.findIndex((item) => item.attrs.id === shape.attrs.id)
-  if (index !== layerList.length - 1) {
-    const [el] = layerList.splice(index, 1)
-    layerList.push(el)
-  }
-}
-
-// 置底
-const moveToBottomEvt = () => {
-  const index = layerList.findIndex((item) => item.attrs.id === shape.attrs.id)
-  const [shapeData] = layerList.splice(index, 1)
-  layerList.unshift(shapeData)
-}
+// 置顶hook
+const { availableMoveToTop, moveToTopEvt } = useMoveToTop(shape, layerList)
+// 置顶hook
+const { availableMoveToBottom, moveToBottomEvt } = useMoveToBottom(
+  shape,
+  layerList
+)
 </script>
 <script>
 export default {
