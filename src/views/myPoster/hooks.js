@@ -111,8 +111,9 @@ export const useMoveToTop = (shape, layerList) => {
   })
   // 置顶
   const moveToTopEvt = () => {
+    const [instanceShape] = shape.value
     const index = layerList.findIndex(
-      (item) => item.attrs.id === shape.attrs.id
+      (item) => item.attrs.id === instanceShape.attrs.id
     )
     if (index !== layerList.length - 1) {
       const [el] = layerList.splice(index, 1)
@@ -142,8 +143,9 @@ export const useMoveToBottom = (shape, layerList) => {
   })
   // 置底
   const moveToBottomEvt = () => {
+    const [instanceShape] = shape.value
     const index = layerList.findIndex(
-      (item) => item.attrs.id === shape.attrs.id
+      (item) => item.attrs.id === instanceShape.attrs.id
     )
     const [shapeData] = layerList.splice(index, 1)
     layerList.unshift(shapeData)
