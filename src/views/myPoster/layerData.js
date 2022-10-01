@@ -18,8 +18,8 @@ const list = [
       x: 150,
       y: 150,
       radius: 70,
-      fill: 'green',
-      stroke: 'black',
+      fill: '#008000',
+      stroke: '#000',
       strokeWidth: 4,
       draggable: true
     }

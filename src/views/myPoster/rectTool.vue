@@ -1,6 +1,6 @@
 <template>
   <div class="circle-tool-container">
-    <h4>圆形</h4>
+    <h4>矩形</h4>
     <el-form label-position="top" label-width="80px">
       <el-form-item label="填充色">
         <el-color-picker
@@ -22,12 +22,20 @@
           @change="strokeColorChange"
         ></el-color-picker>
       </el-form-item>
-      <el-form-item label="半径大小">
+      <el-form-item label="宽度大小">
         <el-input-number
-          v-model="radiusValue"
+          v-model="widthValue"
           :min="1"
           :max="1000"
-          @change="radiusValueChange"
+          @change="widthValueChange"
+        />
+      </el-form-item>
+      <el-form-item label="高度大小">
+        <el-input-number
+          v-model="heightValue"
+          :min="1"
+          :max="1000"
+          @change="heightValueChange"
         />
       </el-form-item>
     </el-form>
@@ -47,7 +55,8 @@ const colorFillChange = (color) => {
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
   currentShapeRow && Object.assign(currentShapeRow.attrs, { fill: color })
 }
-// 描边
+
+// 描边粗细
 const strokeWidth = ref(instanceText.attrs.strokeWidth)
 // 描边粗细change
 const strokeWidthChange = (value) => {
@@ -66,13 +75,22 @@ const strokeColorChange = (value) => {
   currentShapeRow && Object.assign(currentShapeRow.attrs, { stroke: value })
 }
 
-// 半径
-const radiusValue = ref(instanceText.attrs.radius)
-// 半径大小change
-const radiusValueChange = (value) => {
+// 宽度
+const widthValue = ref(instanceText.attrs.width)
+// 宽度大小change
+const widthValueChange = (value) => {
   const { id } = instanceText.attrs
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
-  currentShapeRow && Object.assign(currentShapeRow.attrs, { radius: value })
+  currentShapeRow && Object.assign(currentShapeRow.attrs, { width: value })
+}
+
+// 高度
+const heightValue = ref(instanceText.attrs.height)
+// 宽度大小change
+const heightValueChange = (value) => {
+  const { id } = instanceText.attrs
+  const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
+  currentShapeRow && Object.assign(currentShapeRow.attrs, { height: value })
 }
 </script>
 <script>

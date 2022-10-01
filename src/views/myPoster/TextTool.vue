@@ -85,3 +85,8 @@ const fontSizeChange = (value) => {
   }
 }
 </script>
+<script>
+export default {
+  name: 'TextToolBar'
+}
+</script>

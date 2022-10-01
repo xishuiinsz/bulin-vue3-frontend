@@ -175,9 +175,11 @@ export const useLockModify = (shape, layerList) => {
     )
     if (text === '锁定') {
       shapeData.attrs.draggable = false
+      instanceShape.attrs.draggable = false
     }
     if (text === '解锁') {
       shapeData.attrs.draggable = true
+      instanceShape.attrs.draggable = true
     }
   }
   return {

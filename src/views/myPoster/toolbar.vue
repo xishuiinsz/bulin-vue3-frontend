@@ -49,6 +49,7 @@ import circleTool from './circleTool.vue'
 import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
 import groupTool from './GroupTool.vue'
+import rectTool from './rectTool.vue'
 import Konva from 'konva'
 import {
   useLayerDelete,
@@ -71,7 +72,7 @@ const currentComp = computed(() => {
     if (instanceShape instanceof Konva.Image) return imageTool
     if (instanceShape instanceof Konva.Circle) return circleTool
     if (instanceShape instanceof Konva.Group) return groupTool
-    // if (instanceShape instanceof Konva.Rect) return rectTool
+    if (instanceShape instanceof Konva.Rect) return rectTool
   }
   return stageTool
 })
@@ -99,7 +100,7 @@ const { availableDeleteLayer, deleteLayerHandler } = useLayerDelete(
     emit('destroyTransformer')
   }
 )
-// 锁定hook
+// 锁定图层hook
 const { textLock, lockModify } = useLockModify(shape, layerList)
 
 // 上移一层hook
