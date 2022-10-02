@@ -3,27 +3,67 @@
     <el-form-item v-for="item in formList" :label="item.label">
       <el-input
         v-if="item.name === 'ElInput'"
-        v-model="item.attrs.modelValue"
-        @input="(value) => input(value, item)"
+        :modelValue="getModelValue(item.key)"
+        @input="input(item.key, $event)"
+      />
+      <el-input-number
+        v-if="item.name === 'ElInputNumber'"
+        :modelValue="getModelValue(item.key)"
+        @change="input(item.key, $event)"
       />
       <el-select
         v-if="item.name === 'ElSelect'"
-        v-model="item.attrs.modelValue"
-      />
+        :modelValue="getModelValue(item.key)"
+        @change="change(item.key, $event)"
+      >
+        <el-option
+          v-for="subitem in item.options"
+          :key="subitem.value"
+          :label="subitem.label"
+          :value="subitem.value"
+        />
+      </el-select>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 const props = defineProps({
   formList: Array
 })
 
-const myFormList = reactive()
-console.log(props.formList)
-const input = (value, item) => {
-  console.log(value, item)
-  Object.assign(item.attrs, { modelValue: value })
+const emit = defineEmits(['formChange'])
+
+// 根据props生成自己的响应式数据
+const myFormList = reactive(
+  props.formList.map((item) => {
+    return { modelValue: ref(item.attrs.initValue), key: item.key }
+  })
+)
+
+// 关于v-model关联值
+const getModelValue = (key) => {
+  const [row] = myFormList.filter((item) => item.key === key)
+  return row.modelValue
+}
+
+// 公用input输入事件
+const input = (key, value) => {
+  const [row] = myFormList.filter((item) => item.key === key)
+  row.modelValue = value
+  emit('formChange', myFormList, key)
+}
+
+// 公用change输入事件
+const change = (key, value) => {
+  const [row] = myFormList.filter((item) => item.key === key)
+  row.modelValue = value
+  emit('formChange', myFormList, key)
+}
+</script>
+<script>
+export default {
+  name: 'MyForm'
 }
 </script>
