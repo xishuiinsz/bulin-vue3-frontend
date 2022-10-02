@@ -88,13 +88,9 @@ const destroyTransformerEvt = () => {
 }
 
 // transformer 拖拽完成事件
-function dragendEvt({ target }) {
-  const [shape] = target.getNodes()
-  let shapes = [shape]
-  if (shape instanceof Konva.Group) {
-    shapes = shape.children
-  }
-  shapes.length &&
+function dragendEvt() {
+  const shapesList = this.getNodes()
+  const updateShapes = (shapes) => {
     shapes.forEach((shape) => {
       const { id } = shape.attrs
       const shapeData = getShageOptionById(id, layerRawData)
@@ -103,7 +99,12 @@ function dragendEvt({ target }) {
           x: shape.getAbsolutePosition().x,
           y: shape.getAbsolutePosition().y
         })
+      if (shape instanceof Konva.Group) {
+        updateShapes(shape.children)
+      }
     })
+  }
+  updateShapes(shapesList)
 }
 
 // 矩形选择框变形完成事件
