@@ -12,3 +12,16 @@ export const getShageOptionById = (id, shageList) => {
   }
   return option
 }
+
+export const getMaxId = (layerList, id = '1') => {
+  let _id = id
+  layerList.forEach((layer) => {
+    if (layer.attrs.id > _id) {
+      _id = layer.attrs.id
+    }
+    if (layer.children && layer.children.length) {
+      getMaxId(layer.children, _id)
+    }
+  })
+  return _id
+}

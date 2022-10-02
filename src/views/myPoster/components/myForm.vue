@@ -23,6 +23,11 @@
           :value="subitem.value"
         />
       </el-select>
+      <el-color-picker
+        v-if="item.name === 'ElColorPicke'"
+        :modelValue="getModelValue(item.key)"
+        @change="input(item.key, $event)"
+      />
     </el-form-item>
   </el-form>
 </template>

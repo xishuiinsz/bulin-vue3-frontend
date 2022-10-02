@@ -2,7 +2,9 @@
   <myForm @formChange="formChange" :formList="formList"></myForm>
 </template>
 <script setup>
+import { onMounted, toRaw } from 'vue'
 import myForm from './myForm.vue'
+const emit = defineEmits(['formChange'])
 const formList = [
   {
     key: 'width',
@@ -34,6 +36,30 @@ const formList = [
     name: 'ElInputNumber',
     attrs: {
       initValue: 200
+    }
+  },
+  {
+    key: 'text',
+    label: '文本',
+    name: 'ElInput',
+    attrs: {
+      initValue: '编辑文本'
+    }
+  },
+  {
+    key: 'fontSize',
+    label: '字号',
+    name: 'ElInputNumber',
+    attrs: {
+      initValue: 14
+    }
+  },
+  {
+    key: 'fill',
+    label: '颜色',
+    name: 'ElColorPicke',
+    attrs: {
+      initValue: '#fff'
     }
   }
   // {
@@ -68,9 +94,23 @@ const formList = [
   // }
 ]
 const formChange = (list, key) => {
-  console.log(list)
-  console.log(key)
+  // 校验字段
+  const op = {}
+  list.forEach((item) =>
+    Object.assign(op, {
+      [item.key]: toRaw(item.modelValue)
+    })
+  )
+  emit('formChange', op)
 }
+onMounted(() => {
+  const op = {}
+  const data = formList.map((item) => {
+    return { [item.key]: item.attrs.initValue }
+  })
+  data.forEach((item) => Object.assign(op, item))
+  emit('formChange', op)
+})
 </script>
 <script>
 export default {

@@ -9,7 +9,7 @@
           placeholder="请输入内容"
         ></el-input>
       </el-form-item>
-      <el-form-item label="对齐方式">
+      <el-form-item label="水平对齐方式">
         <el-button-group>
           <el-button @click="setTextAlign('left')" type="primary"
             >左对齐</el-button
@@ -44,7 +44,6 @@
 </template>
 <script setup>
 import { ref, inject } from 'vue'
-import { getShageOptionById } from './utils'
 const shape = inject('currentShape')
 const [instanceText] = shape.value
 const layerList = inject('layerList')
@@ -62,7 +61,10 @@ const input = (value) => {
 }
 // 文本对齐方式
 const setTextAlign = (align) => {
-  const currentShapeRow = getShageOptionById(instanceText.attrs.id, layerList)
+  const [instanceText] = shape.value
+  const [currentShapeRow] = layerList.filter(
+    (item) => item.attrs.id === instanceText.attrs.id
+  )
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { align })
   }

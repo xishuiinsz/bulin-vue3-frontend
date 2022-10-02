@@ -43,7 +43,7 @@
       :title="dialogOption.title"
       width="30%"
     >
-      <component :is="dialogOption.component" />
+      <component @formChange="formChange" :is="dialogOption.component" />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="cancelAddElement">Cancel</el-button>
@@ -56,8 +56,12 @@
 <script setup>
 import { ref, inject } from 'vue'
 import newElementText from './components/newElementText.vue'
-import newCircleText from './components/newCircleText.vue'
+import newElementCircle from './components/newElementCircle.vue'
+import newElementRect from './components/newElementRect.vue'
+import { getMaxId } from './utils'
+let formData
 const shape = inject('currentShape')
+const layerList = inject('layerList')
 const shapeSize = inject('configKonva')
 const dialogVisibleAddElement = ref(false)
 const dialogOption = {
@@ -77,7 +81,7 @@ const shageSizeChange = (size) => {
 const addTextHanler = (text) => {
   dialogOption.title += ` - ${text}`
   Object.assign(dialogOption, {
-    elementType: 'text',
+    elementType: 'Text',
     component: newElementText
   })
   dialogVisibleAddElement.value = true
@@ -87,8 +91,8 @@ const addTextHanler = (text) => {
 const addCircleHanler = (text) => {
   dialogOption.title += ` - ${text}`
   Object.assign(dialogOption, {
-    elementType: 'circle',
-    component: newCircleText
+    elementType: 'Circle',
+    component: newElementCircle
   })
   dialogVisibleAddElement.value = true
 }
@@ -96,8 +100,8 @@ const addCircleHanler = (text) => {
 const addRectHanler = (text) => {
   dialogOption.title += ` - ${text}`
   Object.assign(dialogOption, {
-    elementType: 'rect',
-    component: newCircleText
+    elementType: 'Rect',
+    component: newElementRect
   })
   dialogVisibleAddElement.value = true
 }
@@ -112,5 +116,18 @@ const cancelAddElement = () => {
 const confirmAddElement = () => {
   dialogOption.title = '新增元素'
   dialogVisibleAddElement.value = false
+  const maxId = getMaxId(layerList)
+  layerList.push({
+    type: dialogOption.elementType,
+    attrs: Object.assign(
+      { id: '' + (parseInt(maxId, 10) + 1), draggable: true },
+      formData
+    )
+  })
+}
+
+// 表单改变事件
+const formChange = (list) => {
+  formData = list
 }
 </script>
