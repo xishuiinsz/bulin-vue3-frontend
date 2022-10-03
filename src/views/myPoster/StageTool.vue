@@ -5,6 +5,23 @@
       <el-button @click="stageExport" type="primary">导出</el-button>
     </el-button-group>
     <el-form label-position="top" label-width="80px">
+      <el-form-item label="画布背景色">
+        <el-color-picker
+          v-model="backgroundcolorValue"
+          @change="backgroundcolorChange"
+        ></el-color-picker>
+      </el-form-item>
+      <el-form-item label="画布背景图片">
+        <el-upload
+          class="upload"
+          action="https://httpbin.org/post"
+          :multiple="false"
+          :on-success="onSuccessUpload"
+          :limit="1"
+        >
+          <el-button type="primary">Click to upload</el-button>
+        </el-upload>
+      </el-form-item>
       <el-form-item label="画布尺寸">
         <el-input-number
           style="width: 80px"
@@ -79,6 +96,23 @@ const stageExport = () => {
 }
 const shageSizeChange = (size) => {
   console.log(size)
+}
+
+// 画布背景色
+const backgroundConfig = inject('backgroundConfig')
+const backgroundcolorValue = ref(backgroundConfig.fill)
+const backgroundcolorChange = (color) => {
+  backgroundConfig.fill = color
+}
+// 画布背景图片
+const onSuccessUpload = (response) => {
+  const { file } = response.files
+  const img = new window.Image()
+  img.onload = () => {
+    backgroundConfig.fillPriority = 'pattern'
+    backgroundConfig.fillPatternImage = img
+  }
+  img.src = file
 }
 
 // 新增 Text 元素

@@ -7,6 +7,7 @@
       <el-main ref="refWorkbenchContainer" class="poster-work-behch">
         <k-stage @mousedown="handleStageClick" :config="configKonva">
           <k-layer>
+            <k-rect :config="backgroundConfig"></k-rect>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
             </layerList>
             <k-transformer
@@ -42,6 +43,19 @@ const configKonva = reactive({
   width: 1000,
   height: 800
 })
+
+// rect模拟背景层配置
+const backgroundConfig = reactive({
+  id: 'backgroundRect',
+  width: configKonva.width,
+  height: configKonva.height,
+  x: 0,
+  y: 0,
+  fill: 'rgb(50, 65, 87)',
+  fillPatternImage: null
+})
+provide('backgroundConfig', backgroundConfig)
+
 const list = reactive(layerRawData)
 const currentShape = ref([])
 const configTransformer = reactive({
@@ -54,6 +68,11 @@ provide('configKonva', configKonva)
 function handleStageClick(e) {
   // 点击对象为选择框的小矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
+  if (e.target.attrs.id === 'backgroundRect') {
+    currentShape.value = []
+    updateTransformer()
+    return
+  }
   if (this === e.target) {
     currentShape.value = []
     updateTransformer()
