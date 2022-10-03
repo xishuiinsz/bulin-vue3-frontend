@@ -35,6 +35,9 @@
           <el-button @click="addRectHanler('矩形')" type="primary"
             >矩形</el-button
           >
+          <el-button @click="addImageHanler('图片')" type="primary"
+            >图片</el-button
+          >
         </el-button-group>
       </el-form-item>
     </el-form>
@@ -58,6 +61,7 @@ import { ref, inject } from 'vue'
 import newElementText from './components/newElementText.vue'
 import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
+import newElementImage from './components/newElementImage.vue'
 import { getMaxId } from './utils'
 let formData
 const shape = inject('currentShape')
@@ -102,6 +106,15 @@ const addRectHanler = (text) => {
   Object.assign(dialogOption, {
     elementType: 'Rect',
     component: newElementRect
+  })
+  dialogVisibleAddElement.value = true
+}
+// 新增 Image元素
+const addImageHanler = (text) => {
+  dialogOption.title += ` - ${text}`
+  Object.assign(dialogOption, {
+    elementType: 'Image',
+    component: newElementImage
   })
   dialogVisibleAddElement.value = true
 }

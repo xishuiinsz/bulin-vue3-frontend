@@ -28,6 +28,23 @@
         :modelValue="getModelValue(item.key)"
         @change="input(item.key, $event)"
       />
+      <el-upload
+        v-if="item.name === 'ElUpload'"
+        class="upload-demo"
+        action="https://httpbin.org/post"
+        :multiple="false"
+        :on-success="onSuccess(item.key)"
+        :on-remove="() => {}"
+        :before-remove="() => {}"
+        :limit="1"
+      >
+        <el-button type="primary">Click to upload</el-button>
+        <template #tip>
+          <div class="el-upload__tip">
+            jpg/png files with a size less than 500KB.
+          </div>
+        </template>
+      </el-upload>
     </el-form-item>
   </el-form>
 </template>
@@ -65,6 +82,19 @@ const change = (key, value) => {
   const [row] = myFormList.filter((item) => item.key === key)
   row.modelValue = value
   emit('formChange', myFormList, key)
+}
+
+const onSuccess = (key) => {
+  const [row] = myFormList.filter((item) => item.key === key)
+  return (response) => {
+    const { file } = response.files
+    const img = new window.Image()
+    img.onload = () => {
+      row.modelValue = img
+      emit('formChange', myFormList, key)
+    }
+    img.src = file
+  }
 }
 </script>
 <script>
