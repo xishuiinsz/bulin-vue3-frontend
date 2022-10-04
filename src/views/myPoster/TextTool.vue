@@ -39,17 +39,33 @@
           @change="fontSizeChange"
         />
       </el-form-item>
+      <el-form-item label="字体名称">
+        <el-select
+          v-model="fontFamily"
+          placeholder="请选择"
+          @change="fontFamilyChange"
+        >
+          <el-option
+            v-for="item in fontFamilyList"
+            :key="item.en"
+            :label="`${item.ch}(${item.en})`"
+            :value="item.en"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 <script setup>
 import { ref, inject } from 'vue'
+import { fontFamilyList } from './config'
 const shape = inject('currentShape')
 const [instanceText] = shape.value
 const layerList = inject('layerList')
 const textContent = ref(instanceText.attrs.text)
 const colorValue = ref(instanceText.attrs.fill)
 const fontSize = ref(instanceText.attrs.fontSize)
+const fontFamily = ref(instanceText.attrs.fontFamily)
 
 // 输入框input事件
 const input = (value) => {
@@ -84,6 +100,14 @@ const fontSizeChange = (value) => {
   const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
   if (currentShapeRow) {
     Object.assign(currentShapeRow.attrs, { fontSize: value })
+  }
+}
+// 字体名称改变事件
+const fontFamilyChange = (value) => {
+  const { id } = instanceText.attrs
+  const [currentShapeRow] = layerList.filter((item) => item.attrs.id === id)
+  if (currentShapeRow) {
+    Object.assign(currentShapeRow.attrs, { fontFamily: value })
   }
 }
 </script>

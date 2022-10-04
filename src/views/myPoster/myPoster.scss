@@ -24,4 +24,25 @@
             margin: 0 auto;
         }
     }
+
+    .bg-image-upload {
+        .el-upload--text {
+            width: auto;
+            height: auto;
+        }
+    }
+
+    .el-form.el-form--label-top {
+        .el-form-item {
+            margin-bottom: 16px;
+
+            .el-form-item__content {
+                line-height: 1;
+            }
+
+            .el-form-item__label {
+                padding-bottom: 0;
+            }
+        }
+    }
 }

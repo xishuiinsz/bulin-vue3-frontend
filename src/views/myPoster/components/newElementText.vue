@@ -4,6 +4,13 @@
 <script setup>
 import { onMounted, toRaw } from 'vue'
 import myForm from './myForm.vue'
+import { fontFamilyList } from '../config'
+const transferedFontFamilyList = fontFamilyList.map((item) => {
+  return {
+    value: item.en,
+    label: `${item.ch}(${item.en})`
+  }
+})
 const emit = defineEmits(['formChange'])
 const formList = [
   {
@@ -61,37 +68,16 @@ const formList = [
     attrs: {
       initValue: '#fff'
     }
+  },
+  {
+    key: 'fontFamily',
+    label: '字体名称',
+    name: 'ElSelect',
+    options: transferedFontFamilyList,
+    attrs: {
+      initValue: 'Microsoft YaHei'
+    }
   }
-  // {
-  //   key: 'height',
-  //   label: '高度',
-  //   name: 'ElSelect',
-  //   options: [
-  //     {
-  //       value: 'Option1',
-  //       label: 'Option1'
-  //     },
-  //     {
-  //       value: 'Option2',
-  //       label: 'Option2'
-  //     },
-  //     {
-  //       value: 'Option3',
-  //       label: 'Option3'
-  //     },
-  //     {
-  //       value: 'Option4',
-  //       label: 'Option4'
-  //     },
-  //     {
-  //       value: 'Option5',
-  //       label: 'Option5'
-  //     }
-  //   ],
-  //   attrs: {
-  //     initValue: '300'
-  //   }
-  // }
 ]
 const formChange = (list, key) => {
   // 校验字段

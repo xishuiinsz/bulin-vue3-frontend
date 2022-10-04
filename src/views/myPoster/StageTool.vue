@@ -1,8 +1,9 @@
 <template>
   <div class="stage-tool-container">
     <h4>画布设置</h4>
-    <el-button-group>
+    <el-button-group style="margin-top: 10px">
       <el-button @click="stageExport" type="primary">导出</el-button>
+      <el-button @click="resetBg" type="primary">重置背景</el-button>
     </el-button-group>
     <el-form label-position="top" label-width="80px">
       <el-form-item label="画布背景色">
@@ -13,13 +14,17 @@
       </el-form-item>
       <el-form-item label="画布背景图片">
         <el-upload
-          class="upload"
+          ref="refElUpload"
+          class="bg-image-upload"
           action="https://httpbin.org/post"
           :multiple="false"
           :on-success="onSuccessUpload"
           :limit="1"
         >
-          <el-button type="primary">Click to upload</el-button>
+          <el-button type="primary">点我上传</el-button>
+          <template #tip>
+            <div class="el-upload__tip">如上传无反应，请清空下面文件列表！</div>
+          </template>
         </el-upload>
       </el-form-item>
       <el-form-item label="画布尺寸">
@@ -102,6 +107,7 @@ const shageSizeChange = (size) => {
 const backgroundConfig = inject('backgroundConfig')
 const backgroundcolorValue = ref(backgroundConfig.fill)
 const backgroundcolorChange = (color) => {
+  backgroundConfig.fillPriority = 'fill'
   backgroundConfig.fill = color
 }
 // 画布背景图片
@@ -113,6 +119,12 @@ const onSuccessUpload = (response) => {
     backgroundConfig.fillPatternImage = img
   }
   img.src = file
+}
+
+// 重置背景
+const resetBg = () => {
+  backgroundConfig.fill = 'rgb(50, 65, 87)'
+  backgroundConfig.fillPatternImage = null
 }
 
 // 新增 Text 元素

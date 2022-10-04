@@ -30,7 +30,7 @@
       />
       <el-upload
         v-if="item.name === 'ElUpload'"
-        class="upload-demo"
+        class="bg-image-upload"
         action="https://httpbin.org/post"
         :multiple="false"
         :on-success="onSuccess(item.key)"
@@ -38,11 +38,9 @@
         :before-remove="() => {}"
         :limit="1"
       >
-        <el-button type="primary">Click to upload</el-button>
+        <el-button type="primary">点我上传</el-button>
         <template #tip>
-          <div class="el-upload__tip">
-            jpg/png files with a size less than 500KB.
-          </div>
+          <div class="el-upload__tip">如上传无反应，请清空下面文件列表！</div>
         </template>
       </el-upload>
     </el-form-item>
