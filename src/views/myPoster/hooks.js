@@ -3,6 +3,7 @@ import last from 'lodash/last'
 import first from 'lodash/first'
 import Konva from 'konva'
 import { anchorsTrnasformer } from './config'
+import { ElMessage } from 'element-plus'
 // 图层删除hook
 export const useLayerDelete = (shape, layerList, cb) => {
   const availableDeleteLayer = computed(() => {
@@ -10,6 +11,12 @@ export const useLayerDelete = (shape, layerList, cb) => {
   })
   // 删除shape事件
   const deleteLayerHandler = () => {
+    if (shape.value.length >= layerList.length) {
+      ElMessage.error({
+        message: '至少保留一个元素(shape)!'
+      })
+      return
+    }
     shape.value
       .map((item) => item.attrs.id)
       .sort((a, b) => b - a)
