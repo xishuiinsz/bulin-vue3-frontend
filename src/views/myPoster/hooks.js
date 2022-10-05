@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import last from 'lodash/last'
 import first from 'lodash/first'
 import Konva from 'konva'
-
+import { anchorsTrnasformer } from './config'
 // 图层删除hook
 export const useLayerDelete = (shape, layerList, cb) => {
   const availableDeleteLayer = computed(() => {
@@ -170,14 +170,25 @@ export const useLockModify = (shape, layerList) => {
   // 锁定|解锁
   const lockModify = (text) => {
     const [instanceShape] = shape.value
+    const tr = instanceShape.getStage().findOne('#mainTransfer')
     const [shapeData] = layerList.filter(
       (item) => item.attrs.id === instanceShape.attrs.id
     )
     if (text === '锁定') {
       shapeData.attrs.draggable = false
       instanceShape.attrs.draggable = false
+      tr.setAttrs({
+        borderStroke: '#c0c4cc',
+        rotateEnabled: false,
+        enabledAnchors: []
+      })
     }
     if (text === '解锁') {
+      tr.setAttrs({
+        borderStroke: '#337ecc',
+        rotateEnabled: true,
+        enabledAnchors: anchorsTrnasformer
+      })
       shapeData.attrs.draggable = true
       instanceShape.attrs.draggable = true
     }

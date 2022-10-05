@@ -44,3 +44,15 @@ export const fontFamilyList = [
     en: 'Microsoft YaHei'
   }
 ]
+
+// Transformer变形手柄
+export const anchorsTrnasformer = [
+  'top-left',
+  'top-center',
+  'top-right',
+  'middle-right',
+  'middle-left',
+  'bottom-left',
+  'bottom-center',
+  'bottom-right'
+]

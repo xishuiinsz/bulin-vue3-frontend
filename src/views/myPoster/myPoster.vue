@@ -31,6 +31,7 @@ import layerList from './layerList.vue'
 import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
 import { getShageOptionById } from './utils'
+import { anchorsTrnasformer } from './config'
 import('./myPoster.scss')
 export default {
   name: 'MyPosterPage'
@@ -59,20 +60,22 @@ provide('backgroundConfig', backgroundConfig)
 const list = reactive(layerRawData)
 const currentShape = ref([])
 const configTransformer = reactive({
-  listening: true
+  listening: true,
+  id: 'mainTransfer'
 })
 provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
 // Stage点击事件
 function handleStageClick(e) {
-  // 点击对象为选择框的小矩形
+  // 点击对象为用来模拟【背景】的矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
   if (e.target.attrs.id === 'backgroundRect') {
     currentShape.value = []
     updateTransformer()
     return
   }
+  // 当点击对象为stage时
   if (this === e.target) {
     currentShape.value = []
     updateTransformer()
@@ -88,6 +91,15 @@ function handleStageClick(e) {
     currentShape.value.push(nodeEle)
   } else {
     currentShape.value = [nodeEle]
+  }
+  if (currentShape.value.some((s) => s.attrs.draggable === false)) {
+    configTransformer.rotateEnabled = false
+    configTransformer.borderStroke = '#c0c4cc'
+    configTransformer.enabledAnchors = []
+  } else {
+    configTransformer.borderStroke = '#337ecc'
+    configTransformer.rotateEnabled = true
+    configTransformer.enabledAnchors = anchorsTrnasformer
   }
 
   updateTransformer()
