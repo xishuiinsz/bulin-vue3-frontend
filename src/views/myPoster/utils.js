@@ -25,3 +25,12 @@ export const getMaxId = (layerList, id = '1') => {
   })
   return _id
 }
+
+export const downloadURI = (uri, name = Date.now()) => {
+  const link = document.createElement('a')
+  link.download = name
+  link.href = uri
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}

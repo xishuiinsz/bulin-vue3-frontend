@@ -2,7 +2,19 @@
   <div class="stage-tool-container">
     <h4>画布设置</h4>
     <el-button-group style="margin-top: 10px">
-      <el-button @click="stageExport" type="primary">导出</el-button>
+      <el-dropdown trigger="click" @command="pixelRatioChoose">
+        <el-button type="primary">
+          导出画布
+          <i class="el-icon-lx-right"></i>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="n" v-for="n in 5"
+              >像素比：{{ n }}</el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <el-button @click="resetBg" type="primary">重置背景</el-button>
     </el-button-group>
     <el-form label-position="top" label-width="80px">
@@ -79,25 +91,36 @@
   </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, getCurrentInstance } from 'vue'
 import newElementText from './components/newElementText.vue'
 import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
 import newElementImage from './components/newElementImage.vue'
-import { getMaxId } from './utils'
+import { getMaxId, downloadURI } from './utils'
+import Konva from 'konva'
+
 let formData
-const shape = inject('currentShape')
 const layerList = inject('layerList')
 const shapeSize = inject('configKonva')
 const dialogVisibleAddElement = ref(false)
+const currentInstance = getCurrentInstance()
 const dialogOption = {
   title: '新增元素',
   type: '',
   component: null
 }
 
-const stageExport = () => {
-  console.log(shape.value)
+// 画布另存为
+const pixelRatioChoose = (value) => {
+  // 借助全局app传递数据
+  const { globalProperties } = currentInstance.appContext.config
+  if (globalProperties.mainKonvaStage) {
+    const stage = globalProperties.mainKonvaStage.getStage()
+    const dataURL = stage.toDataURL({
+      pixelRatio: value
+    })
+    downloadURI(dataURL, '我的画布.png')
+  }
 }
 const shageSizeChange = (size) => {
   console.log(size)
@@ -188,5 +211,10 @@ const confirmAddElement = () => {
 // 表单改变事件
 const formChange = (list) => {
   formData = list
+}
+</script>
+<script>
+export default {
+  name: 'StageToolBar'
 }
 </script>

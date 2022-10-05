@@ -4,8 +4,12 @@
       <el-aside class="poster-tool-list" width="200px">
         <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
-      <el-main ref="refWorkbenchContainer" class="poster-work-behch">
-        <k-stage @mousedown="handleStageClick" :config="configKonva">
+      <el-main class="poster-work-behch">
+        <k-stage
+          ref="refMainStage"
+          @mousedown="handleStageClick"
+          :config="configKonva"
+        >
           <k-layer>
             <k-rect :config="backgroundConfig"></k-rect>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
@@ -23,8 +27,8 @@
     </el-container>
   </div>
 </template>
-<script>
-import { onMounted, reactive, ref, provide } from 'vue'
+<script setup>
+import { onMounted, reactive, ref, provide, getCurrentInstance } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
@@ -33,14 +37,14 @@ import img from '@/assets/img/img.jpg'
 import { getShageOptionById } from './utils'
 import { anchorsTrnasformer } from './config'
 import('./myPoster.scss')
-export default {
-  name: 'MyPosterPage'
-}
-</script>
-<script setup>
+const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
-const refWorkbenchContainer = ref(null)
+
+// 主stage实例
+const refMainStage = ref(null)
+
 const configKonva = reactive({
+  id: 'mainStageId',
   width: 1000,
   height: 800
 })
@@ -59,10 +63,13 @@ provide('backgroundConfig', backgroundConfig)
 
 const list = reactive(layerRawData)
 const currentShape = ref([])
+
+// 可变形矩形选择
 const configTransformer = reactive({
   listening: true,
   id: 'mainTransfer'
 })
+// 数据提供
 provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
@@ -156,6 +163,8 @@ function transitionendEvt(e) {
 
 // 生命钩子函数
 onMounted(() => {
+  const { globalProperties } = currentInstance.appContext.config
+  Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
   setTimeout(() => {
     const imageObj = new window.Image()
     imageObj.onload = function () {
@@ -167,4 +176,9 @@ onMounted(() => {
     imageObj.src = img
   }, 200)
 })
+</script>
+<script>
+export default {
+  name: 'MyPosterPage'
+}
 </script>
