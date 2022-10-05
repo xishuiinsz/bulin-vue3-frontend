@@ -97,7 +97,7 @@ import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
 import newElementImage from './components/newElementImage.vue'
 import { getMaxId, downloadURI } from './utils'
-import Konva from 'konva'
+import { ElMessage } from 'element-plus'
 
 let formData
 const layerList = inject('layerList')
@@ -196,6 +196,12 @@ const cancelAddElement = () => {
 
 // 确认 新增元素
 const confirmAddElement = () => {
+  if (!formData.image || !formData.image instanceof Image) {
+    ElMessage.error({
+      message: '请上传图片或等待图片加载完成！'
+    })
+    return
+  }
   dialogOption.title = '新增元素'
   dialogVisibleAddElement.value = false
   const maxId = getMaxId(layerList)
