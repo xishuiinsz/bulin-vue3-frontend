@@ -5,7 +5,7 @@
       <el-form-item label="描边粗细">
         <el-input-number
           v-model="strokeWidth"
-          :min="1"
+          :min="0"
           :max="1000"
           @change="strokeWidthChange"
         />
@@ -42,7 +42,7 @@ const [instanceText] = shape.value
 const layerList = inject('layerList')
 
 // 描边粗细
-const strokeWidth = ref(instanceText.attrs.strokeWidth)
+const strokeWidth = ref(instanceText.attrs.strokeWidth || 0)
 // 描边粗细change
 const strokeWidthChange = (value) => {
   const { id } = instanceText.attrs
