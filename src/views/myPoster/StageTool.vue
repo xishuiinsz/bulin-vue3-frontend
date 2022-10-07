@@ -196,11 +196,13 @@ const cancelAddElement = () => {
 
 // 确认 新增元素
 const confirmAddElement = () => {
-  if (!formData.image || !formData.image instanceof Image) {
-    ElMessage.error({
-      message: '请上传图片或等待图片加载完成！'
-    })
-    return
+  if (dialogOption.elementType === 'Image') {
+    if (!formData.image || !formData.image instanceof Image) {
+      ElMessage.error({
+        message: '请上传图片或等待图片加载完成！'
+      })
+      return
+    }
   }
   dialogOption.title = '新增元素'
   dialogVisibleAddElement.value = false

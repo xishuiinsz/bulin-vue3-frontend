@@ -17,7 +17,7 @@ export default {
     ]
   },
   server: {
-    host: 'localhost.china.com',
+    // host: 'localhost.china.com',
     port: 8080
   }
 }
