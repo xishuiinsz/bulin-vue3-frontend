@@ -56,3 +56,12 @@ export const anchorsTrnasformer = [
   'bottom-center',
   'bottom-right'
 ]
+
+// 静态资源服务器
+export const staticServer = 'http://localhost:1337'
+
+// 上传授权帐号
+export const myIdentifier = {
+  identifier: 'zhangxiaogang',
+  password: 'g00gle.com'
+}

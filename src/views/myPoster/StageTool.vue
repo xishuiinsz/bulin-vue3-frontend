@@ -26,11 +26,10 @@
       </el-form-item>
       <el-form-item label="画布背景图片">
         <el-upload
-          ref="refElUpload"
           class="bg-image-upload"
-          action="https://httpbin.org/post"
+          action="#"
           :multiple="false"
-          :on-success="onSuccessUpload"
+          :http-request="handleUpload"
           :limit="1"
         >
           <el-button type="primary">点我上传</el-button>
@@ -98,7 +97,8 @@ import newElementRect from './components/newElementRect.vue'
 import newElementImage from './components/newElementImage.vue'
 import { getMaxId, downloadURI } from './utils'
 import { ElMessage } from 'element-plus'
-
+import axios from 'axios'
+import { staticServer, myIdentifier } from './config'
 let formData
 const layerList = inject('layerList')
 const shapeSize = inject('configKonva')
@@ -134,14 +134,31 @@ const backgroundcolorChange = (color) => {
   backgroundConfig.fill = color
 }
 // 画布背景图片
-const onSuccessUpload = (response) => {
-  const { file } = response.files
-  const img = new window.Image()
-  img.onload = () => {
-    backgroundConfig.fillPriority = 'pattern'
-    backgroundConfig.fillPatternImage = img
-  }
-  img.src = file
+let jwt
+const handleUpload = async (item) => {
+  const { data } = await axios.post(
+    `${staticServer}/api/auth/local`,
+    myIdentifier
+  )
+  jwt = data.jwt
+  const formData = new FormData()
+  formData.append('files', item.file, item.file.name)
+  axios
+    .post(`${staticServer}/api/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => {
+      const [fileInfo] = response.data
+      const { url } = fileInfo
+      const img = new window.Image()
+      img.onload = () => {
+        backgroundConfig.fillPriority = 'pattern'
+        backgroundConfig.fillPatternImage = img
+      }
+      img.src = `${staticServer}${url}`
+    })
 }
 
 // 重置背景

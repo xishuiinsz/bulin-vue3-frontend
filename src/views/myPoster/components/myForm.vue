@@ -31,11 +31,10 @@
       <el-upload
         v-if="item.name === 'ElUpload'"
         class="bg-image-upload"
-        action="https://httpbin.org/post"
+        action="#"
         :multiple="false"
-        :on-success="onSuccess(item.key)"
-        :on-remove="() => {}"
-        :before-remove="() => {}"
+        :http-request="handleUpload(item.key)"
+        :on-remove="handleRemoveFile"
         :limit="1"
       >
         <el-button type="primary">点我上传</el-button>
@@ -48,7 +47,10 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, toRaw } from 'vue'
+import { ElMessage } from 'element-plus'
+import axios from 'axios'
+import { staticServer, myIdentifier } from '../config'
 const props = defineProps({
   formList: Array
 })
@@ -82,17 +84,56 @@ const change = (key, value) => {
   emit('formChange', myFormList, key)
 }
 
-const onSuccess = (key) => {
+// 文件上传
+let jwt
+const fileMap = new WeakMap()
+const handleUpload = (key) => {
   const [row] = myFormList.filter((item) => item.key === key)
-  return (response) => {
-    const { file } = response.files
-    const img = new window.Image()
-    img.onload = () => {
-      row.modelValue = img
-      emit('formChange', myFormList, key)
-    }
-    img.src = file
+  return async (item) => {
+    const { data } = await axios.post(
+      `${staticServer}/api/auth/local`,
+      myIdentifier
+    )
+    jwt = data.jwt
+    let formData = new FormData()
+    formData.append('files', item.file, item.file.name)
+    axios
+      .post(`${staticServer}/api/upload`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      })
+      .then((response) => {
+        const [fileInfo] = response.data
+        // 上传的文件与上传后后端响应的数据映射起来
+        fileMap.set(toRaw(item.file), fileInfo)
+        const { url } = fileInfo
+        const img = new window.Image()
+        img.onload = () => {
+          row.modelValue = img
+          emit('formChange', myFormList, key)
+        }
+        img.src = `${staticServer}${url}`
+      })
   }
+}
+
+// 文件 删除回调
+const handleRemoveFile = (file) => {
+  const fileInfo = fileMap.get(toRaw(file).raw)
+  axios
+    .delete('http://localhost:1337/api/upload/files/' + fileInfo.id, {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
+    .then((response) => {
+      if (response.status === 200 && response.statusText === 'OK') {
+        ElMessage.success({
+          message: '删除成功!'
+        })
+      }
+    })
 }
 </script>
 <script>
