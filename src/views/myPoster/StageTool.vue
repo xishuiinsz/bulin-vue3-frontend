@@ -9,9 +9,7 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="n" v-for="n in 5"
-              >像素比：{{ n }}</el-dropdown-item
-            >
+            <el-dropdown-item :command="n" v-for="n in 5">像素比：{{ n }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -19,19 +17,10 @@
     </el-button-group>
     <el-form label-position="top" label-width="80px">
       <el-form-item label="画布背景色">
-        <el-color-picker
-          v-model="backgroundcolorValue"
-          @change="backgroundcolorChange"
-        ></el-color-picker>
+        <el-color-picker v-model="backgroundcolorValue" @change="backgroundcolorChange"></el-color-picker>
       </el-form-item>
       <el-form-item label="画布背景图片">
-        <el-upload
-          class="bg-image-upload"
-          action="#"
-          :multiple="false"
-          :http-request="handleUpload"
-          :limit="1"
-        >
+        <el-upload class="bg-image-upload" action="#" :multiple="false" :http-request="handleUpload" :limit="1">
           <el-button type="primary">点我上传</el-button>
           <template #tip>
             <div class="el-upload__tip">如上传无反应，请清空下面文件列表！</div>
@@ -39,46 +28,22 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="画布尺寸">
-        <el-input-number
-          style="width: 80px"
-          :controls="false"
-          v-model="shapeSize.width"
-          :min="1"
-          :max="1000"
-          @change="shageSizeChange('width')"
-        />
+        <el-input-number style="width: 80px" :controls="false" v-model="shapeSize.width" :min="1" :max="1000"
+          @change="shageSizeChange('width')" />
         *
-        <el-input-number
-          style="width: 80px"
-          :controls="false"
-          v-model="shapeSize.height"
-          :min="1"
-          :max="2000"
-          @change="shageSizeChange('height')"
-        />
+        <el-input-number style="width: 80px" :controls="false" v-model="shapeSize.height" :min="1" :max="2000"
+          @change="shageSizeChange('height')" />
       </el-form-item>
       <el-form-item label="新增元素">
         <el-button-group>
-          <el-button @click="addTextHanler('文字')" type="primary"
-            >文字</el-button
-          >
-          <el-button @click="addCircleHanler('圆形')" type="primary"
-            >圆形</el-button
-          >
-          <el-button @click="addRectHanler('矩形')" type="primary"
-            >矩形</el-button
-          >
-          <el-button @click="addImageHanler('图片')" type="primary"
-            >图片</el-button
-          >
+          <el-button @click="addTextHanler('文字')" type="primary">文字</el-button>
+          <el-button @click="addCircleHanler('圆形')" type="primary">圆形</el-button>
+          <el-button @click="addRectHanler('矩形')" type="primary">矩形</el-button>
+          <el-button @click="addImageHanler('图片')" type="primary">图片</el-button>
         </el-button-group>
       </el-form-item>
     </el-form>
-    <el-dialog
-      v-model="dialogVisibleAddElement"
-      :title="dialogOption.title"
-      width="30%"
-    >
+    <el-dialog v-model="dialogVisibleAddElement" :title="dialogOption.title" width="30%">
       <component @formChange="formChange" :is="dialogOption.component" />
       <template #footer>
         <span class="dialog-footer">
