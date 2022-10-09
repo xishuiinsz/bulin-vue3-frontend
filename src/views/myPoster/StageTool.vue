@@ -43,7 +43,7 @@
         </el-button-group>
       </el-form-item>
     </el-form>
-    <el-dialog v-model="dialogVisibleAddElement" :title="dialogOption.title" width="30%">
+    <el-dialog v-model="dialogVisibleAddElement" :title="dialogOption.title" :show-close="false" width="30%">
       <component @formChange="formChange" :is="dialogOption.component" />
       <template #footer>
         <span class="dialog-footer">
