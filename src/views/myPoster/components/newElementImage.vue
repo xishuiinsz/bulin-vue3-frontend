@@ -14,10 +14,16 @@
     <el-form-item label="y轴距离">
       <el-input-number v-model="imageOption.y" />
     </el-form-item>
+    <el-form-item label="描边粗细">
+      <el-input-number v-model="imageOption.strokWidth" />
+    </el-form-item>
+    <el-form-item v-if="imageOption.strokWidth" label="描边色">
+      <el-color-picker v-model="imageOption.stroke"></el-color-picker>
+    </el-form-item>
     <el-form-item label="上传图片">
-      <el-upload class="bg-image-upload" action="#" :multiple="false" :http-request="handleUpload"
-        :on-remove="handleRemoveFile" :limit="1">
-        <el-button type="primary">点我上传</el-button>
+      <el-upload :ref="(el)=> Object.assign(imageRawOption, { ref: el})" class="bg-image-upload" action="#"
+        :multiple="false" :http-request="handleUpload" :on-remove="handleRemoveFile" :limit="1">
+        <el-button @click="beginUploadImage" type="primary">点我上传</el-button>
         <template #tip>
           <div class="el-upload__tip">如上传无反应，请清空下面文件列表！</div>
         </template>
@@ -29,17 +35,19 @@
 import { ref, reactive, toRaw, watch } from 'vue'
 import axios from 'axios'
 import { staticServer, myIdentifier } from '../config'
-import cloneDeep from 'lodash/cloneDeep';
+const imageRawOption = {}
 const emit = defineEmits(['formChange'])
-
+// 图片响应式数据
 const imageOption = reactive({
   width: 150,
   height: 150,
   x: 100,
   y: 100,
+  strokWidth: 0,
+  stroke: '#fff',
   image: null
 })
-const cloneOption = { ...toRaw(imageOption) }
+
 // 宽度自动
 const flagWidthAuto = ref(false)
 // 高度自动
@@ -50,6 +58,11 @@ const AutoCheckChange = field => {
   }
 }
 
+// 重新上传即清除上一次上传数据
+const beginUploadImage = () => {
+  imageRawOption.ref.clearFiles()
+  imageOption.image = null
+}
 
 // 文件上传
 let jwt
@@ -60,7 +73,7 @@ const handleUpload = async (item) => {
     myIdentifier
   )
   jwt = data.jwt
-  let formData = new FormData()
+  const formData = new window.FormData()
   formData.append('files', item.file, item.file.name)
   axios
     .post(`${staticServer}/api/upload`, formData, {
@@ -106,7 +119,6 @@ const handleRemoveFile = (file) => {
 }
 
 watch(imageOption, () => {
-  Object.assign(cloneOption, toRaw(imageOption))
   emit('formChange', toRaw(imageOption))
 }, {
   immediate: true
@@ -115,5 +127,4 @@ watch(imageOption, () => {
 <script>
 export default {
   name: 'NewElementRect'
-}
-</script>
+}</script>
