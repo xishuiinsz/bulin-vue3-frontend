@@ -34,6 +34,9 @@
         <el-input-number style="width: 80px" :controls="false" v-model="shapeSize.height" :min="1" :max="2000"
           @change="shageSizeChange('height')" />
       </el-form-item>
+      <el-form-item label="画布缩放">
+        <el-slider @input="scaleChange" :min="0.2" :max="10" :step="0.1" v-model="scaleValue" />
+      </el-form-item>
       <el-form-item label="新增元素">
         <el-button-group>
           <el-button @click="addTextHanler('文字')" type="primary">文字</el-button>
@@ -60,7 +63,8 @@ import newElementText from './components/newElementText.vue'
 import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
 import newElementImage from './components/newElementImage.vue'
-import { getMaxId, downloadURI } from './utils'
+import { getMaxId, downloadURI, setStageScale } from './utils'
+
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import { staticServer, myIdentifier } from './config'
@@ -74,7 +78,10 @@ const dialogOption = {
   type: '',
   component: null
 }
-
+const scaleValue = ref(0.8)
+const scaleChange = (value) => {
+  setStageScale(value, currentInstance)
+}
 // 画布另存为
 const pixelRatioChoose = (value) => {
   // 借助全局app传递数据
@@ -106,7 +113,7 @@ const handleUpload = async (item) => {
     myIdentifier
   )
   jwt = data.jwt
-  const formData = new FormData()
+  const formData = new window.FormData()
   formData.append('files', item.file, item.file.name)
   axios
     .post(`${staticServer}/api/upload`, formData, {
@@ -179,7 +186,7 @@ const cancelAddElement = () => {
 // 确认 新增元素
 const confirmAddElement = () => {
   if (dialogOption.elementType === 'Image') {
-    if (!formData.image || !formData.image instanceof Image) {
+    if (!formData.image || !(formData.image instanceof window.Image)) {
       ElMessage.error({
         message: '请上传图片或等待图片加载完成！'
       })

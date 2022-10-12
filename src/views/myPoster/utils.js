@@ -34,3 +34,10 @@ export const downloadURI = (uri, name = Date.now()) => {
   link.click()
   document.body.removeChild(link)
 }
+
+// 设置画布缩放率
+export const setStageScale = (scaleValue, currentInstance) => {
+  const { globalProperties } = currentInstance.appContext.config
+  const domStage = globalProperties.mainKonvaStage.getNode().content
+  domStage.style.transform = `scale(${scaleValue})`
+}

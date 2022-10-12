@@ -5,21 +5,13 @@
         <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
       <el-main class="poster-work-behch">
-        <k-stage
-          ref="refMainStage"
-          @mousedown="handleStageClick"
-          :config="configKonva"
-        >
+        <k-stage ref="refMainStage" @mousedown="handleStageClick" :config="configKonva">
           <k-layer>
             <k-rect :config="backgroundConfig"></k-rect>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
             </layerList>
-            <k-transformer
-              @dragend="dragendEvt"
-              @transform="transitionendEvt"
-              ref="refTransformer"
-              :config="configTransformer"
-            >
+            <k-transformer @dragend="dragendEvt" @transform="transitionendEvt" ref="refTransformer"
+              :config="configTransformer">
             </k-transformer>
           </k-layer>
         </k-stage>
@@ -34,12 +26,12 @@ import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
-import { getShageOptionById } from './utils'
+import { getShageOptionById, setStageScale } from './utils'
 import { anchorsTrnasformer } from './config'
+
 import('./myPoster.scss')
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
-
 // 主stage实例
 const refMainStage = ref(null)
 
@@ -74,7 +66,7 @@ provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
 // Stage点击事件
-function handleStageClick(e) {
+function handleStageClick (e) {
   // 点击对象为用来模拟【背景】的矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
   if (e.target.attrs.id === 'backgroundRect') {
@@ -113,7 +105,7 @@ function handleStageClick(e) {
 }
 
 // 绘制变形选择框
-function updateTransformer() {
+function updateTransformer () {
   const transformerNode = refTransformer.value.getNode()
   transformerNode.nodes(currentShape.value)
   return transformerNode
@@ -126,7 +118,7 @@ const destroyTransformerEvt = () => {
 }
 
 // transformer 拖拽完成事件
-function dragendEvt() {
+function dragendEvt () {
   const shapesList = this.getNodes()
   const updateShapes = (shapes) => {
     shapes.forEach((shape) => {
@@ -146,7 +138,7 @@ function dragendEvt() {
 }
 
 // 矩形选择框变形完成事件
-function transitionendEvt(e) {
+function transitionendEvt (e) {
   const transformerNode = refTransformer.value.getNode()
   const shapes = transformerNode.getNodes()
   shapes.forEach((shape) => {
@@ -165,6 +157,7 @@ function transitionendEvt(e) {
 onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
   Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
+  setStageScale(1, currentInstance)
   setTimeout(() => {
     const imageObj = new window.Image()
     imageObj.onload = function () {
