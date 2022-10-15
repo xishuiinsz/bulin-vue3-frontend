@@ -1,8 +1,9 @@
 import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 const { resolve } = require('path')
 
-export default {
+export default defineConfig({
   base: './',
   plugins: [vue(), vueJsx()],
   optimizeDeps: {
@@ -17,7 +18,17 @@ export default {
     ]
   },
   server: {
-    // host: 'localhost.china.com',
-    port: 8080
+    host: 'bulin.china.com',
+    port: 8080,
+    hmr: false,
+    proxy: {
+      '/api': {
+        target: 'http://bulin.china.com:3000',
+        changeOrigin: true,
+        rewrite: (path) => {
+          return path.replace(/^\/api/, '')
+        }
+      }
+    }
   }
-}
+})

@@ -32,12 +32,12 @@
                 <el-table-column label="状态" align="center">
                     <template #default="scope">
                         <el-tag :type="
-                                scope.row.state === '成功'
-                                    ? 'success'
-                                    : scope.row.state === '失败'
-                                    ? 'danger'
-                                    : ''
-                            ">{{ scope.row.state }}</el-tag>
+                            scope.row.state === '成功'
+                                ? 'success'
+                                : scope.row.state === '失败'
+                                ? 'danger'
+                                : ''
+                        ">{{ scope.row.state }}</el-tag>
                     </template>
                 </el-table-column>
 
@@ -78,75 +78,75 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { fetchData } from "../api/index";
+import { ref, reactive } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { fetchData } from '../api/index'
 
 export default {
-    name: "basetable",
-    setup() {
+    name: 'basetable',
+    setup () {
         const query = reactive({
-            address: "",
-            name: "",
+            // address: '',
+            // name: '',
             pageIndex: 1,
-            pageSize: 10,
-        });
-        const tableData = ref([]);
-        const pageTotal = ref(0);
+            pageSize: 10
+        })
+        const tableData = ref([])
+        const pageTotal = ref(0)
         // 获取表格数据
         const getData = () => {
             fetchData(query).then((res) => {
-                tableData.value = res.list;
-                pageTotal.value = res.pageTotal || 50;
-            });
-        };
-        getData();
+                tableData.value = res.list
+                pageTotal.value = res.pageTotal || 50
+            })
+        }
+        getData()
 
         // 查询操作
         const handleSearch = () => {
-            query.pageIndex = 1;
-            getData();
-        };
+            query.pageIndex = 1
+            getData()
+        }
         // 分页导航
         const handlePageChange = (val) => {
-            query.pageIndex = val;
-            getData();
-        };
+            query.pageIndex = val
+            getData()
+        }
 
         // 删除操作
         const handleDelete = (index) => {
             // 二次确认删除
-            ElMessageBox.confirm("确定要删除吗？", "提示", {
-                type: "warning",
+            ElMessageBox.confirm('确定要删除吗？', '提示', {
+                type: 'warning'
             })
                 .then(() => {
-                    ElMessage.success("删除成功");
-                    tableData.value.splice(index, 1);
+                    ElMessage.success('删除成功')
+                    tableData.value.splice(index, 1)
                 })
-                .catch(() => {});
-        };
+                .catch(() => { })
+        }
 
         // 表格编辑时弹窗和保存
-        const editVisible = ref(false);
-        let form = reactive({
-            name: "",
-            address: "",
-        });
-        let idx = -1;
+        const editVisible = ref(false)
+        const form = reactive({
+            name: '',
+            address: ''
+        })
+        let idx = -1
         const handleEdit = (index, row) => {
-            idx = index;
+            idx = index
             Object.keys(form).forEach((item) => {
-                form[item] = row[item];
-            });
-            editVisible.value = true;
-        };
+                form[item] = row[item]
+            })
+            editVisible.value = true
+        }
         const saveEdit = () => {
-            editVisible.value = false;
-            ElMessage.success(`修改第 ${idx + 1} 行成功`);
+            editVisible.value = false
+            ElMessage.success(`修改第 ${idx + 1} 行成功`)
             Object.keys(form).forEach((item) => {
-                tableData.value[idx][item] = form[item];
-            });
-        };
+                tableData.value[idx][item] = form[item]
+            })
+        }
 
         return {
             query,
@@ -158,10 +158,10 @@ export default {
             handlePageChange,
             handleDelete,
             handleEdit,
-            saveEdit,
-        };
-    },
-};
+            saveEdit
+        }
+    }
+}
 </script>
 
 <style scoped>
@@ -177,16 +177,20 @@ export default {
     width: 300px;
     display: inline-block;
 }
+
 .table {
     width: 100%;
     font-size: 14px;
 }
+
 .red {
     color: #ff0000;
 }
+
 .mr10 {
     margin-right: 10px;
 }
+
 .table-td-thumb {
     display: block;
     margin: auto;

@@ -5,7 +5,7 @@
         <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
       <el-main class="poster-work-behch">
-        <k-stage ref="refMainStage" @mousedown="handleStageClick" :config="configKonva">
+        <k-stage ref="refMainStage" @wheel="handleStageMousewheel" @mousedown="handleStageClick" :config="configKonva">
           <k-layer>
             <k-rect :config="backgroundConfig"></k-rect>
             <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
@@ -65,6 +65,14 @@ const configTransformer = reactive({
 provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
+
+function handleStageMousewheel (e) {
+  e.evt.preventDefault()
+  if (e.evt.ctrlKey === true) {
+    console.log(e.evt.wheelDelta)
+    setStageScale(e.evt.wheelDelta / 100, currentInstance)
+  }
+}
 // Stage点击事件
 function handleStageClick (e) {
   // 点击对象为用来模拟【背景】的矩形
@@ -157,7 +165,7 @@ function transitionendEvt (e) {
 onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
   Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
-  setStageScale(1, currentInstance)
+  setStageScale(2, currentInstance)
   setTimeout(() => {
     const imageObj = new window.Image()
     imageObj.onload = function () {
