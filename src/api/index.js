@@ -7,17 +7,24 @@ export const fetchData = (query) => {
     params: query
   })
 }
-export const fetchEmployeeData = (query) => {
+export const fetchCustomerData = (query) => {
   return request({
     url: '/api/customerInfo',
     method: 'get',
     params: query
   })
 }
-export const updateEmployeeData = (query) => {
+export const updateCustomerData = (query) => {
   return request({
     url: '/api/customerInfo',
     method: 'put',
+    params: query
+  })
+}
+export const deleteCustomerData = (query) => {
+  return request({
+    url: '/api/customerInfo',
+    method: 'delete',
     params: query
   })
 }

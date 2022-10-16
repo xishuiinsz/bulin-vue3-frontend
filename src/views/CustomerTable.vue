@@ -57,7 +57,7 @@
         ></el-table-column>
         <el-table-column prop="fullName" label="客户代表">
           <template #default="{ row }"
-            >{{ row.lastName }} {{ row.firstName }}</template
+            >{{ row.firstName }} {{ row.lastName }}</template
           >
         </el-table-column>
         <el-table-column prop="company" label="客户公司"> </el-table-column>
@@ -83,7 +83,7 @@
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -139,7 +139,11 @@
 <script>
 import { ref, reactive, onMounted, readonly, toRaw } from 'vue'
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
-import { fetchEmployeeData, updateEmployeeData } from '@/api/index'
+import {
+  fetchCustomerData,
+  updateCustomerData,
+  deleteCustomerData
+} from '@/api/index'
 
 export default {
   name: 'CustomerTable',
@@ -155,7 +159,7 @@ export default {
     // 获取表格数据
     const getData = () => {
       const loadingInstance = ElLoading.service()
-      fetchEmployeeData(query).then((res) => {
+      fetchCustomerData(query).then((res) => {
         tableData.value = res.list
         pageTotal.value = res.pageTotal || 50
         loadingInstance.close()
@@ -184,16 +188,27 @@ export default {
     }
 
     // 删除操作
-    const handleDelete = (index) => {
+    const handleDelete = (row) => {
       // 二次确认删除
       ElMessageBox.confirm('确定要删除吗？', '提示', {
         type: 'warning'
       })
-        .then(() => {
-          ElMessage.success('删除成功')
-          tableData.value.splice(index, 1)
+        .then((status) => {
+          if (status === 'confirm') {
+            const loadingInstance = ElLoading.service()
+            const resp = deleteCustomerData({ customerId: row.customerId })
+            loadingInstance.close()
+            if (resp && resp.code === '0') {
+              ElMessage.success(resp.msg || '删除成功')
+              handleSearch()
+            } else {
+              ElMessage.error(resp.msg || '删除失败')
+            }
+          }
         })
-        .catch(() => {})
+        .catch((err) => {
+          console.error(err.message)
+        })
     }
 
     // 表格编辑时弹窗和保存
@@ -219,7 +234,7 @@ export default {
         lastName
       })
       const loadingInstance = ElLoading.service()
-      const resp = await updateEmployeeData(readonly(parmas))
+      const resp = await updateCustomerData(readonly(parmas))
       loadingInstance.close()
       if (resp && resp.code === '0') {
         editVisible.value = false
