@@ -22,23 +22,18 @@ a {
 }
 
 .content-box {
-  flex: 1;
-  /* position: absolute; */
-  /* left: 250px; */
-  display: flex;
+  width: calc(100vw - 250px);
+  display: inline-flex;
   flex-direction: column;
-  /* bottom: 0; */
-  /* padding-bottom: 30px; */
-  -webkit-transition: left 0.3s ease-in-out;
   transition: left 0.3s ease-in-out;
   background: #f0f0f0;
 }
 
 .content {
-  width: auto;
+  width: 100%;
   height: 100%;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: hidden;
   box-sizing: border-box;
 }
 
@@ -176,4 +171,9 @@ a {
 
 .v-note-wrapper .v-note-panel {
   min-height: 500px;
+}
+
+.el-pagination button.btn-prev .el-icon,
+.el-pagination button.btn-next .el-icon {
+  display: initial;
 }

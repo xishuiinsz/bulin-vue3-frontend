@@ -18,12 +18,12 @@ export default defineConfig({
     ]
   },
   server: {
-    host: 'bulin.china.com',
+    host: 'localhost',
     port: 8080,
-    hmr: false,
+    hmr: true,
     proxy: {
       '/api': {
-        target: 'http://bulin.china.com:3000',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '')

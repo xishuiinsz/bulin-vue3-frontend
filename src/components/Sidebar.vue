@@ -72,6 +72,11 @@ export default {
         title: '基础表格'
       },
       {
+        icon: 'el-icon-lx-cascades',
+        index: '/customerTable',
+        title: '客户表格'
+      },
+      {
         icon: 'el-icon-lx-copy',
         index: '/tabs',
         title: 'tab选项卡'
@@ -160,12 +165,8 @@ export default {
 
 <style scoped>
 .sidebar {
+  width: 250px;
   display: block;
-  /* position: absolute; */
-  /* left: 0; */
-  /* top: 70px; */
-  bottom: 0;
-  overflow-y: scroll;
 }
 
 .sidebar::-webkit-scrollbar {

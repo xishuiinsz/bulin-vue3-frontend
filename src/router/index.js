@@ -30,6 +30,17 @@ const routes = [
           import(/* webpackChunkName: "table" */ '../views/BaseTable.vue')
       },
       {
+        path: '/customerTable',
+        name: 'CustomerInfoTable',
+        meta: {
+          title: '客户表格'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "customerTable" */ '../views/CustomerTable.vue'
+          )
+      },
+      {
         path: '/myPoster',
         name: 'MyPoster',
         meta: {
