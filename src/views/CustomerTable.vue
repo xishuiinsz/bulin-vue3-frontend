@@ -158,7 +158,7 @@ export default {
     const pageTotal = ref(0)
     // 获取表格数据
     const getData = () => {
-      const loadingInstance = ElLoading.service()
+      const loadingInstance = .service()
       fetchCustomerData(query).then((res) => {
         tableData.value = res.list
         pageTotal.value = res.pageTotal || 50

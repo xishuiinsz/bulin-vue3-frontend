@@ -36,7 +36,7 @@
                   >删除</el-button
                 >
               </template>
-              <img :src="`http://localhost:1337${file.url}`" alt="" srcset="" />
+              <img :src="`${file.url}`" alt="" srcset="" />
             </el-tooltip>
           </li>
         </ul>
@@ -54,6 +54,7 @@
 
 <script>
 import { ref } from 'vue'
+import { ElLoading, ElMessage } from 'element-plus'
 import VueCropper from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
 import defaultSrc from '../assets/img/img.jpg'
@@ -64,7 +65,7 @@ export default {
     VueCropper
   },
   setup() {
-    let jwt
+    const jwt = 'sdfasdfasdfasdfsdfsfdasfd'
     const headers = { 'Content-Type': 'multipart/form-data' }
     const fileList = ref([])
     const imgSrc = ref('')
@@ -77,7 +78,7 @@ export default {
       if (!file.type.includes('image/')) {
         return
       }
-      const reader = new FileReader()
+      const reader = new window.FileReader()
       reader.onload = (event) => {
         dialogVisible.value = true
         imgSrc.value = event.target.result
@@ -97,39 +98,39 @@ export default {
 
     // 文件上传
     const handleUpload = async (item) => {
-      const { data } = await axios.post(
-        'http://localhost:1337/api/auth/local',
-        {
-          identifier: 'zhangxiaogang',
-          password: 'g00gle.com'
-        }
-      )
-      jwt = data.jwt
-      let formData = new FormData()
-      formData.append('files', item.file, item.file.name)
+      const formData = new window.FormData()
+      formData.append('file', item.file, item.file.name)
       axios
-        .post('http://localhost:1337/api/upload', formData, {
+        .post('/api/upload', formData, {
           headers: {
             Authorization: `Bearer ${jwt}`
           }
         })
         .then((response) => {
-          fileList.value.push(...response.data)
+          const { uuid, name } = response.data
+          fileList.value.push({
+            uuid,
+            url: `/api/uploads/${uuid}/${name}`
+          })
         })
     }
 
     // 文件删除
     const fileDeleteHandler = (file) => {
+      const loadingInstance = ElLoading.service()
       axios
-        .delete('http://localhost:1337/api/upload/files/' + file.id, {
+        .delete('/api/upload/' + file.uuid, {
           headers: {
             Authorization: `Bearer ${jwt}`
           }
         })
         .then((response) => {
-          if (response.status === 200 && response.statusText === 'OK') {
+          loadingInstance.close()
+          const { code, msg } = response.data
+          if (code === '0') {
             const index = fileList.value.findIndex((item) => item === file)
             fileList.value.splice(index, 1)
+            ElMessage.success(msg || '删除成功')
           }
         })
     }
