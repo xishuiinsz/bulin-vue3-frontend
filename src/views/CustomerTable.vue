@@ -139,6 +139,7 @@
 <script>
 import { ref, reactive, onMounted, readonly, toRaw } from 'vue'
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
+import isNil from 'lodash/isNil'
 import {
   fetchCustomerData,
   updateCustomerData,
@@ -158,10 +159,10 @@ export default {
     const pageTotal = ref(0)
     // 获取表格数据
     const getData = () => {
-      const loadingInstance = .service()
+      const loadingInstance = ElLoading.service()
       fetchCustomerData(query).then((res) => {
         tableData.value = res.list
-        pageTotal.value = res.pageTotal || 50
+        pageTotal.value = isNil(res.pageTotal) ? 0 : res.pageTotal
         loadingInstance.close()
       })
     }
@@ -193,11 +194,14 @@ export default {
       ElMessageBox.confirm('确定要删除吗？', '提示', {
         type: 'warning'
       })
-        .then((status) => {
+        .then(async (status) => {
           if (status === 'confirm') {
             const loadingInstance = ElLoading.service()
-            const resp = deleteCustomerData({ customerId: row.customerId })
+            const resp = await deleteCustomerData({
+              customerId: row.customerId
+            })
             loadingInstance.close()
+            console.log(resp)
             if (resp && resp.code === '0') {
               ElMessage.success(resp.msg || '删除成功')
               handleSearch()
