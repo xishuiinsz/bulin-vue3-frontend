@@ -9,6 +9,7 @@
       </el-breadcrumb>
     </div>
     <div class="container">
+      <div>{{ html }}</div>
       <div style="margin-top: 16px" v-html="html"></div>
     </div>
   </div>

@@ -90,6 +90,17 @@ const routes = [
           )
       },
       {
+        path: '/sortArray',
+        name: 'SortArray',
+        meta: {
+          title: '数组冒泡排序'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "sortArray" */ '@/views/SortArray/SortArray.vue'
+          )
+      },
+      {
         path: '/permission',
         name: 'permission',
         meta: {

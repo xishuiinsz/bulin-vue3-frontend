@@ -13,4 +13,14 @@ const myDebounced = (fun, wait = 300) => {
   }
 }
 
-export { myDebounced }
+const getRangeInteger = (min, max) => {
+  if (min > max) {
+    // eslint-disable-next-line no-extra-semi
+    ;[min, max] = [max, min] // 交换
+  }
+  min = Math.floor(min)
+  max = Math.ceil(max)
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export { myDebounced, getRangeInteger }

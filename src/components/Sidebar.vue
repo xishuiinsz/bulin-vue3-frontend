@@ -111,6 +111,17 @@ export default {
         ]
       },
       {
+        icon: 'el-icon-lx-calendar',
+        index: '5',
+        title: '练习场',
+        subs: [
+          {
+            index: '/sortArray',
+            title: '数组冒泡排序'
+          }
+        ]
+      },
+      {
         icon: 'el-icon-lx-emoji',
         index: '/icon',
         title: '自定义图标'
