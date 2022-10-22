@@ -18,6 +18,7 @@
           <el-option key="2" label="湖南省" value="湖南省"></el-option>
         </el-select>
         <el-input
+          @input="queryByName('test', 'test1')"
           v-model="query.name"
           placeholder="用户名"
           class="handle-input mr10"
@@ -124,13 +125,13 @@
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { fetchData } from '../api/index'
-
+import { myDebounced } from '@/utils'
 export default {
   name: 'basetable',
   setup() {
     const query = reactive({
-      // address: '',
-      // name: '',
+      address: '',
+      name: '',
       pageIndex: 1,
       pageSize: 10
     })
@@ -190,9 +191,13 @@ export default {
         tableData.value[idx][item] = form[item]
       })
     }
-
+    const queryByName = myDebounced((value, value2) => {
+      getData()
+    }, 500)
     return {
       query,
+      myDebounced,
+      queryByName,
       tableData,
       pageTotal,
       editVisible,
