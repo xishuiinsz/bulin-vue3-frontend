@@ -79,13 +79,15 @@ const routes = [
           import(/* webpackChunkName: "tabs" */ '../views/Tabs.vue')
       },
       {
-        path: '/donate',
-        name: 'donate',
+        path: '/componentHtml',
+        name: 'ComponentHtml',
         meta: {
-          title: '鼓励作者'
+          title: '获取组件html文本'
         },
         component: () =>
-          import(/* webpackChunkName: "donate" */ '../views/Donate.vue')
+          import(
+            /* webpackChunkName: "componentHtml" */ '../views/ComponentHtml.vue'
+          )
       },
       {
         path: '/permission',
@@ -179,6 +181,14 @@ const routes = [
     },
     component: () =>
       import(/* webpackChunkName: "login" */ '../views/Login.vue')
+  },
+  {
+    path: '/:pathMatch(.*)',
+    name: 'NotFoundPage',
+    mata: {
+      title: '未匹配的路由'
+    },
+    component: () => import(/* webpackChunkName: "404" */ '../views/404.vue')
   }
 ]
 

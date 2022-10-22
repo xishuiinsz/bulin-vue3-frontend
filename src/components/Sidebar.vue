@@ -142,8 +142,8 @@ export default {
       },
       {
         icon: 'el-icon-lx-redpacket_fill',
-        index: '/donate',
-        title: '支持作者'
+        index: '/componentHtml',
+        title: '获取组件html文本'
       }
     ]
 
