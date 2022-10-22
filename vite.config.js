@@ -18,12 +18,12 @@ export default defineConfig({
     ]
   },
   server: {
-    host: 'localhost',
+    host: 'windows10.microdone.cn',
     port: 8080,
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://windows10.microdone.cn:3000',
         changeOrigin: true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '')
