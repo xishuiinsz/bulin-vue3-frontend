@@ -11,8 +11,8 @@
         <div class="content">
           <router-view v-slot="{ Component }">
             <transition name="move" mode="out-in">
-              <keep-alive :include="tags.nameList">
-                <component :is="Component" />
+              <keep-alive :key="Component.name" :include="tags.nameList">
+                <component :is="Component" :key="Component.name" />
               </keep-alive>
             </transition>
           </router-view>

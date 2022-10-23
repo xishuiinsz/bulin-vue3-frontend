@@ -8,7 +8,9 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-      <div class="plugins-tips">输入{{ arrRandom }}，输出{{ arrComputed }}</div>
+      <div class="plugins-tips">
+        输入 {{ arrRandom }}，输出 {{ arrComputed }}
+      </div>
       <div>
         <el-form label-width="120px">
           <el-form-item label="将代码贴在此处">

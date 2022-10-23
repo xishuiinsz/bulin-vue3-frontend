@@ -118,6 +118,10 @@ export default {
           {
             index: '/sortArray',
             title: '数组冒泡排序'
+          },
+          {
+            index: '/echartsAndVue',
+            title: 'echarts中Tip引入Vue组件'
           }
         ]
       },

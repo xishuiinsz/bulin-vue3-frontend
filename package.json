@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "echarts": "^5.4.0",
     "element-plus": "^1.0.2-beta.52",
     "highlight.js": "^11.6.0",
     "konva": "^8.3.11",

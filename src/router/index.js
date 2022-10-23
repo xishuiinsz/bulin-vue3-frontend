@@ -101,6 +101,17 @@ const routes = [
           )
       },
       {
+        path: '/echartsAndVue',
+        name: 'EchartsAndVue',
+        meta: {
+          title: 'echarts中Tip引入Vue组件'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "echartsAndVue" */ '@/views/EchartsAndVue/EchartsAndVue.vue'
+          )
+      },
+      {
         path: '/permission',
         name: 'permission',
         meta: {
