@@ -1,22 +1,25 @@
 // 自定义函数
 function customeSort(arr) {
-  let arrTemp = []
+  const arrTemp = []
+  const arrNew = [...arr]
   function mySort(arr) {
-    const arrNew = [...arr]
-    for (let index = 0; index < arrNew.length; index++) {
-      if (arrNew[index] > arrNew[index + 1]) {
-        const temp = arrNew[index]
-        arrNew[index] = arrNew[index + 1]
-        arrNew[index + 1] = temp
+    if (arr.length === 1) {
+      const [num] = arr
+      arrTemp.unshift(num)
+    } else {
+      for (let index = 0; index < arr.length; index++) {
+        if (arr[index] > arr[index + 1]) {
+          const temp = arr[index]
+          arr[index] = arr[index + 1]
+          arr[index + 1] = temp
+        }
       }
+      const el = arr.pop()
+      arrTemp.unshift(el)
+      mySort(arr)
     }
-    arrTemp = arrNew
   }
-
-  for (let index = 0; index < arr.length - 1; index++) {
-    arrTemp.length ? mySort(arrTemp) : mySort(arr)
-  }
-
+  mySort(arrNew)
   return arrTemp
 }
 
