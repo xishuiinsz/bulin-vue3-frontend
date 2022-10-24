@@ -120,6 +120,10 @@ export default {
             title: '数组冒泡排序'
           },
           {
+            index: '/getNodeById',
+            title: '节点处理'
+          },
+          {
             index: '/echartsAndVue',
             title: 'echarts中Tip引入Vue组件'
           }

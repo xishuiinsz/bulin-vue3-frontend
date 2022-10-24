@@ -101,6 +101,17 @@ const routes = [
           )
       },
       {
+        path: '/getNodeById',
+        name: 'GetNodeById',
+        meta: {
+          title: '节点处理'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "sortArray" */ '@/views/GetNodeById/GetNodeById.vue'
+          )
+      },
+      {
         path: '/echartsAndVue',
         name: 'EchartsAndVue',
         meta: {
