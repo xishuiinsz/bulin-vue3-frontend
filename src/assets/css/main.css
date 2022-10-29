@@ -22,7 +22,7 @@ a {
 }
 
 .content-box {
-  width: calc(100vw - 250px);
+  width: 100%;
   display: inline-flex;
   flex-direction: column;
   transition: left 0.3s ease-in-out;

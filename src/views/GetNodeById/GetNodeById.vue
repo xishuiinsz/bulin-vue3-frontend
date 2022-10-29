@@ -9,15 +9,12 @@
     </div>
     <div class="container">
       <div class="plugins-tips">
-        <div
-          class="input-output-block"
-          style="display: flex; justify-content: space-between; padding: 0 24px"
-        >
+        <div class="input-output-block" style="display: flex; justify-content: space-between; padding: 0 24px">
           <div class="input-block">
             输入
             <pre>
           <code>
-           {{tree}}
+           {{ tree }}
           </code>
         </pre>
           </div>
@@ -26,7 +23,7 @@
             输出
             <pre>
           <code>
-           {{out}}
+           {{ out }}
           </code>
         </pre>
           </div>
@@ -35,13 +32,9 @@
       <div>
         <el-form label-width="120px">
           <el-form-item label="将代码贴在此处">
-            <el-input
-              v-model="codesTxt"
-              :rows="10"
-              type="textarea"
-              placeholder="Please input"
-            /> </el-form-item
-        ></el-form>
+            <el-input v-model="codesTxt" :rows="10" type="textarea" placeholder="Please input" />
+          </el-form-item>
+        </el-form>
         <el-button @click="transfer" type="primary">执行</el-button>
       </div>
     </div>
@@ -80,7 +73,7 @@ const tree = {
 }
 export default {
   name: 'SortArray',
-  setup() {
+  setup () {
     const out = ref('')
     const id = ref('1')
     const codesTxt = ref(getNodeById.toString())
@@ -125,4 +118,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

@@ -3,10 +3,7 @@
     <v-header />
     <div class="body-container">
       <v-sidebar />
-      <div
-        class="content-box"
-        :class="{ 'content-collapse': sidebar.collapse }"
-      >
+      <div class="content-box" :class="{ 'content-collapse': sidebar.collapse }">
         <v-tags></v-tags>
         <div class="content">
           <router-view v-slot="{ Component }">
@@ -34,7 +31,7 @@ export default {
     vSidebar,
     vTags
   },
-  setup() {
+  setup () {
     const sidebar = useSidebarStore()
     const tags = useTagsStore()
     return {
@@ -51,7 +48,7 @@ export default {
   flex-direction: column;
 
   .body-container {
-    flex: 1;
+    height: calc(100vh - 70px);
     display: flex;
   }
 }

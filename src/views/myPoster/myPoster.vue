@@ -26,7 +26,7 @@ import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
 import img from '@/assets/img/img.jpg'
-import { getShageOptionById, setStageScale } from './utils'
+import { getShageOptionById, setStageScale, computedFitScale } from './utils'
 import { anchorsTrnasformer } from './config'
 
 import('./myPoster.scss')
@@ -37,8 +37,8 @@ const refMainStage = ref(null)
 
 const configKonva = reactive({
   id: 'mainStageId',
-  width: 1000,
-  height: 800
+  width: 1920,
+  height: 1080
 })
 
 // rect模拟背景层配置
@@ -165,7 +165,9 @@ function transitionendEvt (e) {
 onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
   Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
-  setStageScale(2, currentInstance)
+  const scaleRate = computedFitScale('.poster-work-behch', configKonva.width, configKonva.height)
+  setStageScale(scaleRate, currentInstance)
+  Object.assign(globalProperties, { scaleRate })
   setTimeout(() => {
     const imageObj = new window.Image()
     imageObj.onload = function () {
