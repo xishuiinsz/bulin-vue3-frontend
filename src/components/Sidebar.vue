@@ -1,7 +1,15 @@
 <template>
   <div class="sidebar">
-    <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="sidebar.collapse" background-color="#324157"
-      text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
+    <el-menu
+      class="sidebar-el-menu"
+      :default-active="onRoutes"
+      :collapse="sidebar.collapse"
+      background-color="#324157"
+      text-color="#bfcbd9"
+      active-text-color="#20a0ff"
+      unique-opened
+      router
+    >
       <template v-for="item in items">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index">
@@ -10,12 +18,25 @@
               <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
-              <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
+              <el-submenu
+                v-if="subItem.subs"
+                :index="subItem.index"
+                :key="subItem.index"
+              >
                 <template #title>{{ subItem.title }}</template>
-                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">
-                  {{ threeItem.title }}</el-menu-item>
+                <el-menu-item
+                  v-for="(threeItem, i) in subItem.subs"
+                  :key="i"
+                  :index="threeItem.index"
+                >
+                  {{ threeItem.title }}</el-menu-item
+                >
               </el-submenu>
-              <el-menu-item v-else :index="subItem.index" :key="subItem.index + 1">{{ subItem.title }}
+              <el-menu-item
+                v-else
+                :index="subItem.index"
+                :key="subItem.index + 1"
+                >{{ subItem.title }}
               </el-menu-item>
             </template>
           </el-submenu>
@@ -36,31 +57,26 @@ import { computed } from 'vue'
 import { useSidebarStore } from '../store/sidebar'
 import { useRoute } from 'vue-router'
 export default {
-  setup () {
+  setup() {
     const items = [
       {
         icon: 'el-icon-lx-home',
-        index: '/dashboard',
+        index: '/myComponents/dashboard',
         title: '系统首页'
       },
       {
-        icon: 'el-icon-lx-picfill',
-        index: '/myPoster',
-        title: '在线海报'
-      },
-      {
         icon: 'el-icon-lx-cascades',
-        index: '/table',
+        index: '/myComponents/table',
         title: '基础表格'
       },
       {
         icon: 'el-icon-lx-cascades',
-        index: '/customerTable',
+        index: '/myComponents/customerTable',
         title: '客户表格'
       },
       {
         icon: 'el-icon-lx-copy',
-        index: '/tabs',
+        index: '/myComponents/tabs',
         title: 'tab选项卡'
       },
       {
@@ -69,11 +85,11 @@ export default {
         title: '表单相关',
         subs: [
           {
-            index: '/form',
+            index: '/myComponents/form',
             title: '基本表单'
           },
           {
-            index: '/upload',
+            index: '/myComponents/upload',
             title: '文件上传'
           },
           {
@@ -81,11 +97,11 @@ export default {
             title: '三级菜单',
             subs: [
               {
-                index: '/editor',
+                index: '/myComponents/editor',
                 title: '富文本编辑器'
               },
               {
-                index: '/markdown',
+                index: '/myComponents/markdown',
                 title: 'markdown编辑器'
               }
             ]
@@ -98,32 +114,32 @@ export default {
         title: '练习场',
         subs: [
           {
-            index: '/sortArray',
+            index: '/myComponents/sortArray',
             title: '数组冒泡排序'
           },
           {
-            index: '/getNodeById',
+            index: '/myComponents/getNodeById',
             title: '节点处理'
           },
           {
-            index: '/echartsAndVue',
+            index: '/myComponents/echartsAndVue',
             title: 'echarts中Tip引入Vue组件'
           }
         ]
       },
       {
         icon: 'el-icon-lx-emoji',
-        index: '/icon',
+        index: '/myComponents/icon',
         title: '自定义图标'
       },
       {
         icon: 'el-icon-pie-chart',
-        index: '/charts',
+        index: '/myComponents/charts',
         title: 'schart图表'
       },
       {
         icon: 'el-icon-lx-global',
-        index: '/i18n',
+        index: '/myComponents/i18n',
         title: '国际化功能'
       },
       {
@@ -132,18 +148,18 @@ export default {
         title: '错误处理',
         subs: [
           {
-            index: '/permission',
+            index: '/myComponents/permission',
             title: '权限测试'
           },
           {
-            index: '/404',
+            index: '/myComponents/404',
             title: '404页面'
           }
         ]
       },
       {
         icon: 'el-icon-lx-redpacket_fill',
-        index: '/componentHtml',
+        index: '/myComponents/componentHtml',
         title: '获取组件html文本'
       }
     ]
@@ -185,7 +201,7 @@ export default {
   width: 250px;
 }
 
-.sidebar>ul {
+.sidebar > ul {
   height: 100%;
 }
 </style>

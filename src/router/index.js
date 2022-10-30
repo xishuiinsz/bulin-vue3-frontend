@@ -4,15 +4,15 @@ import Home from '../views/Home.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/dashboard'
+    redirect: '/myComponents'
   },
   {
-    path: '/',
-    name: 'Home',
+    path: '/myComponents',
+    redirect: '/myComponents/dashboard',
     component: Home,
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         name: 'dashboard',
         meta: {
           title: '系统首页'
@@ -21,7 +21,7 @@ const routes = [
           import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue')
       },
       {
-        path: '/table',
+        path: 'table',
         name: 'basetable',
         meta: {
           title: '表格'
@@ -30,7 +30,7 @@ const routes = [
           import(/* webpackChunkName: "table" */ '../views/BaseTable.vue')
       },
       {
-        path: '/customerTable',
+        path: 'customerTable',
         name: 'CustomerInfoTable',
         meta: {
           title: '客户表格'
@@ -40,19 +40,9 @@ const routes = [
             /* webpackChunkName: "customerTable" */ '../views/CustomerTable.vue'
           )
       },
+
       {
-        path: '/myPoster',
-        name: 'MyPoster',
-        meta: {
-          title: '在线海报'
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "myPoster" */ '@/views/myPoster/myPoster.vue'
-          )
-      },
-      {
-        path: '/charts',
+        path: 'charts',
         name: 'basecharts',
         meta: {
           title: '图表'
@@ -61,7 +51,7 @@ const routes = [
           import(/* webpackChunkName: "charts" */ '../views/BaseCharts.vue')
       },
       {
-        path: '/form',
+        path: 'form',
         name: 'baseform',
         meta: {
           title: '表单'
@@ -70,7 +60,7 @@ const routes = [
           import(/* webpackChunkName: "form" */ '../views/BaseForm.vue')
       },
       {
-        path: '/tabs',
+        path: 'tabs',
         name: 'tabs',
         meta: {
           title: 'tab标签'
@@ -79,7 +69,7 @@ const routes = [
           import(/* webpackChunkName: "tabs" */ '../views/Tabs.vue')
       },
       {
-        path: '/componentHtml',
+        path: 'componentHtml',
         name: 'ComponentHtml',
         meta: {
           title: '获取组件html文本'
@@ -90,7 +80,7 @@ const routes = [
           )
       },
       {
-        path: '/sortArray',
+        path: 'sortArray',
         name: 'SortArray',
         meta: {
           title: '数组冒泡排序'
@@ -101,7 +91,7 @@ const routes = [
           )
       },
       {
-        path: '/getNodeById',
+        path: 'getNodeById',
         name: 'GetNodeById',
         meta: {
           title: '节点处理'
@@ -112,7 +102,7 @@ const routes = [
           )
       },
       {
-        path: '/echartsAndVue',
+        path: 'echartsAndVue',
         name: 'EchartsAndVue',
         meta: {
           title: 'echarts中Tip引入Vue组件'
@@ -123,7 +113,7 @@ const routes = [
           )
       },
       {
-        path: '/permission',
+        path: 'permission',
         name: 'permission',
         meta: {
           title: '权限管理',
@@ -133,7 +123,7 @@ const routes = [
           import(/* webpackChunkName: "permission" */ '../views/Permission.vue')
       },
       {
-        path: '/i18n',
+        path: 'i18n',
         name: 'i18n',
         meta: {
           title: '国际化语言'
@@ -142,7 +132,7 @@ const routes = [
           import(/* webpackChunkName: "i18n" */ '../views/I18n.vue')
       },
       {
-        path: '/upload',
+        path: 'upload',
         name: 'upload',
         meta: {
           title: '上传插件'
@@ -151,7 +141,7 @@ const routes = [
           import(/* webpackChunkName: "upload" */ '../views/Upload.vue')
       },
       {
-        path: '/icon',
+        path: 'icon',
         name: 'icon',
         meta: {
           title: '自定义图标'
@@ -160,7 +150,7 @@ const routes = [
           import(/* webpackChunkName: "icon" */ '../views/Icon.vue')
       },
       {
-        path: '/404',
+        path: '404',
         name: '404',
         meta: {
           title: '找不到页面'
@@ -169,7 +159,7 @@ const routes = [
           import(/* webpackChunkName: "404" */ '../views/404.vue')
       },
       {
-        path: '/403',
+        path: '403',
         name: '403',
         meta: {
           title: '没有权限'
@@ -178,7 +168,7 @@ const routes = [
           import(/* webpackChunkName: "403" */ '../views/403.vue')
       },
       {
-        path: '/user',
+        path: 'user',
         name: 'user',
         meta: {
           title: '个人中心'
@@ -187,7 +177,7 @@ const routes = [
           import(/* webpackChunkName: "user" */ '../views/User.vue')
       },
       {
-        path: '/editor',
+        path: 'editor',
         name: 'editor',
         meta: {
           title: '富文本编辑器'
@@ -196,7 +186,7 @@ const routes = [
           import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
       },
       {
-        path: '/markdown',
+        path: 'markdown',
         name: 'markdown',
         meta: {
           title: 'markdown编辑器'
@@ -205,6 +195,15 @@ const routes = [
           import(/* webpackChunkName: "markdown" */ '../views/Markdown.vue')
       }
     ]
+  },
+  {
+    path: '/myPoster',
+    name: 'MyPoster',
+    meta: {
+      title: '在线海报'
+    },
+    component: () =>
+      import(/* webpackChunkName: "myPoster" */ '@/views/myPoster/myPoster.vue')
   },
   {
     path: '/login',
