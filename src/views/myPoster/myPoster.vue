@@ -4,17 +4,32 @@
       <el-aside class="poster-tool-list" width="200px">
         <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
-      <el-main class="poster-work-behch">
-        <k-stage ref="refMainStage" @wheel="handleStageMousewheel" @mousedown="handleStageClick" :config="configKonva">
-          <k-layer>
-            <k-rect :config="backgroundConfig"></k-rect>
-            <layerList v-for="item in list" :key="item.attrs.id" v-bind="item">
-            </layerList>
-            <k-transformer @dragend="dragendEvt" @transform="transitionendEvt" ref="refTransformer"
-              :config="configTransformer">
-            </k-transformer>
-          </k-layer>
-        </k-stage>
+      <el-main class="poster-work-bench">
+        <div class="outer-konva-stage">
+          <k-stage
+            ref="refMainStage"
+            @wheel="handleStageMousewheel"
+            @mousedown="handleStageClick"
+            :config="configKonva"
+          >
+            <k-layer>
+              <k-rect :config="backgroundConfig"></k-rect>
+              <layerList
+                v-for="item in list"
+                :key="item.attrs.id"
+                v-bind="item"
+              >
+              </layerList>
+              <k-transformer
+                @dragend="dragendEvt"
+                @transform="transitionendEvt"
+                ref="refTransformer"
+                :config="configTransformer"
+              >
+              </k-transformer>
+            </k-layer>
+          </k-stage>
+        </div>
       </el-main>
     </el-container>
   </div>
@@ -66,7 +81,7 @@ provide('currentShape', currentShape)
 provide('layerList', list)
 provide('configKonva', configKonva)
 
-function handleStageMousewheel (e) {
+function handleStageMousewheel(e) {
   e.evt.preventDefault()
   if (e.evt.ctrlKey === true) {
     console.log(e.evt.wheelDelta)
@@ -74,7 +89,7 @@ function handleStageMousewheel (e) {
   }
 }
 // Stage点击事件
-function handleStageClick (e) {
+function handleStageClick(e) {
   // 点击对象为用来模拟【背景】的矩形
   if (e.target.getParent() === refTransformer.value.getNode()) return
   if (e.target.attrs.id === 'backgroundRect') {
@@ -113,7 +128,7 @@ function handleStageClick (e) {
 }
 
 // 绘制变形选择框
-function updateTransformer () {
+function updateTransformer() {
   const transformerNode = refTransformer.value.getNode()
   transformerNode.nodes(currentShape.value)
   return transformerNode
@@ -126,7 +141,7 @@ const destroyTransformerEvt = () => {
 }
 
 // transformer 拖拽完成事件
-function dragendEvt () {
+function dragendEvt() {
   const shapesList = this.getNodes()
   const updateShapes = (shapes) => {
     shapes.forEach((shape) => {
@@ -146,7 +161,7 @@ function dragendEvt () {
 }
 
 // 矩形选择框变形完成事件
-function transitionendEvt (e) {
+function transitionendEvt(e) {
   const transformerNode = refTransformer.value.getNode()
   const shapes = transformerNode.getNodes()
   shapes.forEach((shape) => {
@@ -165,8 +180,8 @@ function transitionendEvt (e) {
 onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
   Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
-  const scaleRate = computedFitScale('.poster-work-behch', configKonva.width, configKonva.height)
-  setStageScale(scaleRate, currentInstance)
+  const scaleRate = computedFitScale(configKonva.width, configKonva.height)
+  setStageScale(scaleRate)
   Object.assign(globalProperties, { scaleRate })
   setTimeout(() => {
     const imageObj = new window.Image()
