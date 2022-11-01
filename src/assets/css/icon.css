@@ -1,4 +1,5 @@
-[class*=" el-icon-lx"],
-[class^=el-icon-lx] {
-    font-family: lx-iconfont !important;
+[class*=' el-icon-lx'],
+[class^='el-icon-lx'] {
+  font-family: lx-iconfont !important;
+  font-style: inherit;
 }

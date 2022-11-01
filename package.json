@@ -8,15 +8,16 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "axios": "^0.21.1",
     "echarts": "^5.4.0",
-    "element-plus": "^1.0.2-beta.52",
+    "element-plus": "2.2.19",
     "highlight.js": "^11.6.0",
     "konva": "^8.3.11",
     "lodash": "^4.17.21",
     "marked": "^4.0.18",
     "md-editor-v3": "^2.2.0",
-    "pinia": "^2.0.14",
+    "pinia": "^2.0.23",
     "vue": "^3.1.2",
     "vue-cropperjs": "^5.0.0",
     "vue-i18n": "^9.0.0",

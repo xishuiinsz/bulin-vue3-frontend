@@ -74,13 +74,13 @@
         >
           <template #default="scope">
             <el-button
-              type="text"
+              :text="true"
               icon="el-icon-edit"
               @click="handleEdit(scope.row)"
               >编辑
             </el-button>
             <el-button
-              type="text"
+              :text="true"
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.row)"
@@ -201,7 +201,6 @@ export default {
               customerId: row.customerId
             })
             loadingInstance.close()
-            console.log(resp)
             if (resp && resp.code === '0') {
               ElMessage.success(resp.msg || '删除成功')
               handleSearch()

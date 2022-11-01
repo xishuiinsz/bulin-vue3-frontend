@@ -10,14 +10,14 @@
         <router-link :to="item.path" class="tags-li-title">{{
           item.title
         }}</router-link>
-        <span class="tags-li-icon" @click="closeTags(index)">
-          <i class="el-icon-close"></i>
-        </span>
+        <el-icon @click="closeTags(index)" class="tags-li-icon"
+          ><CircleCloseFilled
+        /></el-icon>
       </li>
     </ul>
     <div class="tags-close-box">
       <el-dropdown @command="handleTags">
-        <el-button size="mini" type="primary">
+        <el-button size="small" type="primary">
           标签选项
           <i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>

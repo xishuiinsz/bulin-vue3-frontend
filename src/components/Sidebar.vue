@@ -12,13 +12,13 @@
     >
       <template v-for="item in items">
         <template v-if="item.subs">
-          <el-submenu :index="item.index" :key="item.index">
+          <el-sub-menu :index="item.index" :key="item.index">
             <template #title>
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
             </template>
             <template v-for="subItem in item.subs">
-              <el-submenu
+              <el-sub-menu
                 v-if="subItem.subs"
                 :index="subItem.index"
                 :key="subItem.index"
@@ -31,7 +31,7 @@
                 >
                   {{ threeItem.title }}</el-menu-item
                 >
-              </el-submenu>
+              </el-sub-menu>
               <el-menu-item
                 v-else
                 :index="subItem.index"
@@ -39,7 +39,7 @@
                 >{{ subItem.title }}
               </el-menu-item>
             </template>
-          </el-submenu>
+          </el-sub-menu>
         </template>
         <template v-else>
           <el-menu-item :index="item.index" :key="item.index">
@@ -133,7 +133,7 @@ export default {
         title: '自定义图标'
       },
       {
-        icon: 'el-icon-pie-chart',
+        icon: 'el-icon-lx-weibo',
         index: '/myComponents/charts',
         title: 'schart图表'
       },
@@ -200,7 +200,9 @@ export default {
 .sidebar-el-menu:not(.el-menu--collapse) {
   width: 250px;
 }
-
+.el-sub-menu__title [class^='el-icon'] {
+  margin-right: 4px;
+}
 .sidebar > ul {
   height: 100%;
 }

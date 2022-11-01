@@ -4,8 +4,8 @@
       <div class="logo-wrap">
         <!-- 折叠按钮 -->
         <div class="collapse-btn" @click="collapseChage">
-          <i v-if="!sidebar.collapse" class="el-icon-s-fold"></i>
-          <i v-else class="el-icon-s-unfold"></i>
+          <el-icon v-if="!sidebar.collapse"><Fold /></el-icon>
+          <el-icon v-else><Expand /></el-icon>
         </div>
         <div class="logo">基于Vue3后台管理系统</div>
       </div>
@@ -32,7 +32,7 @@
             placement="bottom"
           >
             <router-link to="/tabs">
-              <i class="el-icon-bell"></i>
+              <el-icon><Bell color="#fff" /></el-icon>
             </router-link>
           </el-tooltip>
           <span class="btn-bell-badge" v-if="message"></span>
@@ -74,7 +74,7 @@ export default {
   setup() {
     // 用户名下拉菜单选择事件
     const router = useRouter()
-    const topActiveMenuItem = ref('myConponents')
+    const topActiveMenuItem = ref('myComponents')
     const handleTopMenuSelect = (item) => {
       topActiveMenuItem.value = item
       router.push(`/${item}`)
@@ -211,6 +211,7 @@ export default {
 }
 .el-menu-top.el-menu.el-menu--horizontal .el-menu-item {
   height: 100%;
+  font-size: 18px;
 }
 .header-left .el-menu-wrap .el-menu.el-menu--horizontal {
   border-bottom: none;

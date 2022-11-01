@@ -74,13 +74,13 @@
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
-              type="text"
+              :text="true"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
               >编辑
             </el-button>
             <el-button
-              type="text"
+              :text="true"
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
