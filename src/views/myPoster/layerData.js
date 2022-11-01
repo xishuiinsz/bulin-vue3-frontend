@@ -5,7 +5,8 @@ const list = [
       id: '1',
       x: 250,
       y: 250,
-      image: null,
+      image:
+        'http://windows10.microdone.cn:3000/uploads/916fc93b-f0a5-45bb-9d49-bf323743bbfa/img.jpg',
       width: 300,
       height: 400,
       draggable: true

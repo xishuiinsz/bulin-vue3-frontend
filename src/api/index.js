@@ -1,5 +1,12 @@
 import request from '../utils/request'
 
+export const fetchLayerData = (query) => {
+  return request({
+    url: '/api/myPoster/list',
+    method: 'get',
+    params: query
+  })
+}
 export const fetchData = (query) => {
   return request({
     url: '/api/creditInfo',

@@ -14,11 +14,7 @@
           >
             <k-layer>
               <k-rect :config="backgroundConfig"></k-rect>
-              <layerList
-                v-for="item in list"
-                :key="item.attrs.id"
-                v-bind="item"
-              >
+              <layerList v-for="item in []" :key="item.attrs.id" v-bind="item">
               </layerList>
               <k-transformer
                 @dragend="dragendEvt"
@@ -40,11 +36,13 @@ import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerList from './layerList.vue'
 import layerRawData from './layerData'
+import { useMyPosterStore } from '@/store/myPoster'
 import img from '@/assets/img/img.jpg'
 import { getShageOptionById, setStageScale, computedFitScale } from './utils'
 import { anchorsTrnasformer } from './config'
 
 import('./myPoster.scss')
+const myPosterStore = useMyPosterStore()
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
 // 主stage实例
@@ -123,7 +121,6 @@ function handleStageClick(e) {
     configTransformer.rotateEnabled = true
     configTransformer.enabledAnchors = anchorsTrnasformer
   }
-
   updateTransformer()
 }
 
@@ -176,6 +173,10 @@ function transitionendEvt(e) {
   })
 }
 
+const getLayerData = async () => {
+  await myPosterStore.fetchLayerData()
+}
+
 // 生命钩子函数
 onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
@@ -183,16 +184,17 @@ onMounted(() => {
   const scaleRate = computedFitScale(configKonva.width, configKonva.height)
   setStageScale(scaleRate)
   Object.assign(globalProperties, { scaleRate })
-  setTimeout(() => {
-    const imageObj = new window.Image()
-    imageObj.onload = function () {
-      const [findedRow] = list.filter((item) => item.type === 'Image')
-      if (findedRow) {
-        findedRow.attrs.image = this
-      }
-    }
-    imageObj.src = img
-  }, 200)
+  getLayerData()
+  // setTimeout(() => {
+  //   const imageObj = new window.Image()
+  //   imageObj.onload = function () {
+  //     const [findedRow] = list.filter((item) => item.type === 'Image')
+  //     if (findedRow) {
+  //       findedRow.attrs.image = this
+  //     }
+  //   }
+  //   imageObj.src = img
+  // }, 200)
 })
 </script>
 <script>
