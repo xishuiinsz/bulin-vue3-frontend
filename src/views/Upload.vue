@@ -21,11 +21,12 @@
       <el-upload
         action="#"
         class="upload-demo"
+        :before-upload="beforeUpload"
         :http-request="handleUpload"
         :multiple="false"
         :show-file-list="false"
       >
-        <i class="el-icon-upload"></i>
+        <el-icon style="font-size: 100px"><UploadFilled /></el-icon>
       </el-upload>
       <div class="file-list-wrap">
         <ul>
@@ -95,7 +96,17 @@ export default {
       dialogVisible.value = false
       cropImg.value = defaultSrc
     }
-
+    const beforeUpload = (file) => {
+      if (file.size <= 0) {
+        ElMessage.error('上传的文件大小不能为空！')
+        return false
+      }
+      if (!file.type.startsWith('image/')) {
+        ElMessage.error('请上传图片文件！')
+        return false
+      }
+      return true
+    }
     // 文件上传
     const handleUpload = async (item) => {
       const formData = new window.FormData()
@@ -137,6 +148,7 @@ export default {
     return {
       headers,
       fileList,
+      beforeUpload,
       handleUpload,
       fileDeleteHandler,
       cropper,

@@ -3,7 +3,11 @@
     <div class="header-left">
       <div class="logo-wrap">
         <!-- 折叠按钮 -->
-        <div class="collapse-btn" @click="collapseChage">
+        <div
+          v-if="isShowExpandFoldIcon"
+          class="collapse-btn"
+          @click="collapseChage"
+        >
           <el-icon v-if="!sidebar.collapse"><Fold /></el-icon>
           <el-icon v-else><Expand /></el-icon>
         </div>
@@ -50,7 +54,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <a
-                href="https://github.com/lin-xin/vue-manage-system"
+                href="https://github.com/xishuiinsz/bulin-vue3-frontend"
                 target="_blank"
               >
                 <el-dropdown-item>项目仓库</el-dropdown-item>
@@ -67,13 +71,14 @@
   </div>
 </template>
 <script>
-import { ref, onMounted } from 'vue'
-import { useSidebarStore } from '../store/sidebar'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watchEffect } from 'vue'
+import { useSidebarStore } from '@/store/sidebar'
+import { useRouter, useRoute } from 'vue-router'
 export default {
   setup() {
     // 用户名下拉菜单选择事件
     const router = useRouter()
+    const route = useRoute()
     const topActiveMenuItem = ref('myComponents')
     const handleTopMenuSelect = (item) => {
       topActiveMenuItem.value = item
@@ -87,6 +92,14 @@ export default {
     const collapseChage = () => {
       sidebar.handleCollapse()
     }
+    const isShowExpandFoldIcon = ref(true)
+    watchEffect(() => {
+      if (route.name === 'MyPoster') {
+        isShowExpandFoldIcon.value = false
+      } else {
+        isShowExpandFoldIcon.value = true
+      }
+    })
 
     onMounted(() => {
       if (document.body.clientWidth < 1500) {
@@ -104,6 +117,7 @@ export default {
     }
 
     return {
+      isShowExpandFoldIcon,
       topActiveMenuItem,
       handleTopMenuSelect,
       sidebar,
@@ -123,20 +137,22 @@ export default {
   font-size: 22px;
   color: #fff;
   display: flex;
+  padding-left: 20px;
 }
 .header .header-left {
   flex: 1;
   display: flex;
 }
+.header .header-left .logo-wrap {
+  display: flex;
+}
 .collapse-btn {
-  float: left;
-  padding: 0 21px;
+  margin-right: 21px;
   cursor: pointer;
-  line-height: 70px;
+  line-height: 75px;
 }
 
 .header .logo {
-  float: left;
   width: 250px;
   line-height: 70px;
 }
