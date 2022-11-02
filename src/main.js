@@ -15,7 +15,7 @@ app.use(VueKonva, { prefix: 'k' })
 app.directive('highlight', function (el) {
   const blocks = el.querySelectorAll('pre code')
   blocks.forEach((block) => {
-    hljs.highlightBlock(block)
+    hljs.highlightElement(block)
   })
 })
 installElementPlus(app)

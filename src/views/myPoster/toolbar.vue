@@ -59,7 +59,7 @@ import {
   useGroupModify,
   useMoveToTop,
   useMoveToBottom
-} from './hooks'
+} from './hooks/hooks'
 const emit = defineEmits(['destroyTransformer'])
 const layerList = inject('layerList')
 const shape = inject('currentShape')

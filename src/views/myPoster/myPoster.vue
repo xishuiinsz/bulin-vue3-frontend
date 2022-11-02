@@ -5,7 +5,7 @@
         <toolbar @destroyTransformer="destroyTransformerEvt" />
       </el-aside>
       <el-main class="poster-work-bench">
-        <div class="outer-konva-stage">
+        <div v-loading="isShowLoading" class="outer-konva-stage">
           <k-stage
             ref="refMainStage"
             @wheel="handleStageMousewheel"
@@ -14,8 +14,12 @@
           >
             <k-layer>
               <k-rect :config="backgroundConfig"></k-rect>
-              <layerList v-for="item in []" :key="item.attrs.id" v-bind="item">
-              </layerList>
+              <layerRenderList
+                v-for="item in layerList"
+                :key="item.attrs.id"
+                v-bind="item"
+              >
+              </layerRenderList>
               <k-transformer
                 @dragend="dragendEvt"
                 @transform="transitionendEvt"
@@ -34,15 +38,12 @@
 import { onMounted, reactive, ref, provide, getCurrentInstance } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
-import layerList from './layerList.vue'
+import layerRenderList from './layerList.vue'
 import layerRawData from './layerData'
-import { useMyPosterStore } from '@/store/myPoster'
-import img from '@/assets/img/img.jpg'
 import { getShageOptionById, setStageScale, computedFitScale } from './utils'
 import { anchorsTrnasformer } from './config'
-
+import useLayerList from './hooks/useLayerList'
 import('./myPoster.scss')
-const myPosterStore = useMyPosterStore()
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
 // 主stage实例
@@ -173,9 +174,8 @@ function transitionendEvt(e) {
   })
 }
 
-const getLayerData = async () => {
-  await myPosterStore.fetchLayerData()
-}
+// 图层数据列表
+const { isShowLoading, layerList } = useLayerList()
 
 // 生命钩子函数
 onMounted(() => {
@@ -184,7 +184,6 @@ onMounted(() => {
   const scaleRate = computedFitScale(configKonva.width, configKonva.height)
   setStageScale(scaleRate)
   Object.assign(globalProperties, { scaleRate })
-  getLayerData()
   // setTimeout(() => {
   //   const imageObj = new window.Image()
   //   imageObj.onload = function () {

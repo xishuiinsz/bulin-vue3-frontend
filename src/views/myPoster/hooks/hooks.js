@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import last from 'lodash/last'
 import first from 'lodash/first'
 import Konva from 'konva'
-import { anchorsTrnasformer } from './config'
+import { anchorsTrnasformer } from '../config'
 import { ElMessage } from 'element-plus'
 // 图层删除hook
 export const useLayerDelete = (shape, layerList, cb) => {

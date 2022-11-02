@@ -79,7 +79,8 @@ export default {
     // 用户名下拉菜单选择事件
     const router = useRouter()
     const route = useRoute()
-    const topActiveMenuItem = ref('myComponents')
+    const [pathStr] = location.hash.slice(2).split('/')
+    const topActiveMenuItem = ref(pathStr)
     const handleTopMenuSelect = (item) => {
       topActiveMenuItem.value = item
       router.push(`/${item}`)
