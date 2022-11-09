@@ -21,6 +21,7 @@ export default defineConfig({
     host: 'windows10.microdone.cn',
     port: 8080,
     hmr: true,
+    usePolling: true,
     proxy: {
       '/api': {
         target: 'http://windows10.microdone.cn:3000',

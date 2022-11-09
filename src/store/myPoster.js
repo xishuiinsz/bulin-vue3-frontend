@@ -7,5 +7,10 @@ export const useMyPosterStore = defineStore('myPoster', {
     }
   },
   getters: {},
-  actions: {}
+  actions: {
+    // 更新 缩放率
+    setScaleRate(rate) {
+      this.scaleRate = rate
+    }
+  }
 })

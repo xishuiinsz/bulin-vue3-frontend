@@ -2,49 +2,23 @@
   <div class="toolbar-generic-container">
     <el-button-group class="common-btn-actions" v-show="isShowCommonTool">
       <el-button v-if="textLock" @click="lockModify(textLock)" type="primary">{{
-        textLock
+          textLock
       }}</el-button>
-      <el-button
-        :disabled="availableDeleteLayer"
-        @click="deleteLayerHandler"
-        type="primary"
-        >删除</el-button
-      >
-      <el-button :disabled="availableMoveup" @click="moveToUpEvt" type="primary"
-        >上移一层</el-button
-      >
-      <el-button
-        :disabled="availableMovedown"
-        @click="moveTodownEvt"
-        type="primary"
-        >下移一层</el-button
-      >
-      <el-button
-        :disabled="availableMoveToTop"
-        @click="moveToTopEvt"
-        type="primary"
-        >置顶</el-button
-      >
-      <el-button
-        :disabled="availableMoveToBottom"
-        @click="moveToBottomEvt"
-        type="primary"
-        >置底</el-button
-      >
-      <el-button
-        :disabled="textLock === '解锁'"
-        v-if="textGroup"
-        @click="groupModify(textGroup)"
-        type="primary"
-        >{{ textGroup }}</el-button
-      >
+      <el-button :disabled="availableDeleteLayer" @click="deleteLayerHandler" type="primary">删除</el-button>
+      <el-button :disabled="availableMoveup" @click="moveToUpEvt" type="primary">上移一层</el-button>
+      <el-button :disabled="availableMovedown" @click="moveTodownEvt" type="primary">下移一层</el-button>
+      <el-button :disabled="availableMoveToTop" @click="moveToTopEvt" type="primary">置顶</el-button>
+      <el-button :disabled="availableMoveToBottom" @click="moveToBottomEvt" type="primary">置底</el-button>
+      <el-button :disabled="textLock === '解锁'" v-if="textGroup" @click="groupModify(textGroup)" type="primary">{{
+          textGroup
+      }}</el-button>
     </el-button-group>
     <component :is="currentComp" />
   </div>
 </template>
 <script setup>
 import { computed, inject } from 'vue'
-import stageTool from './stageTool.vue'
+import stageTool from './StageToolBar.vue'
 import circleTool from './circleTool.vue'
 import imageTool from './imageTool.vue'
 import textTool from './textTool.vue'
