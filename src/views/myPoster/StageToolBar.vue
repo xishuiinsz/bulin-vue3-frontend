@@ -47,13 +47,7 @@
       </el-form-item>
     </el-form>
     <el-dialog v-model="dialogVisibleAddElement" :title="dialogOption.title" :show-close="false" width="30%">
-      <component @formChange="formChange" :is="dialogOption.component" />
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="cancelAddElement">Cancel</el-button>
-          <el-button @click="confirmAddElement" type="primary">确认</el-button>
-        </span>
-      </template>
+      <component @closeElementDialog="closeElementDialogEvt" :is="dialogOption.component" />
     </el-dialog>
   </div>
 </template>
@@ -174,6 +168,10 @@ const addImageHanler = (text) => {
   dialogVisibleAddElement.value = true
 }
 
+// 关闭元素新增|编辑对话框
+const closeElementDialogEvt = () => {
+  dialogVisibleAddElement.value = false
+}
 // 取消 新增元素
 const cancelAddElement = () => {
   dialogOption.title = '新增元素'
