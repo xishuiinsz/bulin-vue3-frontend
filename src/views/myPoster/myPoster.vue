@@ -50,6 +50,8 @@ const backgroundConfig = reactive({
   height: configKonva.height,
   x: 0,
   y: 0,
+  strokeWidth: 1,
+  stroke: '#fff',
   fill: 'rgb(50, 65, 87)',
   fillPatternImage: null
 })

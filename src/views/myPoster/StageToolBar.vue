@@ -19,6 +19,13 @@
       <el-form-item label="画布背景色">
         <el-color-picker v-model="backgroundcolorValue" @change="backgroundcolorChange"></el-color-picker>
       </el-form-item>
+      <el-form-item label="画布边框粗细">
+        <el-input-number style="width: 150px" v-model="strokeWidthValue" :min="1" :max="5000"
+          @change="strokeWidthChange" />
+      </el-form-item>
+      <el-form-item label="画布边框色">
+        <el-color-picker v-model="strokeColorValue" @change="strokeColorChange"></el-color-picker>
+      </el-form-item>
       <el-form-item label="画布背景图片">
         <el-upload class="bg-image-upload" action="#" :multiple="false" :http-request="handleUpload" :limit="1">
           <el-button type="primary">点我上传</el-button>
@@ -92,36 +99,37 @@ const shageSizeChange = (size) => {
 // 画布背景色
 const backgroundConfig = inject('backgroundConfig')
 const backgroundcolorValue = ref(backgroundConfig.fill)
+const strokeColorValue = ref(backgroundConfig.stroke)
+const strokeWidthValue = ref(backgroundConfig.strokeWidth)
 const backgroundcolorChange = (color) => {
   backgroundConfig.fillPriority = 'fill'
   backgroundConfig.fill = color
 }
+const strokeColorChange = (color) => {
+  backgroundConfig.stroke = color
+}
+const strokeWidthChange = (value) => {
+  backgroundConfig.strokeWidth = value
+}
 // 画布背景图片
-let jwt
+const jwt = 'test'
 const handleUpload = async (item) => {
-  const { data } = await axios.post(
-    `${staticServer}/api/auth/local`,
-    myIdentifier
-  )
-  jwt = data.jwt
   const formData = new window.FormData()
-  formData.append('files', item.file, item.file.name)
-  axios
-    .post(`${staticServer}/api/upload`, formData, {
+  formData.append('file', item.file, item.file.name)
+  const response = await axios
+    .post('/api/upload', formData, {
       headers: {
         Authorization: `Bearer ${jwt}`
       }
     })
-    .then((response) => {
-      const [fileInfo] = response.data
-      const { url } = fileInfo
-      const img = new window.Image()
-      img.onload = () => {
-        backgroundConfig.fillPriority = 'pattern'
-        backgroundConfig.fillPatternImage = img
-      }
-      img.src = `${staticServer}${url}`
-    })
+  const { uuid, name } = response.data
+  const url = `/api/uploads/${uuid}/${name}`
+  const image = new Image()
+  image.onload = () => {
+    backgroundConfig.fillPriority = 'pattern'
+    backgroundConfig.fillPatternImage = image
+  }
+  image.src = url
 }
 
 // 重置背景
