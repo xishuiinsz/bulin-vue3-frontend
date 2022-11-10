@@ -15,6 +15,7 @@ const loadImage = (path) => {
   })
 }
 const layerList = reactive([])
+
 const useLayerList = () => {
   const isShowLoading = ref(true)
   fetchLayerData().then(async (resp) => {
@@ -33,16 +34,16 @@ const useLayerList = () => {
     }
   })
 
-  // 尾部新增图层
-  const addLayerByTail = (type, item) => {
-    const maxId = 100
-    const layer = {
-      type,
-      attrs: { id: '' + (parseInt(maxId, 10) + 1), draggable: true, ...item }
-    }
-    layerList.push(layer)
+  return { isShowLoading, layerList }
+}
+// 尾部新增图层
+export const addLayerByTail = (type, item) => {
+  const maxId = getMaxId(layerList)
+  const layer = {
+    type,
+    attrs: { id: '' + (parseInt(maxId, 10) + 1), draggable: true, ...item }
   }
-  return { isShowLoading, layerList, addLayerByTail }
+  layerList.push(layer)
 }
 
 export default useLayerList

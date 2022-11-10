@@ -170,43 +170,20 @@ const addImageHanler = (text) => {
 
 // 关闭元素新增|编辑对话框
 const closeElementDialogEvt = () => {
-  dialogVisibleAddElement.value = false
-}
-// 取消 新增元素
-const cancelAddElement = () => {
   dialogOption.title = '新增元素'
   dialogVisibleAddElement.value = false
 }
 
-// 确认 新增元素
-const confirmAddElement = () => {
-  if (dialogOption.elementType === 'Image') {
-    if (!formData.image || !(formData.image instanceof window.Image)) {
-      ElMessage.error({
-        message: '请上传图片或等待图片加载完成！'
-      })
-      return
-    }
-  }
-  dialogOption.title = '新增元素'
-  dialogVisibleAddElement.value = false
-  const maxId = getMaxId(layerList)
-  layerList.push({
-    type: dialogOption.elementType,
-    attrs: Object.assign(
-      { id: '' + (parseInt(maxId, 10) + 1), draggable: true },
-      formData
-    )
-  })
-}
-
-// 表单改变事件
-const formChange = (list) => {
-  formData = list
-}
 </script>
 <script>
 export default {
   name: 'StageToolBar'
 }
 </script>
+<style lang="scss">
+.element-image-container {
+  .footer {
+    text-align: right;
+  }
+}
+</style>

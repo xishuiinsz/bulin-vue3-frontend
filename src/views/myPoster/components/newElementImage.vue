@@ -1,5 +1,5 @@
 <template>
-  <div class="element-image-container">
+  <div class="element-image-container element-image-container">
     <el-form label-width="120px">
       <el-form-item label="宽度">
         <el-input-number :disabled="flagWidthAuto" :min="1" v-model="imageOption.width" />
@@ -43,7 +43,7 @@
 <script setup>
 import { ref, reactive, toRaw } from 'vue'
 import axios from 'axios'
-import useLayerList from '../hooks/useLayerList'
+import { addLayerByTail } from '../hooks/useLayerList'
 import { ElMessage } from 'element-plus'
 const imageRawOption = {}
 const emit = defineEmits(['formChange', 'closeElementDialog'])
@@ -130,7 +130,6 @@ const confirmAddElement = () => {
     })
     return
   }
-  const { addLayerByTail } = useLayerList()
   addLayerByTail('Image', imageOption)
   emit('closeElementDialog')
 }
@@ -142,9 +141,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.element-image-container {
-  .footer {
-    text-align: right;
-  }
-}
+.element-image-container {}
 </style>

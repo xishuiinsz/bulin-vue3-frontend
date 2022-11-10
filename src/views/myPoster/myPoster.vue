@@ -10,8 +10,8 @@
             :config="configKonva">
             <k-layer>
               <k-rect :config="backgroundConfig"></k-rect>
-              <layerRenderList v-for="item in layerList" :key="item.attrs.id" v-bind="item">
-              </layerRenderList>
+              <layerRenderComp v-for="item in layerList" :key="item.attrs.id" v-bind="item">
+              </layerRenderComp>
               <k-transformer @dragend="dragendEvt" @transform="transitionendEvt" ref="refTransformer"
                 :config="configTransformer">
               </k-transformer>
@@ -26,8 +26,7 @@
 import { onMounted, reactive, ref, provide, getCurrentInstance } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
-import layerRenderList from './layerList.vue'
-import layerRawData from './layerData'
+import layerRenderComp from './layerRenderComp.vue'
 import { getShageOptionById, setStageScale, computedFitScale } from './utils'
 import { anchorsTrnasformer } from './config'
 import useLayerList from './hooks/useLayerList'
@@ -56,7 +55,8 @@ const backgroundConfig = reactive({
 })
 provide('backgroundConfig', backgroundConfig)
 
-const list = reactive(layerRawData)
+// 图层数据列表
+const { isShowLoading, layerList } = useLayerList()
 const currentShape = ref([])
 
 // 可变形矩形选择
@@ -66,7 +66,7 @@ const configTransformer = reactive({
 })
 // 数据提供
 provide('currentShape', currentShape)
-provide('layerList', list)
+provide('layerList', layerList)
 provide('configKonva', configKonva)
 
 function handleStageMousewheel (e) {
@@ -133,7 +133,7 @@ function dragendEvt () {
   const updateShapes = (shapes) => {
     shapes.forEach((shape) => {
       const { id } = shape.attrs
-      const shapeData = getShageOptionById(id, layerRawData)
+      const shapeData = getShageOptionById(id, layerList)
       shapeData &&
         Object.assign(shapeData.attrs, {
           x: shape.getAbsolutePosition().x,
@@ -153,7 +153,7 @@ function transitionendEvt (e) {
   const shapes = transformerNode.getNodes()
   shapes.forEach((shape) => {
     const { id } = shape.attrs
-    const [shapeData] = layerRawData.filter((item) => item.attrs.id === id)
+    const [shapeData] = layerList.filter((item) => item.attrs.id === id)
     if (shapeData) {
       Object.assign(shapeData.attrs, {
         scaleX: shape.attrs.scaleX,
@@ -162,9 +162,6 @@ function transitionendEvt (e) {
     }
   })
 }
-
-// 图层数据列表
-const { isShowLoading, layerList } = useLayerList()
 
 // 生命钩子函数
 onMounted(() => {

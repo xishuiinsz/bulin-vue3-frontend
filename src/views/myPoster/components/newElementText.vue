@@ -1,102 +1,78 @@
 <template>
-  <myForm @formChange="formChange" :formList="formList"></myForm>
+  <div class="element-common-container element-image-container">
+    <el-form label-width="120px">
+      <el-form-item label="宽度">
+        <el-input-number :min="10" v-model="fontOption.width" />
+      </el-form-item>
+      <el-form-item label="高度">
+        <el-input-number :min="10" v-model="fontOption.height" />
+      </el-form-item>
+      <el-form-item label="x轴距离">
+        <el-input-number v-model="fontOption.x" />
+      </el-form-item>
+      <el-form-item label="y轴距离">
+        <el-input-number v-model="fontOption.y" />
+      </el-form-item>
+      <el-form-item label="文本内容">
+        <el-input v-model="fontOption.text" />
+      </el-form-item>
+      <el-form-item label="字号">
+        <el-input-number v-model="fontOption.fontSize" />
+      </el-form-item>
+      <el-form-item label="填充色">
+        <el-color-picker v-model="fontOption.fill" />
+      </el-form-item>
+      <el-form-item label="字体族">
+        <el-select v-model="fontOption.fontFamily">
+          <el-option v-for="subitem in transferedFontFamilyList" :key="subitem.value" :label="subitem.label"
+            :value="subitem.value" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div class="footer">
+      <span class="dialog-footer">
+        <el-button @click="cancelAddElement">Cancel</el-button>
+        <el-button @click="confirmAddElement" type="primary">确认</el-button>
+      </span>
+    </div>
+  </div>
 </template>
 <script setup>
-import { onMounted, toRaw } from 'vue'
-import myForm from './myForm.vue'
+import { reactive, toRaw } from 'vue'
 import { fontFamilyList } from '../config'
+import { addLayerByTail } from '../hooks/useLayerList'
+const emit = defineEmits(['closeElementDialog'])
+
+// 字体列表格式化
 const transferedFontFamilyList = fontFamilyList.map((item) => {
   return {
     value: item.en,
     label: `${item.ch}(${item.en})`
   }
 })
-const emit = defineEmits(['formChange'])
-const formList = [
-  {
-    key: 'width',
-    label: '宽度',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'height',
-    label: '高度',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'x',
-    label: 'X轴距离',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'y',
-    label: 'y轴距离',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'text',
-    label: '文本',
-    name: 'ElInput',
-    attrs: {
-      initValue: '编辑文本'
-    }
-  },
-  {
-    key: 'fontSize',
-    label: '字号',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 14
-    }
-  },
-  {
-    key: 'fill',
-    label: '颜色',
-    name: 'ElColorPicke',
-    attrs: {
-      initValue: '#fff'
-    }
-  },
-  {
-    key: 'fontFamily',
-    label: '字体名称',
-    name: 'ElSelect',
-    options: transferedFontFamilyList,
-    attrs: {
-      initValue: 'Microsoft YaHei'
-    }
-  }
-]
-const formChange = (list, key) => {
-  // 校验字段
-  const op = {}
-  list.forEach((item) =>
-    Object.assign(op, {
-      [item.key]: toRaw(item.modelValue)
-    })
-  )
-  emit('formChange', op)
-}
-onMounted(() => {
-  const op = {}
-  const data = formList.map((item) => {
-    return { [item.key]: item.attrs.initValue }
-  })
-  data.forEach((item) => Object.assign(op, item))
-  emit('formChange', op)
+
+// 字体响应式模型数据
+const fontOption = reactive({
+  width: 200,
+  height: 200,
+  x: 200,
+  y: 200,
+  text: '编辑内容',
+  fontSize: 14,
+  fill: '#303133',
+  fontFamily: 'SimSun'
+
 })
+// 取消 新增元素
+const cancelAddElement = () => {
+  emit('closeElementDialog')
+}
+
+// 确认 新增元素
+const confirmAddElement = () => {
+  addLayerByTail('Text', toRaw(fontOption))
+  emit('closeElementDialog')
+}
 </script>
 <script>
 export default {
