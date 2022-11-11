@@ -1,108 +1,55 @@
 <template>
-  <myForm @formChange="formChange" :formList="formList"></myForm>
+  <div class="element-common-container element-circle-container">
+    <el-form label-width="120px">
+      <el-form-item label="半径">
+        <el-input-number :min="1" v-model="circleOption.radius" />
+      </el-form-item>
+      <el-form-item label="x轴距离">
+        <el-input-number v-model="circleOption.x" />
+      </el-form-item>
+      <el-form-item label="y轴距离">
+        <el-input-number v-model="circleOption.y" />
+      </el-form-item>
+      <el-form-item label="描边色">
+        <el-color-picker v-model="circleOption.stroke" />
+      </el-form-item>
+      <el-form-item label="填充色">
+        <el-color-picker v-model="circleOption.fill" />
+      </el-form-item>
+    </el-form>
+    <div class="footer">
+      <span class="dialog-footer">
+        <el-button @click="cancelAddElement">Cancel</el-button>
+        <el-button @click="confirmAddElement" type="primary">确认</el-button>
+      </span>
+    </div>
+  </div>
 </template>
 <script setup>
-import { onMounted, toRaw } from 'vue'
-import myForm from './myForm.vue'
-const emit = defineEmits(['formChange'])
-const formList = [
-  {
-    key: 'radius',
-    label: '半径',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 100
-    }
-  },
-  {
-    key: 'x',
-    label: 'X轴距离',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'y',
-    label: 'y轴距离',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 200
-    }
-  },
-  {
-    key: 'strokeWidth',
-    label: '描边粗细',
-    name: 'ElInputNumber',
-    attrs: {
-      initValue: 2
-    }
-  },
-  {
-    key: 'stroke',
-    label: '描边颜色',
-    name: 'ElColorPicke',
-    attrs: {
-      initValue: '#202aa300'
-    }
-  },
-  {
-    key: 'fill',
-    label: '填充色',
-    name: 'ElColorPicke',
-    attrs: {
-      initValue: '#fff'
-    }
-  }
-  // {
-  //   key: 'height',
-  //   label: '高度',
-  //   name: 'ElSelect',
-  //   options: [
-  //     {
-  //       value: 'Option1',
-  //       label: 'Option1'
-  //     },
-  //     {
-  //       value: 'Option2',
-  //       label: 'Option2'
-  //     },
-  //     {
-  //       value: 'Option3',
-  //       label: 'Option3'
-  //     },
-  //     {
-  //       value: 'Option4',
-  //       label: 'Option4'
-  //     },
-  //     {
-  //       value: 'Option5',
-  //       label: 'Option5'
-  //     }
-  //   ],
-  //   attrs: {
-  //     initValue: '300'
-  //   }
-  // }
-]
-const formChange = (list, key) => {
-  // 校验字段
-  const op = {}
-  list.forEach((item) =>
-    Object.assign(op, {
-      [item.key]: toRaw(item.modelValue)
-    })
-  )
-  emit('formChange', op)
-}
-onMounted(() => {
-  const op = {}
-  const data = formList.map((item) => {
-    return { [item.key]: item.attrs.initValue }
-  })
-  data.forEach((item) => Object.assign(op, item))
-  emit('formChange', op)
+import { reactive, toRaw } from 'vue'
+import { addLayerByTail } from '../hooks/useLayerList'
+const emit = defineEmits(['closeElementDialog'])
+
+// 字体响应式模型数据
+const circleOption = reactive({
+  radius: 100,
+  x: 200,
+  y: 200,
+  strokeWidth: 1,
+  stroke: '#000',
+  fill: '#ffffff00'
+
 })
+// 取消 新增元素
+const cancelAddElement = () => {
+  emit('closeElementDialog')
+}
+
+// 确认 新增元素
+const confirmAddElement = () => {
+  addLayerByTail('Circle', toRaw(circleOption))
+  emit('closeElementDialog')
+}
 </script>
 <script>
 export default {

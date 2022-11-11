@@ -1,5 +1,5 @@
 <template>
-  <div class="element-image-container element-image-container">
+  <div class="element-common-container element-image-container">
     <el-form label-width="120px">
       <el-form-item label="宽度">
         <el-input-number :disabled="flagWidthAuto" :min="1" v-model="imageOption.width" />

@@ -64,12 +64,10 @@ import newElementText from './components/newElementText.vue'
 import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
 import newElementImage from './components/newElementImage.vue'
-import { getMaxId, downloadURI } from './utils'
+import { downloadURI } from './utils'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import useScaleRate from './hooks/useScaleRate'
-import { staticServer, myIdentifier } from './config'
-let formData
 const layerList = inject('layerList')
 const shapeSize = inject('configKonva')
 const dialogVisibleAddElement = ref(false)
@@ -101,6 +99,7 @@ const backgroundConfig = inject('backgroundConfig')
 const backgroundcolorValue = ref(backgroundConfig.fill)
 const strokeColorValue = ref(backgroundConfig.stroke)
 const strokeWidthValue = ref(backgroundConfig.strokeWidth)
+
 const backgroundcolorChange = (color) => {
   backgroundConfig.fillPriority = 'fill'
   backgroundConfig.fill = color
@@ -189,7 +188,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.element-image-container {
+.element-common-container {
   .footer {
     text-align: right;
   }
