@@ -30,7 +30,6 @@ import layerRenderComp from './layerRenderComp.vue'
 import { getShageOptionById, setStageScale, computedFitScale } from './utils'
 import { anchorsTrnasformer } from './config'
 import useLayerList from './hooks/useLayerList'
-import { useMyPosterStore } from '@/store/myPoster'
 import('./myPoster.scss')
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
@@ -170,8 +169,6 @@ onMounted(() => {
   const { globalProperties } = currentInstance.appContext.config
   Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
   const scaleRate = computedFitScale(configKonva.width, configKonva.height)
-  const myPosterStore = useMyPosterStore()
-  myPosterStore.setScaleRate(scaleRate)
   setStageScale(scaleRate)
   Object.assign(globalProperties, { scaleRate })
 })
