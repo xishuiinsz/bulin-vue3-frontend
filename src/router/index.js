@@ -197,13 +197,15 @@ const routes = [
     ]
   },
   {
-    path: '/myPoster',
-    name: 'MyPoster',
+    path: '/myPosterPage',
+    name: 'MyPosterPage',
     meta: {
       title: '在线海报'
     },
     component: () =>
-      import(/* webpackChunkName: "myPoster" */ '@/views/myPoster/myPoster.vue')
+      import(
+        /* webpackChunkName: "myPoster" */ '@/views/myPoster/myPosterPage.vue'
+      )
   },
   {
     path: '/login',

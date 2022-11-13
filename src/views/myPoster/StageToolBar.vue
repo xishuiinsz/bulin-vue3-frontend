@@ -67,23 +67,22 @@ import newElementImage from './components/newElementImage.vue'
 import { downloadURI } from './utils'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
-import useScaleRate from './hooks/useScaleRate'
+import useScaleRate, { changeScaleRate } from './hooks/useScaleStage'
+import { useMyPosterStore } from '@/store/myPoster'
 const layerList = inject('layerList')
 const shapeSize = inject('configKonva')
 const dialogVisibleAddElement = ref(false)
-const currentInstance = getCurrentInstance()
-// 借助全局app传递数据
-const { globalProperties } = currentInstance.appContext.config
 const dialogOption = {
   title: '新增元素',
   type: '',
   component: null
 }
-const { scaleRate, changeScaleRate } = useScaleRate()
+const { scaleRate } = useScaleRate()
 // 画布另存为
 const pixelRatioChoose = (value) => {
-  if (globalProperties.mainKonvaStage) {
-    const stage = globalProperties.mainKonvaStage.getStage()
+  const myPosterStore = useMyPosterStore()
+  if (myPosterStore.stageNode) {
+    const stage = myPosterStore.stageNode
     const dataURL = stage.toDataURL({
       pixelRatio: value
     })

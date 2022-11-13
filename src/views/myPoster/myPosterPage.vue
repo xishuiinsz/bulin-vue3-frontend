@@ -27,9 +27,11 @@ import { onMounted, reactive, ref, provide, getCurrentInstance } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerRenderComp from './layerRenderComp.vue'
-import { getShageOptionById, setStageScale, computedFitScale } from './utils'
+import { getShageOptionById } from './utils'
 import { anchorsTrnasformer } from './config'
 import useLayerList from './hooks/useLayerList'
+import { useMyPosterStore } from '@/store/myPoster'
+import { computedFitScale, changeScaleRate } from './hooks/useScaleStage'
 import('./myPoster.scss')
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
@@ -164,13 +166,17 @@ function transitionendEvt (e) {
   })
 }
 
+const fitScreen = () => {
+  const scaleRate = computedFitScale(configKonva.width, configKonva.height)
+  changeScaleRate(scaleRate)
+}
+
 // 生命钩子函数
 onMounted(() => {
-  const { globalProperties } = currentInstance.appContext.config
-  Object.assign(globalProperties, { mainKonvaStage: refMainStage.value })
-  const scaleRate = computedFitScale(configKonva.width, configKonva.height)
-  setStageScale(scaleRate)
-  Object.assign(globalProperties, { scaleRate })
+  const mPosterStore = useMyPosterStore()
+  mPosterStore.setStageNode(refMainStage.value)
+  fitScreen()
+  window.addEventListener('resize', fitScreen)
 })
 </script>
 <script>
