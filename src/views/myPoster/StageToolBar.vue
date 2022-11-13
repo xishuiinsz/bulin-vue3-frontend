@@ -42,7 +42,7 @@
           @change="shageSizeChange('height')" />
       </el-form-item>
       <el-form-item label="画布缩放">
-        <el-slider @input="changeScaleRate" :min="0.2" :max="10" :step="0.1" v-model="scaleRate" />
+        <el-slider @input="scaleRateChange" :min="0.2" :max="10" :step="0.1" v-model="scaleRate" />
       </el-form-item>
       <el-form-item label="新增元素">
         <el-button-group>
@@ -59,7 +59,7 @@
   </div>
 </template>
 <script setup>
-import { ref, inject, getCurrentInstance } from 'vue'
+import { ref, inject, toRaw } from 'vue'
 import newElementText from './components/newElementText.vue'
 import newElementCircle from './components/newElementCircle.vue'
 import newElementRect from './components/newElementRect.vue'
@@ -91,6 +91,11 @@ const pixelRatioChoose = (value) => {
 }
 const shageSizeChange = (size) => {
   console.log(size)
+}
+
+const scaleRateChange = (value) => {
+  const { width, height } = toRaw(shapeSize)
+  changeScaleRate(value, width, height)
 }
 
 // 画布背景色
