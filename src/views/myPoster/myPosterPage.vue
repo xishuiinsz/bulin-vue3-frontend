@@ -8,7 +8,7 @@
         <div v-loading="isShowLoading" class="outer-konva-stage">
           <k-stage ref="refMainStage" @wheel="handleStageMousewheel" @mousedown="handleStageClick"
             :config="configKonva">
-            <k-layer>
+            <k-layer v-if="layerList.length">
               <k-rect :config="backgroundConfig"></k-rect>
               <layerRenderComp v-for="item in layerList" :key="item.attrs.id" v-bind="item">
               </layerRenderComp>
@@ -168,7 +168,7 @@ function transitionendEvt (e) {
 
 const fitScreen = () => {
   const scaleRate = computedFitScale(configKonva.width, configKonva.height)
-  changeScaleRate(scaleRate)
+  changeScaleRate(scaleRate, configKonva.width, configKonva.height)
 }
 
 // 生命钩子函数

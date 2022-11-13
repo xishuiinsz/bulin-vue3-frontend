@@ -15,12 +15,24 @@ const loadImage = (path) => {
   })
 }
 const layerList = reactive([])
-
+export const mainStageConfig = reactive({
+  id: 'mainStageId',
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  strokeWidth: 0,
+  stroke: '#fff',
+  fill: 'rgb(50, 65, 87)',
+  fillPatternImage: null
+})
 const useLayerList = () => {
   const isShowLoading = ref(true)
   fetchLayerData().then(async (resp) => {
     if (resp?.code === '000000') {
       const layerData = resp?.list || []
+      const backgroundConfig = layerData.shift()
+      backgroundConfig && Object.assign(mainStageConfig, backgroundConfig.attrs)
       if (layerData.length) {
         for (const item of layerData) {
           if (item.type === 'Image') {
@@ -34,7 +46,7 @@ const useLayerList = () => {
     }
   })
 
-  return { isShowLoading, layerList }
+  return { isShowLoading, layerList, mainStageConfig }
 }
 // 尾部新增图层
 export const addLayerByTail = (type, item) => {

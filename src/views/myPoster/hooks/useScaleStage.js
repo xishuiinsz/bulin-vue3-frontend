@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useMyPosterStore } from '@/store/myPoster'
 import floor from 'lodash/floor'
 const scaleRate = ref(1)
@@ -10,10 +10,16 @@ export const getOuterWeorkbench = () => {
 }
 
 // update salce value by stage 设置画布缩放率
-export const setStageScale = (scaleValue) => {
+export const setStageScale = (scaleValue, stageSize) => {
+  const [width] = stageSize
   const myPosterStore = useMyPosterStore()
   const stageDom = myPosterStore.stageNode.content
   stageDom.style.transformOrigin = 'left center'
+  const outerContainer = getOuterWeorkbench()
+  const outerContainerStyle = getComputedStyle(outerContainer)
+  const totalWidth = parseFloat(outerContainerStyle.width)
+  const offsetX = (totalWidth - width * scaleValue) / 2
+  stageDom.style.left = `${offsetX}px`
   stageDom.style.transform = `scale(${scaleValue})`
 }
 
@@ -51,9 +57,11 @@ export const computedFitScale = (...stageSize) => {
 }
 
 //  manually change the scale value 手工改变scaleRate
-export const changeScaleRate = (value) => {
+export const changeScaleRate = (value, ...stageSize) => {
   scaleRate.value = value
-  setStageScale(value)
+  setTimeout(() => {
+    setStageScale(value, stageSize)
+  }, 200)
 }
 
 const useScaleRate = () => {
