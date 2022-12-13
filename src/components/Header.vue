@@ -17,7 +17,7 @@
         <el-menu :default-active="topActiveMenuItem" class="el-menu-top" mode="horizontal"
           background-color="transparent" @select="handleTopMenuSelect">
           <el-menu-item index="myComponents">组件列表</el-menu-item>
-          <el-menu-item index="myPoster">在线海报</el-menu-item>
+          <el-menu-item index="myPosterPage">在线海报</el-menu-item>
         </el-menu>
       </div>
     </div>
