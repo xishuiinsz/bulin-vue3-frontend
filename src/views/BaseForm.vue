@@ -12,7 +12,7 @@
       <div class="form-box">
         <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
           <el-form-item label="表单名称" prop="name">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.name" @input="nameInputEvt"></el-input>
           </el-form-item>
           <el-form-item label="选择器" prop="region">
             <el-select v-model="form.region" placeholder="请选择">
@@ -24,31 +24,20 @@
           <el-form-item label="日期时间">
             <el-col :span="11">
               <el-form-item prop="date1">
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  v-model="form.date1"
-                  style="width: 100%"
-                ></el-date-picker>
+                <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
+                  style="width: 100%"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col class="line" :span="2">-</el-col>
             <el-col :span="11">
               <el-form-item prop="date2">
-                <el-time-picker
-                  placeholder="选择时间"
-                  v-model="form.date2"
-                  style="width: 100%"
-                >
+                <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%">
                 </el-time-picker>
               </el-form-item>
             </el-col>
           </el-form-item>
           <el-form-item label="城市级联" prop="options">
-            <el-cascader
-              :options="options"
-              v-model="form.options"
-            ></el-cascader>
+            <el-cascader :options="options" v-model="form.options"></el-cascader>
           </el-form-item>
           <el-form-item label="选择开关" prop="delivery">
             <el-switch v-model="form.delivery"></el-switch>
@@ -81,11 +70,11 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 export default {
   name: 'baseform',
-  setup() {
+  setup () {
     const options = [
       {
         value: 'guangdong',
@@ -153,6 +142,20 @@ export default {
       desc: '',
       options: []
     })
+
+    // 精准计算支持20个西方字符10个中文字符
+    const nameInputEvt = (value) => {
+      if (value) {
+        let realLength = value.replace(/[\u0391-\uFFE5]/g, 'aa').length
+        const arrName = value.split('')
+        while (realLength > 20) {
+          arrName.pop()
+          const name = arrName.join('')
+          realLength = name.replace(/[\u0391-\uFFE5]/g, 'aa').length
+        }
+        form.name = arrName.join('')
+      }
+    }
     // 提交
     const onSubmit = () => {
       // 表单校验
@@ -170,6 +173,7 @@ export default {
     }
 
     return {
+      nameInputEvt,
       options,
       rules,
       formRef,
