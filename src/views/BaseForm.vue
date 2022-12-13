@@ -144,11 +144,12 @@ export default {
     })
 
     // 精准计算支持20个西方字符10个中文字符
+    const maxInputChar = 20
     const nameInputEvt = (value) => {
       if (value) {
         let realLength = value.replace(/[\u0391-\uFFE5]/g, 'aa').length
         const arrName = value.split('')
-        while (realLength > 20) {
+        while (realLength > maxInputChar) {
           arrName.pop()
           const name = arrName.join('')
           realLength = name.replace(/[\u0391-\uFFE5]/g, 'aa').length
