@@ -241,6 +241,7 @@ export const useGroupModify = (shape, layerList) => {
       indexArray = indexArray.sort((a, b) => b - a)
       let shapesGroup = indexArray.map((index) => layerList.splice(index, 1))
       shapesGroup = shapesGroup.reduce((a, b) => a.concat(b))
+      shapesGroup.reverse()
       shapesGroup.forEach((item) => (item.attrs.draggable = false))
       const group = {
         type: 'Group',

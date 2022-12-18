@@ -15,6 +15,7 @@
               <k-transformer @dragend="dragendEvt" @transform="transitionendEvt" ref="refTransformer"
                 :config="configTransformer">
               </k-transformer>
+              <k-rect :config="selectionBoxConfig"></k-rect>
             </k-layer>
           </k-stage>
         </div>
@@ -42,6 +43,13 @@ const configKonva = reactive({
   id: 'mainStageId',
   width: 1920,
   height: 1080
+})
+
+// 动态矩形选择框
+const selectionBoxConfig = reactive({
+  id: 'selectionBox',
+  fill: 'rgba(0,0,255,0.5)',
+  visible: false
 })
 
 // rect模拟背景层配置
@@ -76,22 +84,73 @@ function handleStageMousewheel (e) {
   e.evt.preventDefault()
   if (e.evt.ctrlKey === true) {
     console.log(e.evt.wheelDelta)
-    setStageScale(e.evt.wheelDelta / 100, currentInstance)
+    // setStageScale(e.evt.wheelDelta / 100, currentInstance)
   }
 }
+
+// 鼠标指标的坐标位置
+const selectionBoxOption = {
+  x1: 0,
+  y1: 0,
+  x2: 0,
+  y2: 0
+}
+// 鼠标在画布（即背景图）上移动时事件
+function mousemoveOnstage (e) {
+  if (!selectionBoxConfig.visible) {
+    return
+  }
+  e.evt.preventDefault()
+  selectionBoxOption.x2 = this.getPointerPosition().x
+  selectionBoxOption.y2 = this.getPointerPosition().y
+  const { x1, y1, x2, y2 } = selectionBoxOption
+  Object.assign(selectionBoxConfig, {
+    x: Math.min(x1, x2),
+    y: Math.min(y1, y2),
+    width: Math.abs(x2 - x1),
+    height: Math.abs(y2 - y1)
+  })
+}
+
 // Stage点击事件
 function handleStageClick (e) {
-  // 点击对象为用来模拟【背景】的矩形
-  if (e.target.getParent() === refTransformer.value.getNode()) return
+  // 当点击模拟背景节点时
   if (e.target.attrs.id === 'backgroundRect') {
     currentShape.value = []
     updateTransformer()
+    e.evt.preventDefault()
+    selectionBoxOption.x1 = this.getPointerPosition().x
+    selectionBoxOption.y1 = this.getPointerPosition().y
+    selectionBoxOption.x2 = this.getPointerPosition().x
+    selectionBoxOption.y2 = this.getPointerPosition().y
+    selectionBoxConfig.visible = true
+    selectionBoxConfig.width = 0
+    selectionBoxConfig.height = 0
+    this.on('mousemove touchmove', mousemoveOnstage)
+    this.on('mouseup touchend', () => {
+      this.off('mousemove touchmove')
+      if (selectionBoxConfig.width && selectionBoxConfig.height) {
+        const selectBoxNode = this.findOne('#selectionBox')
+        const box = selectBoxNode.getClientRect()
+        const selected = []
+        layerList.forEach((el) => {
+          const id = el.attrs.id
+          const shape = this.findOne(`#${id}`)
+          if (Konva.Util.haveIntersection(box, shape.getClientRect())) {
+            selected.push(shape)
+          }
+        })
+        if (selected.length) {
+          currentShape.value = [...selected]
+          updateTransformer()
+        }
+      }
+      Object.assign(selectionBoxConfig, { visible: false })
+    })
     return
   }
-  // 当点击对象为stage时
-  if (this === e.target) {
-    currentShape.value = []
-    updateTransformer()
+  // 当点击Transformer节点时
+  if (e.target.getParent() === refTransformer.value.getNode()) {
     return
   }
   let nodeEle
@@ -152,18 +211,22 @@ function dragendEvt () {
 
 // 矩形选择框变形完成事件
 function transitionendEvt (e) {
-  const transformerNode = refTransformer.value.getNode()
-  const shapes = transformerNode.getNodes()
-  shapes.forEach((shape) => {
-    const { id } = shape.attrs
-    const [shapeData] = layerList.filter((item) => item.attrs.id === id)
-    if (shapeData) {
-      Object.assign(shapeData.attrs, {
-        scaleX: shape.attrs.scaleX,
-        scaleY: shape.attrs.scaleY
-      })
-    }
-  })
+  const shapesList = this.getNodes()
+  const updateShapes = (shapes) => {
+    shapes.forEach((shape) => {
+      const { id } = shape.attrs
+      const shapeData = getShageOptionById(id, layerList)
+      shapeData &&
+        Object.assign(shapeData.attrs, {
+          scaleX: shape.attrs.scaleX,
+          scaleY: shape.attrs.scaleY
+        })
+      if (shape instanceof Konva.Group) {
+        updateShapes(shape.children)
+      }
+    })
+  }
+  updateShapes(shapesList)
 }
 
 const fitScreen = () => {
