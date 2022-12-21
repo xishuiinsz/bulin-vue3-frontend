@@ -1,4 +1,4 @@
-export const getShageOptionById = (id, shageList) => {
+export const getShageDataById = (id, shageList) => {
   let option
   for (let index = 0; index < shageList.length; index++) {
     const element = shageList[index]
@@ -7,7 +7,7 @@ export const getShageOptionById = (id, shageList) => {
       break
     }
     if (element.children && element.children.length) {
-      return getShageOptionById(id, element.children)
+      return getShageDataById(id, element.children)
     }
   }
   return option

@@ -6,14 +6,13 @@
       </el-aside>
       <el-main class="poster-work-bench">
         <div v-loading="isShowLoading" class="outer-konva-stage">
-          <k-stage ref="refMainStage" @wheel="handleStageMousewheel" @mousedown="handleStageClick"
+          <k-stage ref="refMainStage" @dragend="dragendEvt" @wheel="handleStageMousewheel" @mousedown="handleStageClick"
             :config="configKonva">
             <k-layer v-if="layerList.length">
               <k-rect :config="backgroundConfig"></k-rect>
               <layerRenderComp v-for="item in layerList" :key="item.attrs.id" v-bind="item">
               </layerRenderComp>
-              <k-transformer @dragend="dragendEvt" @transform="transitionendEvt" ref="refTransformer"
-                :config="configTransformer">
+              <k-transformer @transform="transitionendEvt" ref="refTransformer" :config="configTransformer">
               </k-transformer>
               <k-rect :config="selectionBoxConfig"></k-rect>
             </k-layer>
@@ -28,11 +27,12 @@ import { onMounted, reactive, ref, provide, getCurrentInstance } from 'vue'
 import Konva from 'konva'
 import toolbar from './toolbar.vue'
 import layerRenderComp from './layerRenderComp.vue'
-import { getShageOptionById } from './utils'
+import { getShageDataById } from './utils'
 import { anchorsTrnasformer } from './config'
 import useLayerList from './hooks/useLayerList'
 import { useMyPosterStore } from '@/store/myPoster'
 import { computedFitScale, changeScaleRate } from './hooks/useScaleStage'
+import { Transformer } from 'konva/lib/shapes/Transformer'
 import('./myPoster.scss')
 const currentInstance = getCurrentInstance()
 const refTransformer = ref(null)
@@ -190,23 +190,16 @@ const destroyTransformerEvt = () => {
 }
 
 // transformer 拖拽完成事件
-function dragendEvt () {
-  const shapesList = this.getNodes()
-  const updateShapes = (shapes) => {
-    shapes.forEach((shape) => {
-      const { id } = shape.attrs
-      const shapeData = getShageOptionById(id, layerList)
-      shapeData &&
-        Object.assign(shapeData.attrs, {
-          x: shape.getAbsolutePosition().x,
-          y: shape.getAbsolutePosition().y
-        })
-      if (shape instanceof Konva.Group) {
-        updateShapes(shape.children)
-      }
-    })
+function dragendEvt ({ target }) {
+  if (target.attrs.id !== 'mainTransfer') {
+    const { id } = target.attrs
+    const shapeData = getShageDataById(id, layerList)
+    shapeData &&
+      Object.assign(shapeData.attrs, {
+        x: target.getAbsolutePosition().x,
+        y: target.getAbsolutePosition().y
+      })
   }
-  updateShapes(shapesList)
 }
 
 // 矩形选择框变形完成事件
@@ -215,7 +208,7 @@ function transitionendEvt (e) {
   const updateShapes = (shapes) => {
     shapes.forEach((shape) => {
       const { id } = shape.attrs
-      const shapeData = getShageOptionById(id, layerList)
+      const shapeData = getShageDataById(id, layerList)
       shapeData &&
         Object.assign(shapeData.attrs, {
           scaleX: shape.attrs.scaleX,
