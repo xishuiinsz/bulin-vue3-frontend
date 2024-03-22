@@ -1,0 +1,19 @@
+[class*=' el-icon-lx'],
+[class^='el-icon-lx'] {
+  font-family: lx-iconfont !important;
+  font-style: inherit;
+}
+
+.icon-16 {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+.icon-20 {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+.icon-help {
+  background: url('@a/img/help.png') no-repeat scroll center center / 100%;
+}

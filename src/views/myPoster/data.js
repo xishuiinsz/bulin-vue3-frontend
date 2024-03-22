@@ -1,0 +1,48 @@
+export const layerList = [
+  {
+    id: '1708783066237',
+    type: 'text',
+    width: 70,
+    height: 32,
+    left: 100,
+    top: 200,
+    html: '<span style="font-size:16px;color: red;line-height:32px;">我是文本</span>',
+  },
+  {
+    id: '1708783066238',
+    type: 'line',
+    width: 200,
+    height: 20,
+    left: 100,
+    top: 400,
+    html: '<div style="width: 100%;height: 1px;position:absolute;top: 50%;transform:translateY(-50%);background-color: green;"></div>',
+  },
+  {
+    id: '1708783066239',
+    type: 'group',
+    width: 400,
+    height: 400,
+    left: 200,
+    top: 300,
+    children: [
+      {
+        id: '1708783066337',
+        type: 'text',
+        width: 200,
+        height: 32,
+        left: 100,
+        top: 200,
+        html: '<span style="font-size:16px;color: red;line-height:32px;">我是文本</span>',
+      },
+      {
+        id: '1703783066237',
+        type: 'text',
+        width: 200,
+        height: 32,
+        left: 150,
+        top: 250,
+        html: '<span style="font-size:16px;color: red;line-height:32px;">我是文本</span>',
+      },
+    ],
+  },
+];

@@ -1,0 +1,50 @@
+{
+  "name": "vue-manage-system",
+  "version": "5.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
+    "@floating-ui/dom": "^1.6.3",
+    "axios": "^0.21.1",
+    "cropperjs": "^1.6.1",
+    "echarts": "^5.4.0",
+    "element-plus": "^2.3.7",
+    "highlight.js": "^11.6.0",
+    "jsdoc": "^4.0.2",
+    "konva": "^8.3.11",
+    "lodash": "^4.17.21",
+    "marked": "^4.0.18",
+    "md-editor-v3": "^2.2.0",
+    "pinia": "^2.0.23",
+    "vue": "^3.1.2",
+    "vue-cropperjs": "^5.0.0",
+    "vue-i18n": "^9.0.0",
+    "vue-konva": "^3.0.1",
+    "vue-router": "^4.0.10",
+    "vue-schart": "^2.0.0",
+    "wangeditor": "^4.7.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.0",
+    "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "@vue/compiler-sfc": "^3.1.2",
+    "eslint": "^8.22.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "sass": "^1.54.5",
+    "vite": "^4.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

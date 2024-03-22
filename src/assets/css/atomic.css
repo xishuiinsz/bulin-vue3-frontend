@@ -1,0 +1,21 @@
+.text-center {
+  text-align: center;
+}
+.d-flex {
+  display: flex !important;
+}
+.pl8 {
+  padding-left: 8px !important;
+}
+.px-8 {
+  padding: 0 8px !important;
+}
+.flex-fill {
+  flex: 1 1 auto;
+}
+.w-100 {
+  width: 100% !important;
+}
+.align-items-center {
+  align-items: center !important;
+}
