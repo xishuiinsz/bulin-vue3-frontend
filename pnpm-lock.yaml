@@ -8,24 +8,27 @@ dependencies:
   '@element-plus/icons-vue':
     specifier: ^2.0.10
     version: 2.3.1(vue@3.4.21)
+  '@floating-ui/dom':
+    specifier: ^1.6.3
+    version: 1.6.3
   axios:
     specifier: ^0.21.1
     version: 0.21.4
+  cropperjs:
+    specifier: ^1.6.1
+    version: 1.6.1
   echarts:
     specifier: ^5.4.0
     version: 5.5.0
   element-plus:
     specifier: ^2.3.7
-    version: 2.6.1(vue@3.4.21)
+    version: 2.6.2(vue@3.4.21)
   highlight.js:
     specifier: ^11.6.0
     version: 11.9.0
   jsdoc:
     specifier: ^4.0.2
     version: 4.0.2
-  konva:
-    specifier: ^8.3.11
-    version: 8.4.3
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -47,9 +50,6 @@ dependencies:
   vue-i18n:
     specifier: ^9.0.0
     version: 9.10.2(vue@3.4.21)
-  vue-konva:
-    specifier: ^3.0.1
-    version: 3.0.2(konva@8.4.3)
   vue-router:
     specifier: ^4.0.10
     version: 4.3.0(vue@3.4.21)
@@ -1388,8 +1388,8 @@ packages:
     resolution: {integrity: sha512-XzWNH4ZSa9BwVUQSDorPWAUQ5WGuYz7zJUNpNif40zFCiCl20t8zgylmreNmn26h5kiyw2lg7RfTmeMBsDklqg==}
     dev: true
 
-  /element-plus@2.6.1(vue@3.4.21):
-    resolution: {integrity: sha512-6VRpLjwtIVdtUuITJPPKtpOH1NM6nuAkRE3q5O4Lrx0N1bYMhTkiqb2Jy7zfQuDPbOIkkF2OABTzegpNnzgsnQ==}
+  /element-plus@2.6.2(vue@3.4.21):
+    resolution: {integrity: sha512-WFMv1v83l437Xu+GeeM+ytxd9VUQpR4418BowvTVIPYItsoj6yK0ITIuSv19iCesF405FbAOaCIHXhJch0ilFA==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
@@ -2333,10 +2333,6 @@ packages:
       graceful-fs: 4.2.11
     dev: false
 
-  /konva@8.4.3:
-    resolution: {integrity: sha512-ARqdgAbdNIougRlOKvkQwHlGhXPRBV4KvhCP+qoPpGoVQwwiJe4Hkdu4HHdRPb9rGUp04jDTAxBzEwBsE272pg==}
-    dev: false
-
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -3106,15 +3102,6 @@ packages:
       '@intlify/shared': 9.10.2
       '@vue/devtools-api': 6.6.1
       vue: 3.4.21
-    dev: false
-
-  /vue-konva@3.0.2(konva@8.4.3):
-    resolution: {integrity: sha512-FNWKtPPVDihNuQcq7F4GzuVPkPaEfg8lnWezpRqgiC2VetdvONOiYOFD800jNL5kt/lEYnSOYvhqqdTPbv2c8w==}
-    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
-    peerDependencies:
-      konva: '>7'
-    dependencies:
-      konva: 8.4.3
     dev: false
 
   /vue-router@4.3.0(vue@3.4.21):

@@ -8,20 +8,12 @@ const routes = [
   },
   {
     path: '/myComponents',
-    redirect: '/myComponents/welcome',
+    redirect: '/myComponents/dashboard',
     component: Home,
     children: [
       {
-        path: 'welcome',
-        name: 'WelcomePage',
-        meta: {
-          title: '欢迎页',
-        },
-        component: () => import(/* webpackChunkName: "WelcomePage" */ '@v/WelcomePage.vue'),
-      },
-      {
         path: 'dashboard',
-        name: 'dashboard',
+        name: 'Dashboard',
         meta: {
           title: '系统首页',
         },
@@ -67,14 +59,6 @@ const routes = [
           title: 'tab标签',
         },
         component: () => import(/* webpackChunkName: "tabs" */ '@v/Tabs.vue'),
-      },
-      {
-        path: 'componentHtml',
-        name: 'ComponentHtml',
-        meta: {
-          title: '获取组件html文本',
-        },
-        component: () => import(/* webpackChunkName: "componentHtml" */ '@v/ComponentHtml.vue'),
       },
       {
         path: 'flowChartsByCavnvas',
@@ -214,14 +198,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "markdown" */ '@v/Markdown.vue'),
       },
     ],
-  },
-  {
-    path: '/myPosterPage',
-    name: 'MyPosterPage',
-    meta: {
-      title: '在线海报',
-    },
-    component: () => import(/* webpackChunkName: "myPoster" */ '@/views/myPoster/myPosterPage.vue'),
   },
   {
     path: '/login',

@@ -80,13 +80,11 @@
 </template>
 
 <script>
-  import Schart from 'vue-schart';
   import { marked } from 'marked';
   import { reactive, ref, onMounted } from 'vue';
   import logsMarkdown from '@/logs.md?raw';
   export default {
-    name: 'dashboard',
-    components: { Schart },
+    name: 'Dashboard',
     setup() {
       const name = window.localStorage.getItem('ms_username');
       const role = name === 'admin' ? '超级管理员' : '普通用户';

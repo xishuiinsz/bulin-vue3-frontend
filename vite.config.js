@@ -7,7 +7,6 @@ export default defineConfig({
   base: './',
   plugins: [vue(), vueJsx()],
   optimizeDeps: {
-    include: ['schart.js'],
   },
   resolve: {
     alias: [

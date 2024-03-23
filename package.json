@@ -16,7 +16,6 @@
     "element-plus": "^2.3.7",
     "highlight.js": "^11.6.0",
     "jsdoc": "^4.0.2",
-    "konva": "^8.3.11",
     "lodash": "^4.17.21",
     "marked": "^4.0.18",
     "md-editor-v3": "^2.2.0",
@@ -24,7 +23,6 @@
     "vue": "^3.1.2",
     "vue-cropperjs": "^5.0.0",
     "vue-i18n": "^9.0.0",
-    "vue-konva": "^3.0.1",
     "vue-router": "^4.0.10",
     "vue-schart": "^2.0.0",
     "wangeditor": "^4.7.4"

@@ -169,11 +169,6 @@ export default {
           },
         ],
       },
-      {
-        icon: 'el-icon-lx-redpacket_fill',
-        index: '/myComponents/componentHtml',
-        title: '获取组件html文本超长文本测试',
-      },
     ];
 
     const route = useRoute();

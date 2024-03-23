@@ -1,12 +1,5 @@
 import request from '@u/request';
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus';
-export const fetchLayerData = (query) => {
-  return request({
-    url: '/api/myPoster/list',
-    method: 'get',
-    params: query,
-  });
-};
 export const fetchData = (query) => {
   return request({
     url: '/api/creditInfo',
