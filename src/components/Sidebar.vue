@@ -43,199 +43,194 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue';
-import { useSidebarStore } from '../store/sidebar';
+import { useSidebarStore } from '@/store/sidebar';
 import { useRoute } from 'vue-router';
 import { computePosition, offset, arrow } from '@floating-ui/dom';
-export default {
-  setup () {
-    const items = [
-      {
-        icon: 'el-icon-lx-home',
-        index: '/myComponents/dashboard',
-        title: '系统首页',
-      },
-      {
-        icon: 'el-icon-lx-cascades',
-        index: '/myComponents/table',
-        title: '基础表格',
-      },
-      {
-        icon: 'el-icon-lx-cascades',
-        index: '/myComponents/customerTable',
-        title: '客户表格',
-      },
-      {
-        icon: 'el-icon-lx-copy',
-        index: '/myComponents/tabs',
-        title: 'tab选项卡',
-      },
-      {
-        icon: 'el-icon-lx-calendar',
-        index: '3',
-        title: '表单相关',
-        subs: [
-          {
-            index: '/myComponents/form',
-            title: '结构化表单',
-          },
-          {
-            index: '/myComponents/upload',
-            title: '文件上传',
-          },
-          {
-            index: '4',
-            title: '三级菜单',
-            subs: [
-              {
-                index: '/myComponents/editor',
-                title: '富文本编辑器',
-              },
-              {
-                index: '/myComponents/markdown',
-                title: 'markdown编辑器',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        icon: 'el-icon-lx-calendar',
-        index: '5',
-        title: '练习场',
-        subs: [
-          {
-            index: '/myComponents/flowChartsByCavnvas',
-            title: 'html+canvas审批流程图',
-          },
-          {
-            index: '/myComponents/imgWaterfall',
-            title: '图片瀑布流',
-          },
-          {
-            index: '/myComponents/sortArray',
-            title: '数组冒泡排序',
-          },
-          {
-            index: '/myComponents/getNodeById',
-            title: '节点处理',
-          },
-          {
-            index: '/myComponents/echartsAndVue',
-            title: 'echarts中Tip引入Vue组件',
-          },
-          {
-            index: '/myComponents/barChart',
-            title: '柱状图Tip引入Vue组件',
-          },
-          {
-            index: '/myComponents/tinymceDemo',
-            title: 'tinymce富文本编辑器',
-          },
-          {
-            index: '/myComponents/contentEditable',
-            title: '当html遇上contentEditable',
-          },
-        ],
-      },
-      {
-        icon: 'el-icon-lx-emoji',
-        index: '/myComponents/icon',
-        title: '自定义图标',
-      },
-      {
-        icon: 'el-icon-lx-weibo',
-        index: '/myComponents/charts',
-        title: 'echart图表',
-      },
-      {
-        icon: 'el-icon-lx-global',
-        index: '/myComponents/i18n',
-        title: '国际化功能',
-      },
-      {
-        icon: 'el-icon-lx-warn',
-        index: '7',
-        title: '错误处理',
-        subs: [
-          {
-            index: '/myComponents/permission',
-            title: '权限测试',
-          },
-          {
-            index: '/myComponents/404',
-            title: '404页面',
-          },
-        ],
-      },
-    ];
-
-    const route = useRoute();
-    const onRoutes = computed(() => {
-      return route.path;
-    });
-
-    const sidebar = useSidebarStore();
-    const sidebarWidth = computed(() => {
-      let width = 250;
-      if (sidebar.collapse) {
-        width = 65;
-      }
-      return width;
-    });
-    const mouseenterHandler = ({ target }) => {
-      if (target.clientWidth < target.scrollWidth) {
-        const placement = 'bottom';
-        const text = target.innerText;
-        const tooltip = document.createElement('div');
-        tooltip.className = 'el-popper is-light';
-        tooltip.textContent = text;
-        const arrowEl = document.createElement('div');
-        arrowEl.setAttribute('data-popper-arrow', '');
-        arrowEl.className = 'el-popper__arrow';
-        tooltip.appendChild(arrowEl);
-        document.body.appendChild(tooltip);
-        target.addEventListener('mouseleave', () => {
-          setTimeout(() => tooltip.remove(), 300);
-        });
-        function applyStyles (data) {
-          const { x = 0, y = 0, strategy = 'fixed', middlewareData } = data;
-          console.log(middlewareData);
-          if (middlewareData.arrow) {
-            const { x, y } = middlewareData.arrow;
-            Object.assign(arrowEl.style, {
-              left: x != null ? `${x}px` : '',
-              top: y != null ? `${y}px` : '',
-            });
-          }
-          tooltip.setAttribute('data-popper-placement', placement);
-          Object.assign(tooltip.style, {
-            position: strategy,
-            left: `${x}px`,
-            top: `${y}px`,
-          });
-        }
-        computePosition(target, tooltip, {
-          middleware: [
-            offset(0),
-            arrow({
-              element: arrowEl,
-            }),
-          ],
-          placement,
-        }).then(applyStyles);
-      }
-    };
-
-    return {
-      items,
-      onRoutes,
-      sidebar,
-      mouseenterHandler,
-    };
+const items = [
+  {
+    icon: 'el-icon-lx-home',
+    index: '/myComponents/dashboard',
+    title: '系统首页',
   },
+  {
+    icon: 'el-icon-lx-cascades',
+    index: '/myComponents/table',
+    title: '基础表格',
+  },
+  {
+    icon: 'el-icon-lx-cascades',
+    index: '/myComponents/customerTable',
+    title: '客户表格',
+  },
+  {
+    icon: 'el-icon-lx-copy',
+    index: '/myComponents/tabs',
+    title: 'tab选项卡',
+  },
+  {
+    icon: 'el-icon-lx-calendar',
+    index: '3',
+    title: '表单相关',
+    subs: [
+      {
+        index: '/myComponents/form',
+        title: '结构化表单',
+      },
+      {
+        index: '/myComponents/upload',
+        title: '文件上传',
+      },
+      {
+        index: '4',
+        title: '三级菜单',
+        subs: [
+          {
+            index: '/myComponents/editor',
+            title: '富文本编辑器',
+          },
+          {
+            index: '/myComponents/markdown',
+            title: 'markdown编辑器',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    icon: 'el-icon-lx-calendar',
+    index: '5',
+    title: '练习场',
+    subs: [
+      {
+        index: '/myComponents/flowChartsByCavnvas',
+        title: 'html+canvas审批流程图',
+      },
+      {
+        index: '/myComponents/imgWaterfall',
+        title: '图片瀑布流',
+      },
+      {
+        index: '/myComponents/sortArray',
+        title: '数组冒泡排序',
+      },
+      {
+        index: '/myComponents/getNodeById',
+        title: '节点处理',
+      },
+      {
+        index: '/myComponents/echartsAndVue',
+        title: 'echarts中Tip引入Vue组件',
+      },
+      {
+        index: '/myComponents/barChart',
+        title: '柱状图Tip引入Vue组件',
+      },
+      {
+        index: '/myComponents/tinymceDemo',
+        title: 'tinymce富文本编辑器',
+      },
+      {
+        index: '/myComponents/contentEditable',
+        title: '当html遇上contentEditable',
+      },
+    ],
+  },
+  {
+    icon: 'el-icon-lx-emoji',
+    index: '/myComponents/icon',
+    title: '自定义图标',
+  },
+  {
+    icon: 'el-icon-lx-weibo',
+    index: '/myComponents/charts',
+    title: 'echarts图表',
+    subs: [{
+      index: '/myComponents/chinaMap',
+      title: '中国地图',
+    }
+    ]
+  },
+  {
+    icon: 'el-icon-lx-global',
+    index: '/myComponents/i18n',
+    title: '国际化功能',
+  },
+  {
+    icon: 'el-icon-lx-warn',
+    index: '7',
+    title: '错误处理',
+    subs: [
+      {
+        index: '/myComponents/permission',
+        title: '权限测试',
+      },
+      {
+        index: '/myComponents/404',
+        title: '404页面',
+      },
+    ],
+  },
+];
+
+const route = useRoute();
+const onRoutes = computed(() => {
+  return route.path;
+});
+
+const sidebar = useSidebarStore();
+const sidebarWidth = computed(() => {
+  let width = 250;
+  if (sidebar.collapse) {
+    width = 65;
+  }
+  return width;
+});
+const mouseenterHandler = ({ target }) => {
+  if (target.clientWidth < target.scrollWidth) {
+    const placement = 'bottom';
+    const text = target.innerText;
+    const tooltip = document.createElement('div');
+    tooltip.className = 'el-popper is-light';
+    tooltip.textContent = text;
+    const arrowEl = document.createElement('div');
+    arrowEl.setAttribute('data-popper-arrow', '');
+    arrowEl.className = 'el-popper__arrow';
+    tooltip.appendChild(arrowEl);
+    document.body.appendChild(tooltip);
+    target.addEventListener('mouseleave', () => {
+      setTimeout(() => tooltip.remove(), 300);
+    });
+    function applyStyles(data) {
+      const { x = 0, y = 0, strategy = 'fixed', middlewareData } = data;
+      console.log(middlewareData);
+      if (middlewareData.arrow) {
+        const { x, y } = middlewareData.arrow;
+        Object.assign(arrowEl.style, {
+          left: x != null ? `${x}px` : '',
+          top: y != null ? `${y}px` : '',
+        });
+      }
+      tooltip.setAttribute('data-popper-placement', placement);
+      Object.assign(tooltip.style, {
+        position: strategy,
+        left: `${x}px`,
+        top: `${y}px`,
+      });
+    }
+    computePosition(target, tooltip, {
+      middleware: [
+        offset(0),
+        arrow({
+          element: arrowEl,
+        }),
+      ],
+      placement,
+    }).then(applyStyles);
+  }
 };
+
 </script>
 
 <style scoped>
@@ -261,7 +256,9 @@ export default {
 .sidebar>ul {
   height: 100%;
 }
-
+.el-menu--vertical:not(.el-menu--collapse):not(.el-menu--popup-container) .el-sub-menu .el-menu-item {
+  padding-left: 48px;
+}
 .el-menu-item-title {
   flex: 1;
   overflow: hidden;

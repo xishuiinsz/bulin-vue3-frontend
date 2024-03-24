@@ -23,6 +23,10 @@ export default defineConfig({
         replacement: resolve(__dirname, 'src/components'),
       },
       {
+        find: '@h',
+        replacement: resolve(__dirname, 'src/hooks'),
+      },
+      {
         find: '@i',
         replacement: resolve(__dirname, 'src/api'),
       },
@@ -48,6 +52,14 @@ export default defineConfig({
           return path.replace(/^\/api/, '');
         },
       },
+      '/map': {
+        target: 'https://geo.datav.aliyun.com',
+        changeOrigin: true,
+        rewrite: (path) => {
+          return path.replace(/^\/map/, '');
+        },
+      },
+      
     },
   },
 });

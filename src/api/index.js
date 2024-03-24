@@ -38,3 +38,10 @@ export const deleteCustomerData = (query) => {
     params: query,
   });
 };
+
+export const fetchMapJson = async (code) => {
+  return request({
+    url: `/map/areas_v3/bound/${code}_full.json`,
+    method: 'get',
+  })
+}

@@ -101,12 +101,12 @@ const routes = [
         component: () => import(/* webpackChunkName: "echartsAndVue" */ '@/views/EchartsAndVue/EchartsAndVue.vue'),
       },
       {
-        path: 'barChart',
-        name: 'BarChart',
+        path: 'chinaMap',
+        name: 'ChinaMap',
         meta: {
-          title: 'echarts中Tip引入Vue组件',
+          title: '中国地图',
         },
-        component: () => import(/* webpackChunkName: "barChart" */ '@/views/barChart/barChart.vue'),
+        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap.vue'),
       },
       {
         path: 'tinymceDemo',

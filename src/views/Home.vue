@@ -4,7 +4,7 @@
       <v-sidebar />
       <div class="content-box" :class="{ 'content-collapse': sidebar.collapse }">
         <v-tags></v-tags>
-        <div class="content" :class="kebabCase(route.name)">
+        <div class="main-content" :class="kebabCase(route.name)">
           <router-view v-slot="{ Component }">
             <transition name="move" mode="out-in">
               <keep-alive :key="Component.name" :include="tags.nameList">
