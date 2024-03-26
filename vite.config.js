@@ -41,12 +41,12 @@ export default defineConfig({
     ],
   },
   server: {
-    host: 'localhost.bulin.com',
+    // host: 'localhost.aliyun.com',
     port: 8080,
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://localhost.bulin.com:3000',
+        target: 'http://localhost.aliyun.com:3000',
         changeOrigin: true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '');

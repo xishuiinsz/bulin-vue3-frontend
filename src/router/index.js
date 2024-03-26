@@ -106,7 +106,7 @@ const routes = [
         meta: {
           title: '中国地图',
         },
-        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap.vue'),
+        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap/index.vue'),
       },
       {
         path: 'tinymceDemo',

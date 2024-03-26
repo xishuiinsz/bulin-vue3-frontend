@@ -17,28 +17,92 @@ import { onMounted, ref } from 'vue';
 import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
+import cloneDeep from 'lodash/cloneDeep';
+import { mapbgColor, excludedProvinces } from './util';
 const chinaMap = 'china'
+const cityMap = 'city'
 const refMap = ref(null);
 const cache = {
     chartInstance: null
 }
 
 const getOption = () => {
+    const getRegions = () => {
+        const mapJson = echarts.getMap()
+        return [
+            {
+                name: '武汉市',
+                itemStyle: {
+                    areaColor: '#4876FF'
+                }
+            },
+            {
+                name: '湖南省',
+                itemStyle: {
+                    areaColor: '#104E8B'
+                }
+            },
+        ]
+    }
     const option = {
         geo: {
-            map: chinaMap,
+            map: cityMap,
             roam: true,
-            zoom: 1.2
-        }
+            zoom: 1.2,
+            label: {
+                show: true,
+            },
+            itemStyle: {
+                borderColor: '#fff',
+                areaColor: mapbgColor,
+            },
+            // regions: getRegions()
+        },
     }
+    const { geoJson } = getMap(option.geo.map);
+    const regions = [
+        {
+            name: '武汉市',
+            itemStyle: {
+                areaColor: '#4876FF'
+            }
+        },
+        {
+            name: '湖南省',
+            itemStyle: {
+                areaColor: '#104E8B'
+            }
+        },
+    ]
+    geoJson.features.filter(item => !excludedProvinces.includes(String(item.properties.adcode))).forEach(item => {
+        const { name, adcode, level } = item.properties;
+        const op = {
+            name,
+            itemStyle: {
+            },
+            emphasis: {
+                itemStyle: {
+                   
+                }
+            }
+        }
+        if (item.properties.level === 'province') {
+            Object.assign(op.itemStyle, { borderColor: 'red', borderWidth: 2, selected: true, borderType: 'solid' })
+
+        } else {
+            Object.assign(op, { silent: true})
+            Object.assign(op.itemStyle, { borderColor: '#fff', borderWidth: 1, selected: false, borderType: 'dashed', })
+            Object.assign(op.emphasis.itemStyle, { areaColor: mapbgColor, opacity: 0 })
+        }
+        regions.push(op)
+    })
+    Object.assign(option.geo, { regions })
     return option
 }
 
 const renderCharts = () => {
     if (!cache.chartInstance) {
         cache.chartInstance = init(refMap.value)
-
-
     }
     const option = getOption();
     cache.chartInstance?.setOption(option)
@@ -168,9 +232,60 @@ const trimNanhaiZhudao = (json) => {
     return json
 }
 
+const fixGeoLabels = (mapJson) => {
+    mapJson.features?.length && mapJson.features.forEach(item => {
+        if (item.properties.name === '河北省') {
+            const [lng, lat] = item.properties.center;
+            Object.assign(item.properties, {
+                cp: [lng + 1, lat + 0.05]
+            })
+        }
+        if (item.properties.name === '甘肃省') {
+            const [lng, lat] = item.properties.center;
+            Object.assign(item.properties, {
+                cp: [lng + 0.2, lat + 0.05]
+            })
+        }
+    })
+    return mapJson
+}
+
+const getMapJson = async (code) => {
+    const jsonOption = { chinaMap: {}, cityMap: {} }
+    const sessionStorageKey = 'cacheMapJson';
+    const cacheMapJson = sessionStorage.getItem(sessionStorageKey)
+    if (!cacheMapJson) {
+        const chinaMapJson = fixGeoLabels(await fetchMapJson(code));
+        const cityMapJson = { features: [], type: "FeatureCollection" }
+        if (chinaMapJson.features?.length) {
+            for await (const item of chinaMapJson.features) {
+                const { adcode } = item.properties;
+                if (!['710000', '100000_JD'].includes(String(adcode))) {
+                    const city = await fetchMapJson(adcode);
+                    cityMapJson.features.push(...city.features);
+                    cityMapJson.features.push(cloneDeep(item));
+
+
+                }
+            }
+        }
+        Object.assign(jsonOption, { chinaMap: chinaMapJson, cityMap: cityMapJson })
+        sessionStorage.setItem(sessionStorageKey, JSON.stringify({ chinaMap: chinaMapJson, cityMap: cityMapJson }))
+    } else {
+        try {
+            const parseMapJson = JSON.parse(cacheMapJson)
+            Object.assign(jsonOption, parseMapJson)
+        } catch (error) {
+            window.console.error(error)
+        }
+    }
+    return jsonOption
+}
+
 const initCharts = async () => {
-    const chinaMapJson = await fetchMapJson('100000')
+    const { chinaMap: chinaMapJson, cityMap: cityMapJson } = await getMapJson('100000')
     registerMap(chinaMap, trimNanhaiZhudao(chinaMapJson));
+    registerMap('city', cityMapJson);
     renderCharts();
 }
 

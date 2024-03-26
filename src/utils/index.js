@@ -15,8 +15,7 @@ const myDebounced = (fun, wait = 300) => {
 
 const getRangeInteger = (min, max) => {
   if (min > max) {
-    // eslint-disable-next-line no-extra-semi
-    ;[min, max] = [max, min] // 交换
+    [min, max] = [max, min] // 交换
   }
   min = Math.floor(min)
   max = Math.ceil(max)
