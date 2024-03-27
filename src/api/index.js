@@ -39,9 +39,13 @@ export const deleteCustomerData = (query) => {
   });
 };
 
-export const fetchMapJson = async (code) => {
+export const fetchMapJson = async (code, fullFlag = true) => {
+  let jsonName = code;
+  if (fullFlag) {
+    jsonName += '_full'
+  }
   return request({
-    url: `/map/areas_v3/bound/${code}_full.json`,
+    url: `/map/areas_v3/bound/${jsonName}.json`,
     method: 'get',
   })
 }

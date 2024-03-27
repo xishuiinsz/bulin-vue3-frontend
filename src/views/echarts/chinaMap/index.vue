@@ -18,7 +18,7 @@ import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { mapbgColor, excludedProvinces } from './util';
+import { mapbgColor, excludedProvinces, createPositonsByCount} from './util';
 const chinaMap = 'china'
 const cityMap = 'city'
 const refMap = ref(null);
@@ -87,7 +87,8 @@ const getOption = () => {
             }
         }
         if (item.properties.level === 'province') {
-            Object.assign(op.itemStyle, { borderColor: 'red', borderWidth: 2, selected: true, borderType: 'solid' })
+            Object.assign(op.itemStyle, { areaColor:'#ffffff00', borderColor: 'red', borderWidth: 2, selected: true, borderType: 'solid' })
+            Object.assign(op.emphasis.itemStyle, { areaColor:'#ffffff00' })
 
         } else {
             Object.assign(op, { silent: true})
@@ -292,6 +293,9 @@ const initCharts = async () => {
 const resizeHandler = () => {
     cache.chartInstance?.resize()
 }
+
+const list = createPositonsByCount(100);
+console.log(list);
 
 onMounted(initCharts);
 useResizeObserver(refMap, resizeHandler);
