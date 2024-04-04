@@ -144,11 +144,15 @@ const items = [
   },
   {
     icon: 'el-icon-lx-weibo',
-    index: '/myComponents/charts',
+    index: '/myComponents/echarts',
     title: 'echarts图表',
     subs: [{
-      index: '/myComponents/chinaMap',
-      title: '中国地图',
+      index: '/myComponents/chinaMap2D',
+      title: '2D中国地图',
+    },
+    {
+      index: '/myComponents/chinaMap3D',
+      title: '3D中国地图',
     }
     ]
   },
@@ -256,9 +260,11 @@ const mouseenterHandler = ({ target }) => {
 .sidebar>ul {
   height: 100%;
 }
+
 .el-menu--vertical:not(.el-menu--collapse):not(.el-menu--popup-container) .el-sub-menu .el-menu-item {
   padding-left: 48px;
 }
+
 .el-menu-item-title {
   flex: 1;
   overflow: hidden;

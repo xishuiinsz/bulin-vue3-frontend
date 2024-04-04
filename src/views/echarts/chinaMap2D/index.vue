@@ -18,87 +18,117 @@ import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { mapbgColor, excludedProvinces, createPositonsByCount} from './util';
-const chinaMap = 'china'
-const cityMap = 'city'
+import { mapbgColor, excludedProvinces, createPositonsByCount } from './util';
+import hit from '@a/img/hit.gif';
 const refMap = ref(null);
 const cache = {
-    chartInstance: null
+    chartInstance: null,
+    zoom: 1.6,
+    center: null
 }
+const scaleBase = 5;
 
-const getOption = () => {
-    const getRegions = () => {
-        const mapJson = echarts.getMap()
-        return [
-            {
-                name: '武汉市',
-                itemStyle: {
-                    areaColor: '#4876FF'
-                }
-            },
-            {
-                name: '湖南省',
-                itemStyle: {
-                    areaColor: '#104E8B'
-                }
-            },
-        ]
-    }
-    const option = {
-        geo: {
-            map: cityMap,
-            roam: true,
-            zoom: 1.2,
+const getProvincesRegions = () => {
+    const allProvinces = getAllProvince();
+    return allProvinces.map(item => {
+        const { name: provinceName } = item.properties;
+        return {
+            name: provinceName,
             label: {
-                show: true,
+                show: true
             },
             itemStyle: {
-                borderColor: '#fff',
-                areaColor: mapbgColor,
-            },
-            // regions: getRegions()
-        },
-    }
-    const { geoJson } = getMap(option.geo.map);
-    const regions = [
-        {
-            name: '武汉市',
-            itemStyle: {
-                areaColor: '#4876FF'
-            }
-        },
-        {
-            name: '湖南省',
-            itemStyle: {
-                areaColor: '#104E8B'
-            }
-        },
-    ]
-    geoJson.features.filter(item => !excludedProvinces.includes(String(item.properties.adcode))).forEach(item => {
-        const { name, adcode, level } = item.properties;
-        const op = {
-            name,
-            itemStyle: {
+                borderType: 'solid',
+                areaColor: '#4876FF',
+                borderWidth: 1,
+                borderColor: 'rgba(255,255,255, .8)'
             },
             emphasis: {
                 itemStyle: {
-                   
+                    areaColor: '#4876FF',
+                    borderColor: 'pink',
+                    borderWidth: 2
                 }
             }
         }
-        if (item.properties.level === 'province') {
-            Object.assign(op.itemStyle, { areaColor:'#ffffff00', borderColor: 'red', borderWidth: 2, selected: true, borderType: 'solid' })
-            Object.assign(op.emphasis.itemStyle, { areaColor:'#ffffff00' })
-
-        } else {
-            Object.assign(op, { silent: true})
-            Object.assign(op.itemStyle, { borderColor: '#fff', borderWidth: 1, selected: false, borderType: 'dashed', })
-            Object.assign(op.emphasis.itemStyle, { areaColor: mapbgColor, opacity: 0 })
-        }
-        regions.push(op)
     })
-    Object.assign(option.geo, { regions })
+}
+const getCitiesRegions = () => {
+    const cities = getAllCities();
+    return cities.map(item => {
+        const { name: cityName } = item.properties;
+        return {
+            name: cityName,
+            label: {
+                show: true
+            },
+            itemStyle: {
+                borderType: 'dashed',
+                borderWidth: 1,
+                borderColor: 'rgba(252,252,252, .6)'
+            },
+            emphasis: {
+                disabled: true
+            }
+        }
+    })
+}
+const getOption = () => {
+
+    const option = {
+        geo: [{
+            name: 'showGeo',
+            map: 'china',
+            layoutCenter: ['50%', '30%'],
+            roam: true,
+            zoom: cache.zoom,
+            center: cache.center,
+            label: {
+                show: false,
+            },
+            itemStyle: {
+                borderColor: '#ffffff00',
+                areaColor: '#ffffff00',
+            },
+            emphasis: {
+                disabled: true
+            },
+            regions: getProvincesRegions()
+        }],
+    }
+
+
     return option
+}
+
+const addEventHandler = (instance) => {
+    const geoRoamHandler = params => {
+        const option = instance.getOption();
+        const showGeo = option.geo.at(-1);
+        const { center, zoom } = showGeo;
+        Object.assign(cache, { center, zoom })
+        if (params.zoom) {
+            const currentZoom = showGeo.zoom
+            const lastZoom = currentZoom / params.zoom;
+            if (params.zoom > 1) {
+                if (lastZoom < scaleBase && currentZoom > scaleBase) {
+                    const citiesRegions = getCitiesRegions();
+                    const provincesRegions = getProvincesRegions();
+                    showGeo.regions = [...provincesRegions, ...citiesRegions,]
+                    instance.clear();
+                    instance.setOption(option)
+                }
+            } else {
+                if (lastZoom > scaleBase && currentZoom < scaleBase) {
+                    const provincesRegions = getProvincesRegions();
+                    showGeo.regions = [...provincesRegions,]
+                    instance.clear();
+                    instance.setOption(option)
+                }
+            }
+        }
+    }
+    instance.on('georoam', geoRoamHandler)
 }
 
 const renderCharts = () => {
@@ -107,6 +137,7 @@ const renderCharts = () => {
     }
     const option = getOption();
     cache.chartInstance?.setOption(option)
+    addEventHandler(cache.chartInstance)
 }
 
 const trimNanhaiZhudao = (json) => {
@@ -251,51 +282,43 @@ const fixGeoLabels = (mapJson) => {
     return mapJson
 }
 
-const getMapJson = async (code) => {
-    const jsonOption = { chinaMap: {}, cityMap: {} }
-    const sessionStorageKey = 'cacheMapJson';
-    const cacheMapJson = sessionStorage.getItem(sessionStorageKey)
-    if (!cacheMapJson) {
-        const chinaMapJson = fixGeoLabels(await fetchMapJson(code));
-        const cityMapJson = { features: [], type: "FeatureCollection" }
-        if (chinaMapJson.features?.length) {
-            for await (const item of chinaMapJson.features) {
-                const { adcode } = item.properties;
-                if (!['710000', '100000_JD'].includes(String(adcode))) {
-                    const city = await fetchMapJson(adcode);
-                    cityMapJson.features.push(...city.features);
-                    cityMapJson.features.push(cloneDeep(item));
+const getAllProvince = () => {
+    const chinaMapJson = getMap('china').geoJson.features;
+    const provinces = chinaMapJson.filter(item => item.properties.level === 'province');
+    return provinces;
+}
+const getAllCities = () => {
+    const chinaMapJson = getMap('china').geoJson.features;
+    const cities = chinaMapJson.filter(item => item.properties.level !== 'province');
+    return cities;
+}
 
+const getCitiesMap = async (code = '100000') => {
+    const chinaMapJson = fixGeoLabels(await fetchMapJson(code));
+    const cityMapJson = { features: [], type: "FeatureCollection" }
+    if (chinaMapJson.features?.length) {
+        for await (const item of chinaMapJson.features) {
+            const { adcode } = item.properties;
+            if (!['710000', '100000_JD'].includes(String(adcode))) {
+                const city = await fetchMapJson(adcode);
+                cityMapJson.features.push(cloneDeep(item));
+                cityMapJson.features.push(...city.features);
 
-                }
             }
         }
-        Object.assign(jsonOption, { chinaMap: chinaMapJson, cityMap: cityMapJson })
-        sessionStorage.setItem(sessionStorageKey, JSON.stringify({ chinaMap: chinaMapJson, cityMap: cityMapJson }))
-    } else {
-        try {
-            const parseMapJson = JSON.parse(cacheMapJson)
-            Object.assign(jsonOption, parseMapJson)
-        } catch (error) {
-            window.console.error(error)
-        }
     }
-    return jsonOption
+    return cityMapJson
 }
 
 const initCharts = async () => {
-    const { chinaMap: chinaMapJson, cityMap: cityMapJson } = await getMapJson('100000')
-    registerMap(chinaMap, trimNanhaiZhudao(chinaMapJson));
-    registerMap('city', cityMapJson);
+    const cityMapJson = await getCitiesMap();
+    registerMap('china', trimNanhaiZhudao(cityMapJson));
     renderCharts();
 }
 
 const resizeHandler = () => {
     cache.chartInstance?.resize()
 }
-
-const list = createPositonsByCount(100);
-console.log(list);
 
 onMounted(initCharts);
 useResizeObserver(refMap, resizeHandler);

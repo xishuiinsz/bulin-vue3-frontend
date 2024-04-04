@@ -101,12 +101,20 @@ const routes = [
         component: () => import(/* webpackChunkName: "echartsAndVue" */ '@/views/EchartsAndVue/EchartsAndVue.vue'),
       },
       {
-        path: 'chinaMap',
-        name: 'ChinaMap',
+        path: 'chinaMap2D',
+        name: 'ChinaMap2D',
         meta: {
-          title: '中国地图',
+          title: '2D中国地图',
         },
-        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap/index.vue'),
+        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap2D/index.vue'),
+      },
+      {
+        path: 'chinaMap3D',
+        name: 'ChinaMap3D',
+        meta: {
+          title: '3D中国地图',
+        },
+        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap3D/index.vue'),
       },
       {
         path: 'tinymceDemo',
