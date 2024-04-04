@@ -13,18 +13,20 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
-import { registerMap, init, getMap } from 'echarts';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { registerMap, init } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { mapbgColor, excludedProvinces, createPositonsByCount } from './util';
-import hit from '@a/img/hit.gif';
+import { getAllCities, getAllProvince, getAliasLabel } from './util';
 const refMap = ref(null);
 const cache = {
     chartInstance: null,
     zoom: 1.6,
-    center: null
+    center: [
+        104.54645138688016,
+        34.62417828653609
+    ]
 }
 const scaleBase = 5;
 
@@ -35,7 +37,10 @@ const getProvincesRegions = () => {
         return {
             name: provinceName,
             label: {
-                show: true
+                show: true,
+                formatter: (parmas) => {
+                    return getAliasLabel(parmas.name)
+                }
             },
             itemStyle: {
                 borderType: 'solid',
@@ -74,12 +79,11 @@ const getCitiesRegions = () => {
     })
 }
 const getOption = () => {
-
+    const scatterList = getAllCities();
     const option = {
         geo: [{
             name: 'showGeo',
             map: 'china',
-            layoutCenter: ['50%', '30%'],
             roam: true,
             zoom: cache.zoom,
             center: cache.center,
@@ -95,6 +99,121 @@ const getOption = () => {
             },
             regions: getProvincesRegions()
         }],
+        series: [{
+            name: 'huxideng',
+            type: 'custom',
+            coordinateSystem: 'geo',
+            geoIndex: 0,
+            zlevel: 2,
+            dimensions: ['date', 'open'],
+            encode: '',
+            tooltip: {
+                show: true,
+                formatter: '{b0}: {c0}<br />{b1}: {c1}',
+            },
+            data: [
+                [104.54645138688016,
+                    34.62417828653609, 100],
+                [
+                    114.298572,
+                    30.584355
+                ],
+                [
+                    114.890593,
+                    30.396536
+                ],
+                [894, 1188, 61],
+                [1372, 477, 70],
+                [1378, 935, 81]
+            ],
+            renderItem(params, api) {
+                const coord = api.coord([
+                    api.value(0, params.dataIndex),
+                    api.value(1, params.dataIndex)
+                ]);
+
+                const circles = [];
+                for (let i = 0; i < 5; i++) {
+                    circles.push({
+                        type: 'circle',
+                        shape: {
+                            cx: 0,
+                            cy: 0,
+                            r: 30
+                        },
+                        style: {
+                            stroke: 'red',
+                            fill: 'none',
+                            lineWidth: 2
+                        },
+                        // Ripple animation
+                        keyframeAnimation: {
+                            duration: 4000,
+                            loop: true,
+                            delay: (-i / 4) * 4000,
+                            keyframes: [
+                                {
+                                    percent: 0,
+                                    scaleX: 0,
+                                    scaleY: 0,
+                                    style: {
+                                        opacity: 1
+                                    }
+                                },
+                                {
+                                    percent: 1,
+                                    scaleX: 1,
+                                    scaleY: 0.4,
+                                    style: {
+                                        opacity: 0
+                                    }
+                                }
+                            ]
+                        }
+                    });
+                }
+                return {
+                    type: 'group',
+                    x: coord[0],
+                    y: coord[1],
+                    children: [
+                        ...circles,
+                        {
+                            type: 'path',
+                            shape: {
+                                d:
+                                    'M16 0c-5.523 0-10 4.477-10 10 0 10 10 22 10 22s10-12 10-22c0-5.523-4.477-10-10-10zM16 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z',
+                                x: -10,
+                                y: -35,
+                                width: 20,
+                                height: 40
+                            },
+                            style: {
+                                fill: 'green'
+                            },
+                            // Jump animation.
+                            keyframeAnimation: {
+                                duration: 1000,
+                                loop: true,
+                                delay: Math.random() * 1000,
+                                keyframes: [
+                                    {
+                                        y: -10,
+                                        percent: 0.5,
+                                        easing: 'cubicOut'
+                                    },
+                                    {
+                                        y: 0,
+                                        percent: 1,
+                                        easing: 'bounceOut'
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                };
+            }
+        }]
     }
 
 
@@ -105,8 +224,6 @@ const addEventHandler = (instance) => {
     const geoRoamHandler = params => {
         const option = instance.getOption();
         const showGeo = option.geo.at(-1);
-        const { center, zoom } = showGeo;
-        Object.assign(cache, { center, zoom })
         if (params.zoom) {
             const currentZoom = showGeo.zoom
             const lastZoom = currentZoom / params.zoom;
@@ -136,7 +253,7 @@ const renderCharts = () => {
         cache.chartInstance = init(refMap.value)
     }
     const option = getOption();
-    cache.chartInstance?.setOption(option)
+    cache.chartInstance?.setOption(option, { render: 'svg' })
     addEventHandler(cache.chartInstance)
 }
 
@@ -282,17 +399,6 @@ const fixGeoLabels = (mapJson) => {
     return mapJson
 }
 
-const getAllProvince = () => {
-    const chinaMapJson = getMap('china').geoJson.features;
-    const provinces = chinaMapJson.filter(item => item.properties.level === 'province');
-    return provinces;
-}
-const getAllCities = () => {
-    const chinaMapJson = getMap('china').geoJson.features;
-    const cities = chinaMapJson.filter(item => item.properties.level !== 'province');
-    return cities;
-}
-
 const getCitiesMap = async (code = '100000') => {
     const chinaMapJson = fixGeoLabels(await fetchMapJson(code));
     const cityMapJson = { features: [], type: "FeatureCollection" }
@@ -320,7 +426,13 @@ const resizeHandler = () => {
     cache.chartInstance?.resize()
 }
 
+const destroy = () => {
+    cache.chartInstance.dispose();
+    Object.assign(cache, { chartInstance: null });
+}
+
 onMounted(initCharts);
+onUnmounted(destroy)
 useResizeObserver(refMap, resizeHandler);
 </script>
 <script>
