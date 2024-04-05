@@ -259,6 +259,7 @@ const mouseenterHandler = ({ target }) => {
 
 .sidebar>ul {
   height: 100%;
+  overflow-y: auto;
 }
 
 .el-menu--vertical:not(.el-menu--collapse):not(.el-menu--popup-container) .el-sub-menu .el-menu-item {

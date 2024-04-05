@@ -122,6 +122,7 @@
   .tags {
     position: relative;
     height: 30px;
+    flex-shrink: 0;
     overflow: hidden;
     background: #fff;
     padding-right: 120px;
