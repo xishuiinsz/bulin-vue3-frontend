@@ -244,3 +244,46 @@ export const getAliasLabel = label => {
     }
     return label;
 }
+
+/**
+ * 
+ * @param {String[]} adcodes 
+ * @param {import("echarts").EChartsType} instance 
+ */
+const getCoordsBySameAdcodes = (instance, sameDataCenters) => {
+    const option = instance.getOption();
+    const showGeo = option.geo?.at(-1);
+    const { zoom = 1} = showGeo;
+    const [firstItem] = sameDataCenters;
+    const { center } = firstItem;
+    const pixel = instance.convertToPixel({ geoName: 'showGeo' }, center);
+    const [xCenter, yCenter] = pixel;
+    const r = 10 / zoom ;
+    const dataCenters = sameDataCenters.map((dataCenter, index) => {
+        const angle = 360 / sameDataCenters.length * index;
+        const offsetX = Math.cos(angle * Math.PI / 180) * r;
+        const offsetY = Math.sin(angle * Math.PI / 180) * r;
+        const newPixel = [xCenter + offsetX, yCenter + offsetY];
+        const _center = instance.convertFromPixel({ geoName: 'showGeo' }, newPixel);
+        Object.assign(dataCenter, { _center });
+        return dataCenter;
+    })
+    return dataCenters;
+}
+
+/**
+ * 根据一个或多个地址码返回相应的geo坐标地址
+ * @param {String[]} adcode 
+ * @returns { Array }
+ */
+export const getCoordsByDataCenters = (instance, datacenters) => {
+    const datacenterList = datacenters.map(datacenter => {
+        if (datacenter?.length === 1) {
+            return [datacenter]
+        } else {
+            return getCoordsBySameAdcodes(instance, datacenter);
+        }
+    })
+    return datacenterList.flat(Infinity);;
+}
+

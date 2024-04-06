@@ -14,11 +14,12 @@
 </template>
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue';
-import { registerMap, init } from 'echarts';
+import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { getAllCities, getAllProvince, getAliasLabel } from './util';
+import { getAllCities, getAllProvince, getAliasLabel, getCoordsByDataCenters } from './util';
+import createDataCenterList from './mock'
 const refMap = ref(null);
 const cache = {
     chartInstance: null,
@@ -78,8 +79,7 @@ const getCitiesRegions = () => {
         }
     })
 }
-const getOption = () => {
-    const scatterList = getAllCities();
+const getOption = (list) => {
     const option = {
         geo: [{
             name: 'showGeo',
@@ -99,124 +99,8 @@ const getOption = () => {
             },
             regions: getProvincesRegions()
         }],
-        series: [{
-            name: 'huxideng',
-            type: 'custom',
-            coordinateSystem: 'geo',
-            geoIndex: 0,
-            zlevel: 2,
-            dimensions: ['date', 'open'],
-            encode: '',
-            tooltip: {
-                show: true,
-                formatter: '{b0}: {c0}<br />{b1}: {c1}',
-            },
-            data: [
-                [104.54645138688016,
-                    34.62417828653609, 100],
-                [
-                    114.298572,
-                    30.584355
-                ],
-                [
-                    114.890593,
-                    30.396536
-                ],
-                [894, 1188, 61],
-                [1372, 477, 70],
-                [1378, 935, 81]
-            ],
-            renderItem(params, api) {
-                const coord = api.coord([
-                    api.value(0, params.dataIndex),
-                    api.value(1, params.dataIndex)
-                ]);
-
-                const circles = [];
-                for (let i = 0; i < 5; i++) {
-                    circles.push({
-                        type: 'circle',
-                        shape: {
-                            cx: 0,
-                            cy: 0,
-                            r: 30
-                        },
-                        style: {
-                            stroke: 'red',
-                            fill: 'none',
-                            lineWidth: 2
-                        },
-                        // Ripple animation
-                        keyframeAnimation: {
-                            duration: 4000,
-                            loop: true,
-                            delay: (-i / 4) * 4000,
-                            keyframes: [
-                                {
-                                    percent: 0,
-                                    scaleX: 0,
-                                    scaleY: 0,
-                                    style: {
-                                        opacity: 1
-                                    }
-                                },
-                                {
-                                    percent: 1,
-                                    scaleX: 1,
-                                    scaleY: 0.4,
-                                    style: {
-                                        opacity: 0
-                                    }
-                                }
-                            ]
-                        }
-                    });
-                }
-                return {
-                    type: 'group',
-                    x: coord[0],
-                    y: coord[1],
-                    children: [
-                        ...circles,
-                        {
-                            type: 'path',
-                            shape: {
-                                d:
-                                    'M16 0c-5.523 0-10 4.477-10 10 0 10 10 22 10 22s10-12 10-22c0-5.523-4.477-10-10-10zM16 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z',
-                                x: -10,
-                                y: -35,
-                                width: 20,
-                                height: 40
-                            },
-                            style: {
-                                fill: 'green'
-                            },
-                            // Jump animation.
-                            keyframeAnimation: {
-                                duration: 1000,
-                                loop: true,
-                                delay: Math.random() * 1000,
-                                keyframes: [
-                                    {
-                                        y: -10,
-                                        percent: 0.5,
-                                        easing: 'cubicOut'
-                                    },
-                                    {
-                                        y: 0,
-                                        percent: 1,
-                                        easing: 'bounceOut'
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                };
-            }
-        }]
+        series: []
     }
-
-
     return option
 }
 
@@ -243,18 +127,16 @@ const addEventHandler = (instance) => {
                     instance.setOption(option)
                 }
             }
+            renderScatterCharts(cache.chartInstance, cache.dataCenterList);
         }
     }
     instance.on('georoam', geoRoamHandler)
 }
 
-const renderCharts = () => {
-    if (!cache.chartInstance) {
-        cache.chartInstance = init(refMap.value)
-    }
-    const option = getOption();
-    cache.chartInstance?.setOption(option, { render: 'svg' })
-    addEventHandler(cache.chartInstance)
+const renderMapCharts = (instance, list) => {
+    const option = getOption(list);
+    instance?.setOption(option, { render: 'svg' })
+    addEventHandler(instance)
 }
 
 const trimNanhaiZhudao = (json) => {
@@ -409,17 +291,140 @@ const getCitiesMap = async (code = '100000') => {
                 const city = await fetchMapJson(adcode);
                 cityMapJson.features.push(cloneDeep(item));
                 cityMapJson.features.push(...city.features);
-
             }
         }
     }
     return cityMapJson
 }
 
+const renderScatterCharts = (instance, dclist) => {
+    const dataCenteOptions = {};
+    dclist.forEach(item => {
+        const code = item.countyCode || item.cityCode;
+        if (dataCenteOptions[code]) {
+            dataCenteOptions[code].push(item)
+        } else {
+            dataCenteOptions[code] = [item];
+        }
+    })
+    const data = getCoordsByDataCenters(instance, Object.values(dataCenteOptions));
+    const option = instance.getOption();
+    const breathingLight = {
+        name: 'breathingLight',
+        type: 'custom',
+        coordinateSystem: 'geo',
+        geoIndex: 0,
+        zlevel: 2,
+        dimensions: ['date', 'open'],
+        encode: '',
+        tooltip: {
+            show: true,
+            formatter: '{b0}: {c0}<br />{b1}: {c1}',
+        },
+        data: data.map(item => item._center || item.center),
+        renderItem(params, api) {
+            const coord = api.coord([
+                api.value(0, params.dataIndex),
+                api.value(1, params.dataIndex)
+            ]);
+
+            const circles = [];
+            for (let i = 0; i < 5; i++) {
+                circles.push({
+                    type: 'circle',
+                    shape: {
+                        cx: 0,
+                        cy: 0,
+                        r: 30
+                    },
+                    style: {
+                        stroke: 'red',
+                        fill: 'none',
+                        lineWidth: 2
+                    },
+                    // Ripple animation
+                    keyframeAnimation: {
+                        duration: 4000,
+                        loop: true,
+                        delay: (-i / 4) * 4000,
+                        keyframes: [
+                            {
+                                percent: 0,
+                                scaleX: 0,
+                                scaleY: 0,
+                                style: {
+                                    opacity: 1
+                                }
+                            },
+                            {
+                                percent: 1,
+                                scaleX: 1,
+                                scaleY: 0.4,
+                                style: {
+                                    opacity: 0
+                                }
+                            }
+                        ]
+                    }
+                });
+            }
+            return {
+                type: 'group',
+                x: coord[0],
+                y: coord[1],
+                children: [
+                    ...circles,
+                    {
+                        type: 'path',
+                        shape: {
+                            d:
+                                'M16 0c-5.523 0-10 4.477-10 10 0 10 10 22 10 22s10-12 10-22c0-5.523-4.477-10-10-10zM16 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z',
+                            x: -10,
+                            y: -35,
+                            width: 20,
+                            height: 40
+                        },
+                        style: {
+                            fill: 'green'
+                        },
+                        // Jump animation.
+                        keyframeAnimation: {
+                            duration: 1000,
+                            loop: true,
+                            delay: Math.random() * 1000,
+                            keyframes: [
+                                {
+                                    y: -10,
+                                    percent: 0.5,
+                                    easing: 'cubicOut'
+                                },
+                                {
+                                    y: 0,
+                                    percent: 1,
+                                    easing: 'bounceOut'
+                                }
+                            ]
+                        }
+                    }
+                ]
+            };
+        }
+    }
+    option.series[0] = breathingLight;
+    instance?.setOption(option);
+}
+
 const initCharts = async () => {
     const cityMapJson = await getCitiesMap();
     registerMap('china', trimNanhaiZhudao(cityMapJson));
-    renderCharts();
+    if (!cache.chartInstance) {
+        cache.chartInstance = init(refMap.value)
+    }
+    const dataCenterList = await createDataCenterList(getMap('china'));
+    Object.assign(cache, { dataCenterList });
+    renderMapCharts(cache.chartInstance, cache.dataCenterList);
+    renderScatterCharts(cache.chartInstance, cache.dataCenterList);
+
 }
 
 const resizeHandler = () => {
@@ -427,7 +432,7 @@ const resizeHandler = () => {
 }
 
 const destroy = () => {
-    cache.chartInstance.dispose();
+    cache.chartInstance?.dispose();
     Object.assign(cache, { chartInstance: null });
 }
 
