@@ -66,7 +66,7 @@ const getCitiesRegions = () => {
         return {
             name: cityName,
             label: {
-                show: true
+                show: false
             },
             itemStyle: {
                 borderType: 'dashed',
@@ -81,6 +81,8 @@ const getCitiesRegions = () => {
 }
 const getOption = (list) => {
     const option = {
+        tooltip: {
+        },
         geo: [{
             name: 'showGeo',
             map: 'china',
@@ -127,15 +129,19 @@ const addEventHandler = (instance) => {
                     instance.setOption(option)
                 }
             }
-            renderScatterCharts(cache.chartInstance, cache.dataCenterList);
+            // renderScatterCharts(cache.chartInstance, cache.dataCenterList);
         }
     }
-    instance.on('georoam', geoRoamHandler)
+    instance.on('georoam', geoRoamHandler);
+    instance.on('click', 'series.custom', (params) => {
+        params.event.event.stopPropagation();
+        console.log('event : ', params);
+    });
 }
 
 const renderMapCharts = (instance, list) => {
     const option = getOption(list);
-    instance?.setOption(option, { render: 'svg' })
+    instance?.setOption(option, { render: 'canvas' })
     addEventHandler(instance)
 }
 
@@ -308,107 +314,76 @@ const renderScatterCharts = (instance, dclist) => {
         }
     })
     const data = getCoordsByDataCenters(instance, Object.values(dataCenteOptions));
+    console.log(data)
     const option = instance.getOption();
     const breathingLight = {
         name: 'breathingLight',
         type: 'custom',
         coordinateSystem: 'geo',
         geoIndex: 0,
-        zlevel: 2,
-        dimensions: ['date', 'open'],
-        encode: '',
+        zlevel: 1,
+        label:{
+            show: false
+        },
         tooltip: {
             show: true,
-            formatter: '{b0}: {c0}<br />{b1}: {c1}',
+            enterable: true,
+            formatter: (params) => {
+                const value = params.value.at(-1);
+                return `数值：${value}`;
+            }
         },
-        data: data.map(item => item._center || item.center),
-        renderItem(params, api) {
+
+        renderItem: function (params, api) {
             const coord = api.coord([
                 api.value(0, params.dataIndex),
                 api.value(1, params.dataIndex)
             ]);
-
             const circles = [];
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 50; i++) {
                 circles.push({
                     type: 'circle',
                     shape: {
                         cx: 0,
                         cy: 0,
-                        r: 30
+                        r: 20
                     },
                     style: {
                         stroke: 'red',
-                        fill: 'none',
+                        fill: 'red',
                         lineWidth: 2
                     },
                     // Ripple animation
-                    keyframeAnimation: {
-                        duration: 4000,
-                        loop: true,
-                        delay: (-i / 4) * 4000,
-                        keyframes: [
-                            {
-                                percent: 0,
-                                scaleX: 0,
-                                scaleY: 0,
-                                style: {
-                                    opacity: 1
+                    keyframeAnimation: [
+                        {
+                            duration: 3000,
+                            loop: true,
+                            keyframes: [
+                                {
+                                    percent: 0.5,
+                                    easing: 'sinusoidalInOut',
+                                    scaleX: 0.4,
+                                    scaleY: 0.4
+                                },
+                                {
+                                    percent: 1,
+                                    easing: 'sinusoidalInOut',
+                                    scaleX: 1,
+                                    scaleY: 1
                                 }
-                            },
-                            {
-                                percent: 1,
-                                scaleX: 1,
-                                scaleY: 0.4,
-                                style: {
-                                    opacity: 0
-                                }
-                            }
-                        ]
-                    }
+                            ]
+                        }
+                    ]
                 });
             }
             return {
                 type: 'group',
                 x: coord[0],
                 y: coord[1],
-                children: [
-                    ...circles,
-                    {
-                        type: 'path',
-                        shape: {
-                            d:
-                                'M16 0c-5.523 0-10 4.477-10 10 0 10 10 22 10 22s10-12 10-22c0-5.523-4.477-10-10-10zM16 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z',
-                            x: -10,
-                            y: -35,
-                            width: 20,
-                            height: 40
-                        },
-                        style: {
-                            fill: 'green'
-                        },
-                        // Jump animation.
-                        keyframeAnimation: {
-                            duration: 1000,
-                            loop: true,
-                            delay: Math.random() * 1000,
-                            keyframes: [
-                                {
-                                    y: -10,
-                                    percent: 0.5,
-                                    easing: 'cubicOut'
-                                },
-                                {
-                                    y: 0,
-                                    percent: 1,
-                                    easing: 'bounceOut'
-                                }
-                            ]
-                        }
-                    }
-                ]
+                children: [...circles]
             };
-        }
+        },
+        data: data.map(item => (item._center || item.center).concat(item.centerName)),
     }
     option.series[0] = breathingLight;
     instance?.setOption(option);

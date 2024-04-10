@@ -37,14 +37,6 @@ const routes = [
       },
 
       {
-        path: 'charts',
-        name: 'basecharts',
-        meta: {
-          title: '图表',
-        },
-        component: () => import(/* webpackChunkName: "charts" */ '@v/BaseCharts.vue'),
-      },
-      {
         path: 'form',
         name: 'baseform',
         meta: {
