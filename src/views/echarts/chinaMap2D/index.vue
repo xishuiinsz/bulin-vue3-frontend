@@ -18,7 +18,7 @@ import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { getAllCities, getAllProvince, getAliasLabel, getCoordsByDataCenters, statsByProvince, getColorByData } from './util';
+import { getAllCities, getAllProvinces, getAliasLabel, getCoordsByDataCenters, statsByProvince, getColorByData, getProvinceNameByDivision, cacheBySession } from './util';
 import createDataCenterList from './mock'
 const refMap = ref(null);
 const cache = {
@@ -30,6 +30,7 @@ const cache = {
     ]
 }
 const scaleBase = 5;
+
 /**
  * 
  * @param { import("echarts").EChartsType } instance 
@@ -40,8 +41,9 @@ const getGeoByName = (instance, name) => {
     const [showGeo] = geos.filter(item => item.name === name);
     return showGeo;
 }
+
 const getProvincesRegions = (list) => {
-    const allProvinces = getAllProvince();
+    const allProvinces = getAllProvinces();
     return allProvinces.map(item => {
         const { name: provinceName } = item.properties;
         const mapQty = statsByProvince(list)
@@ -51,6 +53,8 @@ const getProvincesRegions = (list) => {
             name: provinceName,
             label: {
                 show: true,
+                color: '#fff',
+                fontSize: 14,
                 formatter: (parmas) => {
                     return getAliasLabel(parmas.name)
                 }
@@ -63,11 +67,11 @@ const getProvincesRegions = (list) => {
             },
             emphasis: {
                 itemStyle: {
-                    areaColor: '#4876FF',
+                    areaColor: 'red',
                     borderColor: 'pink',
                     borderWidth: 2
                 }
-            }
+            },
         }
     })
 }
@@ -78,7 +82,8 @@ const getCitiesRegions = () => {
         return {
             name: cityName,
             label: {
-                show: true
+                show: true,
+                fontSize: 12
             },
             itemStyle: {
                 borderType: 'dashed',
@@ -87,14 +92,13 @@ const getCitiesRegions = () => {
             },
             emphasis: {
                 disabled: true
-            }
+            },
         }
     })
 }
 const getOption = (list) => {
     const option = {
-        tooltip: {
-        },
+        tooltip: {},
         geo: [{
             name: 'showGeo',
             map: 'china',
@@ -111,6 +115,13 @@ const getOption = (list) => {
             emphasis: {
                 disabled: true
             },
+            tooltip: {
+                show: true,
+                formatter: (params) => {
+                    const name = cache.namesMap.get(params.name) || params.name
+                    return name;
+                }
+            },
             regions: getProvincesRegions(list)
         }],
         series: []
@@ -118,7 +129,7 @@ const getOption = (list) => {
     return option
 }
 
-const addEventHandler = (instance) => {
+const addEventHandler = (instance, list) => {
     const geoRoamHandler = params => {
         const option = instance.getOption();
         const showGeo = option.geo.at(-1);
@@ -128,14 +139,14 @@ const addEventHandler = (instance) => {
             if (params.zoom > 1) {
                 if (lastZoom < scaleBase && currentZoom > scaleBase) {
                     const citiesRegions = getCitiesRegions();
-                    const provincesRegions = getProvincesRegions();
+                    const provincesRegions = getProvincesRegions(list);
                     showGeo.regions = [...provincesRegions, ...citiesRegions,]
                     instance.clear();
                     instance.setOption(option)
                 }
             } else {
                 if (lastZoom > scaleBase && currentZoom < scaleBase) {
-                    const provincesRegions = getProvincesRegions();
+                    const provincesRegions = getProvincesRegions(list);
                     showGeo.regions = [...provincesRegions,]
                     instance.clear();
                     instance.setOption(option)
@@ -154,7 +165,7 @@ const addEventHandler = (instance) => {
 const renderMapCharts = (instance, list) => {
     const option = getOption(list);
     instance?.setOption(option, { render: 'canvas' })
-    addEventHandler(instance)
+    addEventHandler(instance, list)
 }
 
 const trimNanhaiZhudao = (json) => {
@@ -299,7 +310,7 @@ const fixGeoLabels = (mapJson) => {
     return mapJson
 }
 
-const getCitiesMap = async (code = '100000') => {
+const getAllMapGeoJson = async (code = '100000') => {
     const chinaMapJson = fixGeoLabels(await fetchMapJson(code));
     const cityMapJson = { features: [], type: "FeatureCollection" }
     if (chinaMapJson.features?.length) {
@@ -326,7 +337,6 @@ const renderScatterCharts = (instance, dclist) => {
         }
     })
     const data = getCoordsByDataCenters(instance, Object.values(dataCenteOptions));
-    console.log(data)
     const option = instance.getOption();
     const breathingLight = {
         name: 'breathingLight',
@@ -373,7 +383,7 @@ const renderScatterCharts = (instance, dclist) => {
                     // Ripple animation
                     keyframeAnimation: [
                         {
-                            duration: 3000,
+                            duration: 2000,
                             loop: true,
                             keyframes: [
                                 {
@@ -427,8 +437,8 @@ const renderScatterCharts = (instance, dclist) => {
 }
 
 const initCharts = async () => {
-    const cityMapJson = await getCitiesMap();
-    registerMap('china', trimNanhaiZhudao(cityMapJson));
+    const allMapJson = await getAllMapGeoJson();
+    registerMap('china', trimNanhaiZhudao(allMapJson));
     if (!cache.chartInstance) {
         cache.chartInstance = init(refMap.value)
     }
@@ -436,7 +446,7 @@ const initCharts = async () => {
     Object.assign(cache, { dataCenterList });
     renderMapCharts(cache.chartInstance, cache.dataCenterList);
     renderScatterCharts(cache.chartInstance, cache.dataCenterList);
-
+    cacheBySession('allGeoJson', allMapJson.features);
 }
 
 const resizeHandler = () => {
@@ -447,8 +457,33 @@ const destroy = () => {
     cache.chartInstance?.dispose();
     Object.assign(cache, { chartInstance: null });
 }
+const initCaches = () => {
+    createNamesMap();
+}
+const createNamesMap = () => {
+    const map = new Map();
+    const allGeoJson = cacheBySession('allGeoJson');
+    if (allGeoJson) {
+        const allProvinces = allGeoJson.filter(item => item?.properties?.level === 'province');
+        const allCities = allGeoJson.filter(item => item?.properties?.level !== 'province');
+
+        allProvinces.forEach(item => {
+            const { name } = item.properties;
+            map.set(name, name)
+        })
+        allCities.forEach(item => {
+            const { parent, name } = item.properties;
+            const [province] = allProvinces.filter(item => item.properties.adcode === parent.adcode);
+            if (province && province?.properties?.name) {
+                map.set(name, province.properties.name)
+            }
+        })
+    }
+    Object.assign(cache, { namesMap: map })
+}
 
 onMounted(initCharts);
+onMounted(initCaches);
 onUnmounted(destroy)
 useResizeObserver(refMap, resizeHandler);
 </script>

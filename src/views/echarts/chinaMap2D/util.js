@@ -115,7 +115,7 @@ export const createPositonsByCount = async (count) => {
  * @param {String} name 地图名称
  * @returns 全部省份集合
  */
-export const getAllProvince = (name = 'china') => {
+export const getAllProvinces = (name = 'china') => {
     const chinaMapJson = getMap(name).geoJson.features;
     const provinces = chinaMapJson.filter(item => item.properties.level === 'province');
     return provinces;
@@ -326,3 +326,32 @@ export const getCoordsByDataCenters = (instance, datacenters) => {
     return datacenterList.flat(Infinity);;
 }
 
+/**
+ * 传入行省份或其下城市名称，返回省份名称
+ * @param {*} provinces 
+ */
+export const getProvinceNameByDivision = (name) => {
+    // return provinces.map(item => {
+    //     const { name: provinceName } = item.properties;
+    //     return provinceName;
+    // })
+    const list = getMap('china');
+    console.log(list);
+    return name;
+}
+
+
+
+export const cacheBySession = (...params) => {
+    if (params.length === 1) {
+        const [key] = params;
+        const content = sessionStorage.getItem(key);
+        if (content) {
+            return JSON.parse(content).value
+        }
+        return null;
+    } else {
+        const [key, value] = params;
+        return sessionStorage.setItem(key, JSON.stringify({ value }));
+    }
+}
