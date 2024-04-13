@@ -18,7 +18,7 @@ import { registerMap, init, getMap } from 'echarts';
 import { fetchMapJson } from '@i';
 import useResizeObserver from '@h/useResizeObserver';
 import cloneDeep from 'lodash/cloneDeep';
-import { getAllCities, getAllProvince, getAliasLabel, getCoordsByDataCenters } from './util';
+import { getAllCities, getAllProvince, getAliasLabel, getCoordsByDataCenters, statsByProvince, getColorByData } from './util';
 import createDataCenterList from './mock'
 const refMap = ref(null);
 const cache = {
@@ -30,11 +30,23 @@ const cache = {
     ]
 }
 const scaleBase = 5;
-
-const getProvincesRegions = () => {
+/**
+ * 
+ * @param { import("echarts").EChartsType } instance 
+ * @param {*} name 
+ */
+const getGeoByName = (instance, name) => {
+    const geos = instance.getOption().geo;
+    const [showGeo] = geos.filter(item => item.name === name);
+    return showGeo;
+}
+const getProvincesRegions = (list) => {
     const allProvinces = getAllProvince();
     return allProvinces.map(item => {
         const { name: provinceName } = item.properties;
+        const mapQty = statsByProvince(list)
+        const qty = mapQty.get(provinceName) || 0;
+        const color = getColorByData(qty);
         return {
             name: provinceName,
             label: {
@@ -45,7 +57,7 @@ const getProvincesRegions = () => {
             },
             itemStyle: {
                 borderType: 'solid',
-                areaColor: '#4876FF',
+                areaColor: color,
                 borderWidth: 1,
                 borderColor: 'rgba(255,255,255, .8)'
             },
@@ -66,7 +78,7 @@ const getCitiesRegions = () => {
         return {
             name: cityName,
             label: {
-                show: false
+                show: true
             },
             itemStyle: {
                 borderType: 'dashed',
@@ -99,7 +111,7 @@ const getOption = (list) => {
             emphasis: {
                 disabled: true
             },
-            regions: getProvincesRegions()
+            regions: getProvincesRegions(list)
         }],
         series: []
     }
@@ -322,12 +334,16 @@ const renderScatterCharts = (instance, dclist) => {
         coordinateSystem: 'geo',
         geoIndex: 0,
         zlevel: 1,
-        label:{
+        label: {
             show: false
         },
         tooltip: {
             show: true,
             enterable: true,
+            position: function (pos, params, dom, rect, size) {
+                const [x, y] = pos;
+                return [x + 5, y + 5];
+            },
             formatter: (params) => {
                 const value = params.value.at(-1);
                 return `数值：${value}`;
@@ -340,13 +356,14 @@ const renderScatterCharts = (instance, dclist) => {
                 api.value(1, params.dataIndex)
             ]);
             const circles = [];
-            for (let i = 0; i < 50; i++) {
-                circles.push({
+            circles.push(
+
+                {
                     type: 'circle',
                     shape: {
                         cx: 0,
                         cy: 0,
-                        r: 20
+                        r: 10
                     },
                     style: {
                         stroke: 'red',
@@ -374,8 +391,28 @@ const renderScatterCharts = (instance, dclist) => {
                             ]
                         }
                     ]
-                });
-            }
+                },
+                {
+                    type: 'circle',
+                    shape: {
+                        cx: 0,
+                        cy: 0,
+                        r: 10
+                    },
+                    style: {
+                        stroke: 'green',
+                        fill: 'green',
+                        lineWidth: 1,
+                        opacity: 0
+                    },
+                    emphasis: {
+                        style: {
+                            opacity: 1,
+                            lineWidth: 2,
+                        }
+                    }
+                },
+            );
             return {
                 type: 'group',
                 x: coord[0],
@@ -385,7 +422,7 @@ const renderScatterCharts = (instance, dclist) => {
         },
         data: data.map(item => (item._center || item.center).concat(item.centerName)),
     }
-    option.series[0] = breathingLight;
+    option.series.push(breathingLight);
     instance?.setOption(option);
 }
 

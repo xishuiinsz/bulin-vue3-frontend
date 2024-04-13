@@ -1,7 +1,7 @@
 import axios from "axios";
 import { fetchMapJson } from '@i';
 import { getRangeInteger } from '@u';
-import { getMap } from 'echarts';
+import { getMap, graphic } from 'echarts';
 export const mapbgColor = '#87CEEB';
 export const scaleThreshold = 5;
 export const businessDataRange = [
@@ -18,6 +18,45 @@ export const colorsRange = [
     ['#000066', '#000033'],
 ]
 
+export const getColorByData = (qty) => {
+    const list = businessDataRange.map((item, index) => {
+        return { range: item, colors: colorsRange[index] }
+    });
+    let colors = colorsRange[0]
+    const lastElement = list.at(-1);
+    if (qty >= lastElement.range) {
+        colors = lastElement.colors
+    } else {
+        for (let index = 1; index < list.length - 1; index++) {
+            const element = list[index];
+            const [min, max] = element.range
+            if (qty >= min && qty <= max) {
+                colors = element.colors;
+                break;
+            }
+        }
+    }
+    const [colorStart, colorEnd] = colors;
+    return new graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: colorStart },
+        { offset: 1, color: colorEnd }
+    ])
+}
+
+
+/**
+ * 
+ * @param {Array} data 
+ */
+export const statsByProvince = (data) => {
+    const map = new Map();
+    data.forEach(item => {
+        const { provinceName } = item;
+        const value = map.get(provinceName);
+        map.set(provinceName, value ? value + 1 : 1)
+    })
+    return map;
+}
 // 排除的省份|直辖市|特别行政区
 export const excludedProvinces = ['710000', '810000', '820000', '100000_JD'];
 
@@ -253,12 +292,12 @@ export const getAliasLabel = label => {
 const getCoordsBySameAdcodes = (instance, sameDataCenters) => {
     const option = instance.getOption();
     const showGeo = option.geo?.at(-1);
-    const { zoom = 1} = showGeo;
+    const { zoom = 1 } = showGeo;
     const [firstItem] = sameDataCenters;
     const { center } = firstItem;
     const pixel = instance.convertToPixel({ geoName: 'showGeo' }, center);
     const [xCenter, yCenter] = pixel;
-    const r = 10 / zoom ;
+    const r = 10 / zoom;
     const dataCenters = sameDataCenters.map((dataCenter, index) => {
         const angle = 360 / sameDataCenters.length * index;
         const offsetX = Math.cos(angle * Math.PI / 180) * r;
