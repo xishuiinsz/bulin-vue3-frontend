@@ -134,6 +134,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "permission" */ '@v/Permission.vue'),
       },
       {
+        path: 'refreshRoute',
+        name: 'refreshRoute',
+        meta: {
+          title: '刷新当前路由',
+        },
+        component: () => import(/* webpackChunkName: "refreshRoute" */ '@v/refreshRoute.vue'),
+      },
+      {
         path: 'i18n',
         name: 'i18n',
         meta: {
@@ -207,6 +215,7 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "login" */ '@v/Login.vue'),
   },
+  
   {
     path: '/:pathMatch(.*)',
     name: 'NotFoundPage',

@@ -143,7 +143,7 @@ const items = [
     title: '自定义图标',
   },
   {
-    icon: 'el-icon-lx-weibo',
+    icon: 'el-icon-lx-favorfill',
     index: '/myComponents/echarts',
     title: 'echarts图表',
     subs: [{
@@ -155,6 +155,11 @@ const items = [
       title: '3D中国地图',
     }
     ]
+  },
+  {
+    icon: 'el-icon-lx-refresh',
+    index: '/myComponents/refreshRoute',
+    title: '刷新当前路由',
   },
   {
     icon: 'el-icon-lx-global',
