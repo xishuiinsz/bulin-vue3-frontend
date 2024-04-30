@@ -1,7 +1,7 @@
 import { h, reactive } from 'vue';
 import { ElImage, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import { User } from '@element-plus/icons-vue';
-import openCommonDialog from '@u/commondialog/index.js';
+import openCommonDialog from '@u/commonDialog/index.js';
 import detailsForm from './detailsForm.vue';
 
 // 操作列之“编辑”点击事件
