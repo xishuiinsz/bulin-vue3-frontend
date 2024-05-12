@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import router from './router';
 import installElementPlus from './plugins/element';
 import installElementPlusIcon from './plugins/elementIcon';
+import './assets/css/bootstrap.css';
 import './assets/css/atomic.css';
 import './assets/css/icon.css';
 import 'highlight.js/styles/atom-one-dark.css';
