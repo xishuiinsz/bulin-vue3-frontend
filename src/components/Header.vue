@@ -14,8 +14,13 @@
         <div class="logo">基于Vue3的布林前端开源平台</div>
       </div>
       <div class="el-menu-wrap">
-        <el-menu :default-active="topActiveMenuItem" class="el-menu-top" mode="horizontal" background-color="transparent"
-          @select="handleTopMenuSelect">
+        <el-menu
+          :default-active="topActiveMenuItem"
+          class="el-menu-top"
+          mode="horizontal"
+          background-color="transparent"
+          @select="handleTopMenuSelect"
+        >
           <el-menu-item index="myComponents">组件列表</el-menu-item>
         </el-menu>
       </div>
@@ -44,11 +49,14 @@
             <i class="el-icon-caret-bottom"></i>
           </span>
           <template #dropdown>
-            <el-dropdown-menu>
+            <el-dropdown-menu class="personal-profile">
               <a href="https://github.com/xishuiinsz/bulin-vue3-frontend" target="_blank">
                 <el-dropdown-item>项目仓库</el-dropdown-item>
               </a>
               <el-dropdown-item command="user">个人中心</el-dropdown-item>
+              <el-dropdown-item command="user" @mouseenter="showTooltip($event.target)">
+                我的个人兴趣爱好是Javascript编程
+              </el-dropdown-item>
               <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -57,58 +65,44 @@
     </div>
   </div>
 </template>
-<script>
-import { ref, onMounted, watchEffect } from 'vue'
-import { useSidebarStore } from '@/store/sidebar'
-import { useRouter, useRoute } from 'vue-router'
-export default {
-  setup () {
-    // 用户名下拉菜单选择事件
-    const router = useRouter()
-    const route = useRoute()
-    const [pathStr] = location.hash.slice(2).split('/')
-    const topActiveMenuItem = ref(pathStr || 'myComponents')
-    const handleTopMenuSelect = (item) => {
-      topActiveMenuItem.value = item
-      router.push(`/${item}`)
-    }
-    const username = localStorage.getItem('ms_username')
-    const message = 2
+<script setup>
+import { ref, onMounted, watchEffect } from 'vue';
+import { useSidebarStore } from '@/store/sidebar';
+import { useRouter, useRoute } from 'vue-router';
+import showTooltip from '@/imperatives/showTooltip';
+// 用户名下拉菜单选择事件
+const router = useRouter();
+const route = useRoute();
+const [pathStr] = location.hash.slice(2).split('/');
+const topActiveMenuItem = ref(pathStr || 'myComponents');
+const handleTopMenuSelect = (item) => {
+  topActiveMenuItem.value = item;
+  router.push(`/${item}`);
+};
+const username = localStorage.getItem('ms_username');
+const message = 2;
 
-    const sidebar = useSidebarStore()
-    // 侧边栏折叠
-    const collapseChage = () => {
-      sidebar.handleCollapse()
-    }
-    const isShowExpandFoldIcon = ref(true)
+const sidebar = useSidebarStore();
+// 侧边栏折叠
+const collapseChage = () => {
+  sidebar.handleCollapse();
+};
+const isShowExpandFoldIcon = ref(true);
 
-    onMounted(() => {
-      if (document.body.clientWidth < 1500) {
-        collapseChage()
-      }
-    })
+onMounted(() => {
+  if (document.body.clientWidth < 1500) {
+    collapseChage();
+  }
+});
 
-    const handleCommand = (command) => {
-      if (command === 'loginout') {
-        localStorage.removeItem('ms_username')
-        router.push('/login')
-      } else if (command === 'user') {
-        router.push('/user')
-      }
-    }
-
-    return {
-      isShowExpandFoldIcon,
-      topActiveMenuItem,
-      handleTopMenuSelect,
-      sidebar,
-      username,
-      message,
-      collapseChage,
-      handleCommand,
-    }
-  },
-}
+const handleCommand = (command) => {
+  if (command === 'loginout') {
+    localStorage.removeItem('ms_username');
+    router.push('/login');
+  } else if (command === 'user') {
+    router.push('/user');
+  }
+};
 </script>
 <style scoped>
 .header {
@@ -223,12 +217,24 @@ export default {
   color: #fff;
 }
 
-.header-left .el-menu-wrap .el-menu--horizontal>.el-menu-item.is-active {
+.header-left .el-menu-wrap .el-menu--horizontal > .el-menu-item.is-active {
   border-bottom: none;
   color: #fff;
 }
 
 .el-dropdown-menu__item {
   text-align: center;
+}
+</style>
+<style>
+.el-dropdown-menu.personal-profile {
+  overflow: hidden;
+  width: 120px;
+}
+.el-dropdown-menu.personal-profile .el-dropdown-menu__item {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 </style>
