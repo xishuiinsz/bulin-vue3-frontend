@@ -1,7 +1,15 @@
 <template>
   <div class="sidebar">
-    <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="sidebar.collapse" background-color="#324157"
-      text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
+    <el-menu
+      class="sidebar-el-menu"
+      :default-active="onRoutes"
+      :collapse="sidebar.collapse"
+      background-color="#324157"
+      text-color="#bfcbd9"
+      active-text-color="#20a0ff"
+      unique-opened
+      router
+    >
       <template v-for="item in items">
         <template v-if="item.subs">
           <el-sub-menu :index="item.index" :key="item.index">
@@ -135,6 +143,10 @@ const items = [
         index: '/myComponents/contentEditable',
         title: '当html遇上contentEditable',
       },
+      {
+        index: '/myComponents/jsInvokeTooltip',
+        title: 'js调用Tooltip',
+      },
     ],
   },
   {
@@ -146,15 +158,16 @@ const items = [
     icon: 'el-icon-lx-favorfill',
     index: '/myComponents/echarts',
     title: 'echarts图表',
-    subs: [{
-      index: '/myComponents/chinaMap2D',
-      title: '2D中国地图',
-    },
-    {
-      index: '/myComponents/chinaMap3D',
-      title: '3D中国地图',
-    }
-    ]
+    subs: [
+      {
+        index: '/myComponents/chinaMap2D',
+        title: '2D中国地图',
+      },
+      {
+        index: '/myComponents/chinaMap3D',
+        title: '3D中国地图',
+      },
+    ],
   },
   {
     icon: 'el-icon-lx-refresh',
@@ -239,7 +252,6 @@ const mouseenterHandler = ({ target }) => {
     }).then(applyStyles);
   }
 };
-
 </script>
 
 <style scoped>
@@ -262,7 +274,7 @@ const mouseenterHandler = ({ target }) => {
   text-align: center;
 }
 
-.sidebar>ul {
+.sidebar > ul {
   height: 100%;
   overflow-y: auto;
 }

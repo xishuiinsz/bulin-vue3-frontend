@@ -125,6 +125,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "contenteditable" */ '@/views/contenteditable/index.vue'),
       },
       {
+        path: 'jsInvokeTooltip',
+        name: 'JsInvokeTooltip',
+        meta: {
+          title: '当html遇上contentEditable',
+        },
+        component: () => import(/* webpackChunkName: "jsInvokeTooltip" */ '@/views/jsInvokeTooltip/index.vue'),
+      },
+      {
         path: 'permission',
         name: 'permission',
         meta: {
@@ -188,14 +196,6 @@ const routes = [
           title: '个人中心',
         },
         component: () => import(/* webpackChunkName: "user" */ '@v/User.vue'),
-      },
-      {
-        path: 'editor',
-        name: 'editor',
-        meta: {
-          title: '富文本编辑器',
-        },
-        component: () => import(/* webpackChunkName: "editor" */ '@v/Editor.vue'),
       },
       {
         path: 'markdown',
