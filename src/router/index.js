@@ -33,7 +33,7 @@ const routes = [
         meta: {
           title: '客户表格',
         },
-        component: () => import(/* webpackChunkName: "customerTable" */ '@v/CustomerTable.vue'),
+        component: () => import(/* webpackChunkName: "customerTable" */ '@v/CustomerTable/index.vue'),
       },
 
       {
