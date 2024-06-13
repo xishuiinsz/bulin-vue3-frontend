@@ -6,8 +6,7 @@ import { resolve } from 'path';
 export default defineConfig({
   base: './',
   plugins: [vue(), vueJsx()],
-  optimizeDeps: {
-  },
+  optimizeDeps: {},
   resolve: {
     alias: [
       {
@@ -39,6 +38,12 @@ export default defineConfig({
         replacement: resolve(__dirname, 'src/views'),
       },
     ],
+    // 配置 Vite 如何解析自定义扩展
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
+    // 指定 tsconfig 文件
+    typescript: {
+      tsconfig: './tsconfig.json',
+    },
   },
   server: {
     // host: 'localhost.aliyun.com',
@@ -59,7 +64,6 @@ export default defineConfig({
           return path.replace(/^\/map/, '');
         },
       },
-      
     },
   },
 });
