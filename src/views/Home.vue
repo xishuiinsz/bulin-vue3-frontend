@@ -4,7 +4,7 @@
       <v-sidebar />
       <div class="content-box" :class="{ 'content-collapse': sidebar.collapse }">
         <v-tags></v-tags>
-        <div class="main-content" :class="kebabCase(route.name)">
+        <div ref="scrollRef" class="main-content" :class="kebabCase(route.name)">
           <router-view v-slot="{ Component }">
             <transition name="move" mode="out-in">
               <keep-alive :key="Component.name" :include="tags.nameList">
@@ -18,21 +18,24 @@
   </div>
 </template>
 <script setup>
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useSidebarStore } from '../store/sidebar'
-import { useTagsStore } from '../store/tags'
-import vSidebar from '../components/Sidebar.vue'
-import vTags from '../components/Tags.vue'
-import kebabCase from 'lodash/kebabCase'
+import { useSidebarStore } from '../store/sidebar';
+import { useTagsStore } from '../store/tags';
+import vSidebar from '../components/Sidebar.vue';
+import vTags from '../components/Tags.vue';
+import kebabCase from 'lodash/kebabCase';
+import { useBindScrollEvt } from '@h/useScrollEvt';
 const route = useRoute();
-const sidebar = useSidebarStore()
-const tags = useTagsStore()
-
+const sidebar = useSidebarStore();
+const tags = useTagsStore();
+const scrollRef = ref(null);
+useBindScrollEvt(scrollRef);
 </script>
 <script>
 export default {
-  name: 'HomePage'
-}
+  name: 'HomePage',
+};
 </script>
 <style lang="scss">
 .home-page-container {

@@ -147,6 +147,10 @@ const items = [
         index: '/myComponents/jsInvokeTooltip',
         title: 'js调用Tooltip',
       },
+      {
+        index: '/myComponents/scrollDriveAnimation',
+        title: '滚动驱动动画',
+      },
     ],
   },
   {

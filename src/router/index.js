@@ -133,6 +133,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "jsInvokeTooltip" */ '@/views/jsInvokeTooltip/index.vue'),
       },
       {
+        path: 'scrollDriveAnimation',
+        name: 'ScrollDriveAnimation',
+        meta: {
+          title: '滚动驱动动画',
+        },
+        component: () => import(/* webpackChunkName: "scrollDriveAnimation" */ '@/views/scrollDriveAnimation/index.vue'),
+      },
+      {
         path: 'permission',
         name: 'permission',
         meta: {
