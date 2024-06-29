@@ -4,7 +4,7 @@
       <v-sidebar />
       <div class="content-box" :class="{ 'content-collapse': sidebar.collapse }">
         <v-tags></v-tags>
-        <div ref="scrollRef" class="main-content" :class="kebabCase(route.name)">
+        <div ref="scrollRef" class="main-content w-100 h-100" :class="kebabCase(route.name)">
           <router-view v-slot="{ Component }">
             <transition name="move" mode="out-in">
               <keep-alive :key="Component.name" :include="tags.nameList">
@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss">
 .home-page-container {
-  height: 100%;
+  height: calc(100% - 70px);
   display: flex;
   flex-direction: column;
 

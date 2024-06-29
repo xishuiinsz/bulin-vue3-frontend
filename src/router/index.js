@@ -1,6 +1,27 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@v/Home.vue';
-
+const pages = import.meta.glob('@p/**/page.js', {
+  eager: true,
+  import: 'default',
+});
+// 自动生成的菜单数据
+export const menuList = [];
+// 生成生成的路由数据
+const routesPages = Object.values(pages).map((item) => {
+  const { path, title, order, hasChild, component, icon = 'favor' } = item;
+  const PathStr = path.slice(0, 16);
+  const meta = { title, order, hasChild };
+  menuList.push({
+    icon,
+    index: path,
+    title: title,
+  });
+  return {
+    path: PathStr,
+    component,
+    meta,
+  };
+});
 const routes = [
   {
     path: '/',
@@ -213,6 +234,7 @@ const routes = [
         },
         component: () => import(/* webpackChunkName: "markdown" */ '@v/Markdown.vue'),
       },
+      ...routesPages,
     ],
   },
   {
@@ -223,7 +245,7 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "login" */ '@v/Login.vue'),
   },
-  
+
   {
     path: '/:pathMatch(.*)',
     name: 'NotFoundPage',

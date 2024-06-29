@@ -56,6 +56,7 @@ import { computed } from 'vue';
 import { useSidebarStore } from '@/store/sidebar';
 import { useRoute } from 'vue-router';
 import { computePosition, offset, arrow } from '@floating-ui/dom';
+import { menuList } from '@/router';
 const items = [
   {
     icon: 'el-icon-lx-home',
@@ -151,6 +152,7 @@ const items = [
         index: '/myComponents/scrollDriveAnimation',
         title: '滚动驱动动画',
       },
+      ...menuList,
     ],
   },
   {

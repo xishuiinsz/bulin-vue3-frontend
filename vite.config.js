@@ -2,7 +2,6 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { resolve } from 'path';
-
 export default defineConfig({
   base: './',
   plugins: [vue(), vueJsx()],
@@ -30,6 +29,10 @@ export default defineConfig({
         replacement: resolve(__dirname, 'src/api'),
       },
       {
+        find: '@p',
+        replacement: resolve(__dirname, 'src/pages'),
+      },
+      {
         find: '@u',
         replacement: resolve(__dirname, 'src/utils'),
       },
@@ -46,7 +49,7 @@ export default defineConfig({
     },
   },
   server: {
-    // host: 'localhost.aliyun.com',
+    host: 'localhost.bulin.com',
     port: 8080,
     hmr: true,
     proxy: {
