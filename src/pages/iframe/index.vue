@@ -23,17 +23,19 @@ const url = decodeURIComponent(route.query.url);
 const hashSymbol = '#';
 const registerMessage = () => {
   const messageEvtHandler = (e) => {
-    const { pathname } = e.data;
-    // 移除url中的query部分
-    const pathStr = url.slice(0, url.indexOf(hashSymbol));
-    // 更新url中的query部分
-    const newURL = pathStr + encodeURIComponent(`${hashSymbol}${pathname}`);
-    router.push({
-      path: route.path,
-      query: {
-        url: newURL,
-      },
-    });
+    if (e.data?.type === 'hashchange') {
+      const { fullPath } = e.data;
+      // 移除url中的query部分
+      const pathStr = url.includes(hashSymbol) ? url.slice(0, url.indexOf(hashSymbol)) : url;
+      // 更新url中的query部分
+      const newURL = pathStr + encodeURIComponent(`${hashSymbol}${fullPath}`);
+      router.push({
+        path: route.path,
+        query: {
+          url: newURL,
+        },
+      });
+    }
   };
   window.addEventListener('message', messageEvtHandler);
 };
