@@ -9,7 +9,11 @@ export const menuList = [];
 // 生成生成的路由数据
 const routesPages = Object.values(pages).map((item) => {
   const { path, title, order, hasChild, component, icon = 'favor' } = item;
-  const PathStr = path.slice(0, 16);
+  let pathStr = path;
+  if (path.includes('?')) {
+    const index = path.indexOf('?');
+    pathStr = path.slice(0, index);
+  }
   const meta = { title, order, hasChild };
   menuList.push({
     icon,
@@ -17,7 +21,7 @@ const routesPages = Object.values(pages).map((item) => {
     title: title,
   });
   return {
-    path: PathStr,
+    path: pathStr,
     component,
     meta,
   };
