@@ -19,3 +19,6 @@
 .align-items-center {
   align-items: center !important;
 }
+.width-fit-content {
+  width: fit-content !important;
+}
