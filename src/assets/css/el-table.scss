@@ -1,0 +1,55 @@
+@mixin card-row($bg: #fff) {
+  position: absolute;
+  left: 0;
+  top: calc((100% - 40px) / 2);
+  content: '';
+  display: inline-block;
+  width: 100%;
+  height: 40px;
+  background-color: $bg;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+}
+.el-table {
+  &.card-stylized-table {
+    --el-table-tr-bg-color: transparent;
+    .el-table__inner-wrapper {
+      .el-table__header-wrapper {
+      }
+      .el-table__body-wrapper {
+        .el-table__body {
+          .el-table__row {
+            height: 56px;
+            position: relative;
+            &::after {
+              @include card-row();
+            }
+            &.hover-row {
+              > td.el-table__cell {
+                background-color: var(--el-table-tr-bg-color);
+              }
+              &::after {
+                @include card-row(var(--el-table-row-hover-bg-color));
+              }
+            }
+          }
+        }
+      }
+    }
+    tr {
+      &:hover {
+        background-color: var(--el-table-tr-bg-color);
+      }
+    }
+    td.el-table__cell {
+      border-bottom: none;
+      &.el-table-fixed-column--left {
+        // background-color: #fff;
+      }
+    }
+  }
+  tr {
+    &:hover {
+      background-color: var(--el-table-tr-bg-color);
+    }
+  }
+}

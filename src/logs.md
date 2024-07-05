@@ -1,7 +1,12 @@
 
+### 2024-07-05
++ [x] 卡片化el-table表格组件，某项目组的需求从标准化的table变更为卡片化的table.
+  * demo路径：左侧菜单 - 练习场 - 卡片化表格
+  * 组件路径: **src\assets\css\el-table.scss**
+
 ### 2024-07-03
 + [x] 封装简易、手工版本的轮播组件
-  * demo路径：左侧菜单 - 练习声 - 走马灯
+  * demo路径：左侧菜单 - 练习场 - 走马灯
   * 组件路径: **src\pages\carouselDemo\components\multiItemsCarouse.vue**
 
 ### 2024-03-24
