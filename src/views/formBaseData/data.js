@@ -85,8 +85,8 @@ const formList = [
     key: 'desc',
     type: 'ElInput',
     hidden: ref(true),
-    props: { type: 'textarea', placeholder: '请输入活动形式' },
-    label: '活动形式',
+    props: { type: 'textarea', placeholder: '请输入活动描述' },
+    label: '活动描述',
   },
   {
     key: 'isFree',
