@@ -100,7 +100,7 @@ function render(ctx, cache, $props, $setup, $data, $options) {
         return <el-form-item {...elformItemProps}>{h(getComponent(item.type), componentOptions, slots)}</el-form-item>;
       })}
 
-      {ctx.$slots?.default && <el-form-item>{ctx.$slots.default()}</el-form-item>}
+      {ctx.$slots?.default && <el-form-item>{ctx.$slots.default({ formData: ctx.formData })}</el-form-item>}
     </el-form>
   );
 }

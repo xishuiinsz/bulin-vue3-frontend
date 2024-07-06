@@ -17,11 +17,13 @@
           @formDataCast="formDataCastHandler"
           :formItemList="formList"
         >
-          <div>
-            <el-button @click="onSubmit" type="primary">提交</el-button>
-            <el-button @click="onReset">重置</el-button>
-            <el-button>取消</el-button>
-          </div>
+          <template v-slot="{ formData }">
+            <div>
+              <el-button @click="onSubmit(formData)" type="primary">提交</el-button>
+              <el-button @click="onReset">重置</el-button>
+              <el-button>取消</el-button>
+            </div>
+          </template>
         </structuredForm>
       </div>
     </div>
@@ -31,17 +33,14 @@
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import structuredForm from '@c/structuredForm/entry.jsx';
-import formList, { formData } from './data.js';
+import formList from './data.js';
 const formRef = ref(null);
-
 // 表单数据change回调
-const formDataCastHandler = (data) => {
-  Object.assign(formData, data);
-};
+const formDataCastHandler = (data) => {};
 
 // 提交
-const onSubmit = () => {
-  console.log('表单数据：', formData);
+const onSubmit = (data) => {
+  console.log('表单数据: ', data);
   formRef.value.validate((flag) => {
     console.log('校验结果: ', flag);
   });
