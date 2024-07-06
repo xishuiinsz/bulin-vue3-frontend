@@ -6,7 +6,17 @@ import ElxRadioGroup from './ElxRadioGroup.vue';
 import chinaCitiesPicker from '@/components/chinaCitiesPicker/chinaCitiesPicker.vue';
 const structuredForm = defineComponent({
   name: 'structuredForm',
-  components: { ElForm, ElFormItem, ElInput, ElxSelect, ElxCheckboxGroup, ElxRadioGroup, ElSwitch, chinaCitiesPicker, ElDatePicker },
+  components: {
+    ElForm,
+    ElFormItem,
+    ElInput,
+    ElxSelect,
+    ElxCheckboxGroup,
+    ElxRadioGroup,
+    ElSwitch,
+    chinaCitiesPicker,
+    ElDatePicker,
+  },
   props: {
     formOptions: {
       type: Object,
@@ -48,7 +58,7 @@ const structuredForm = defineComponent({
         const data = toRaw(newVal);
         ctx.emit('formDataCast', { ...data });
       },
-      watchOption
+      watchOption,
     );
     reset();
     return { formData, formOptions };
@@ -67,36 +77,26 @@ function render(ctx, cache, $props, $setup, $data, $options) {
   };
   return (
     <el-form {...ctx.formOptions}>
-      {formItemList
-        .filter((item) => (isRef(item.hidden) ? item.hidden.value !== true : true))
-        .map((item) => {
-          const componentOptions = {
-            modelValue: ctx.formData[item.key],
-            'onUpdate:modelValue': (value) => inputEvt(item.key, value),
-            ...item.props,
-          };
-          if (componentOptions.onChange) {
-            const _onChange = componentOptions.onChange;
-            Object.assign(componentOptions, {
-              onChange: (value) => {
-                _onChange(value, ctx.formData);
-              },
-            });
-          }
-          const slots = {};
-          if (item?.props?.slots) {
-            Object.assign(slots, item.props.slots);
-          }
-          return (
-            <el-form-item {...item}>
-              {h(
-                getComponent(item.type),
-                { ...componentOptions, disabled: isRef(componentOptions.disabled) ? componentOptions.disabled.value : componentOptions.disabled },
-                slots
-              )}
-            </el-form-item>
-          );
-        })}
+      {formItemList.map((item) => {
+        const componentOptions = {
+          modelValue: ctx.formData[item.key],
+          'onUpdate:modelValue': (value) => inputEvt(item.key, value),
+          ...item.componentProps,
+        };
+        if (componentOptions.onChange) {
+          const _onChange = componentOptions.onChange;
+          Object.assign(componentOptions, {
+            onChange: (value) => {
+              _onChange(value, ctx.formData);
+            },
+          });
+        }
+        const slots = {};
+        if (item?.props?.slots) {
+          Object.assign(slots, item.componentProps.slots);
+        }
+        return <el-form-item {...item.formItemProps}>{h(getComponent(item.type), componentOptions, slots)}</el-form-item>;
+      })}
 
       {ctx.$slots?.default && <el-form-item>{ctx.$slots.default()}</el-form-item>}
     </el-form>

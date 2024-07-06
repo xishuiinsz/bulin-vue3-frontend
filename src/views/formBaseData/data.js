@@ -1,11 +1,12 @@
 import { ref } from 'vue';
 import activityTime from './activityTime.vue';
+import { reactive } from 'vue';
 
 // 收集表单数据
 export const formData = {};
 
-const getFormItemByKey = (formData, key) => {
-  const formItem = formData.find((item) => item.key === key);
+const getFormItemByKey = (list, key) => {
+  const formItem = list.find((item) => item.key === key);
   if (formItem) {
     return formItem;
   }
@@ -16,10 +17,11 @@ const formList = [
   {
     key: 'name',
     initValue: '',
-    help: '我是帮助内容',
     type: 'ElInput',
-    label: '活动名称',
-    props: {
+    formItemProps: {
+      label: '活动名称',
+    },
+    componentProps: {
       placeholder: '请输入活动名称',
     },
   },
@@ -27,8 +29,10 @@ const formList = [
     key: 'region',
     initValue: 'wuchang',
     type: 'ElxSelect',
-    label: '活动区域',
-    props: {
+    formItemProps: {
+      label: '活动区域',
+    },
+    componentProps: {
       placeholder: '请输入活动区域',
       options: [
         { value: 'wuchang', label: '武昌' },
@@ -40,19 +44,29 @@ const formList = [
     key: 'city',
     initValue: '武汉',
     type: 'chinaCitiesPicker',
-    label: '活动城市',
-    props: {
+    formItemProps: {
+      label: '活动城市',
+    },
+    componentProps: {
       placeholder: '请输入活动城市',
     },
   },
-  { key: 'time', initValue: ['2024-02-08', '22:30:18'], type: activityTime, label: '活动时间', props: {} },
-  { key: 'delivery', initValue: true, type: 'ElSwitch', label: '即时配送', props: {} },
+  {
+    key: 'time',
+    initValue: ['2024-02-08', '22:30:18'],
+    type: activityTime,
+    formItemProps: { label: '活动时间' },
+    componentProps: {},
+  },
+  { key: 'delivery', initValue: true, type: 'ElSwitch', formItemProps: { label: '即时配送' }, componentProps: {} },
   {
     key: 'type',
     initValue: ['Promotion activities'],
     type: 'ElxCheckboxGroup',
-    label: '活动性质',
-    props: {
+    formItemProps: {
+      label: '活动性质',
+    },
+    componentProps: {
       placeholder: '请输入活动性质',
       options: [
         { value: '1', label: 'Online activities' },
@@ -65,12 +79,12 @@ const formList = [
   {
     key: 'resource',
     type: 'ElxRadioGroup',
-    label: '特殊资源',
+    formItemProps: { label: '特殊资源' },
     initValue: '2',
-    props: {
+    componentProps: {
       onChange: (value, reactiveFormData) => {
         const descFormItem = getFormItemByKey(formList, 'desc');
-        descFormItem && Object.assign(descFormItem.hidden, { value: value === '2' });
+        descFormItem && Object.assign(descFormItem.formItemProps, { hidden: value === '2' });
         if (value === '2') {
           Object.assign(reactiveFormData, { desc: '' });
         }
@@ -84,16 +98,15 @@ const formList = [
   {
     key: 'desc',
     type: 'ElInput',
-    hidden: ref(true),
-    props: { type: 'textarea', placeholder: '请输入活动描述' },
-    label: '活动描述',
+    formItemProps: reactive({ label: '活动描述', hidden: true }),
+    componentProps: { type: 'textarea', placeholder: '请输入活动描述' },
   },
   {
     key: 'isFree',
     initValue: false,
     type: 'ElSwitch',
-    label: '是否公益',
-    props: {
+    formItemProps: { label: '是否公益' },
+    componentProps: {
       onChange: (value, reactiveFormData) => {
         if (value === true) {
           reactiveFormData.cost = '0.00';
@@ -101,7 +114,7 @@ const formList = [
           reactiveFormData.cost = '';
         }
         const costFormItem = getFormItemByKey(formList, 'cost');
-        costFormItem && Object.assign(costFormItem.props.disabled, { value });
+        costFormItem && Object.assign(costFormItem.componentProps, { disabled: value });
       },
     },
   },
@@ -109,15 +122,15 @@ const formList = [
     key: 'cost',
     initValue: '',
     type: 'ElInput',
-    label: '活动经费',
-    props: {
+    formItemProps: { label: '活动经费' },
+    componentProps: reactive({
       type: 'number',
-      disabled: ref(false),
       placeholder: '请输入金额',
+      disabled: true,
       slots: {
         append: () => '万元',
       },
-    },
+    }),
   },
 ];
 export default formList;
