@@ -69,8 +69,8 @@ const formList = [
     initValue: '2',
     props: {
       onChange: (value, reactiveFormData) => {
-        const costFormItem = getFormItemByKey(formList, 'desc');
-        costFormItem && Object.assign(costFormItem.hidden, { value: value === '2' });
+        const descFormItem = getFormItemByKey(formList, 'desc');
+        descFormItem && Object.assign(descFormItem.hidden, { value: value === '2' });
         if (value === '2') {
           Object.assign(reactiveFormData, { desc: '' });
         }
