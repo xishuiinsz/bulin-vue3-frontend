@@ -93,7 +93,7 @@ function render(ctx, cache, $props, $setup, $data, $options) {
           });
         }
         const slots = {};
-        if (item?.props?.slots) {
+        if (item?.componentProps?.slots) {
           Object.assign(slots, item.componentProps.slots);
         }
         const elformItemProps = { ...item.formItemProps, prop: item.key };
