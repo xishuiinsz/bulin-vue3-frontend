@@ -20,6 +20,8 @@ const formList = [
     type: 'ElInput',
     formItemProps: {
       label: '活动名称',
+      required: true,
+      rules: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
     },
     componentProps: {
       placeholder: '请输入活动名称',

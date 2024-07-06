@@ -75,8 +75,9 @@ function render(ctx, cache, $props, $setup, $data, $options) {
   const inputEvt = (key, value) => {
     Object.assign(ctx.formData, { [key]: value });
   };
+  const elFormOptions = { ...ctx.formOptions, model: ctx.formData };
   return (
-    <el-form {...ctx.formOptions}>
+    <el-form {...elFormOptions}>
       {formItemList.map((item) => {
         const componentOptions = {
           modelValue: ctx.formData[item.key],
@@ -95,7 +96,8 @@ function render(ctx, cache, $props, $setup, $data, $options) {
         if (item?.props?.slots) {
           Object.assign(slots, item.componentProps.slots);
         }
-        return <el-form-item {...item.formItemProps}>{h(getComponent(item.type), componentOptions, slots)}</el-form-item>;
+        const elformItemProps = { ...item.formItemProps, prop: item.key };
+        return <el-form-item {...elformItemProps}>{h(getComponent(item.type), componentOptions, slots)}</el-form-item>;
       })}
 
       {ctx.$slots?.default && <el-form-item>{ctx.$slots.default()}</el-form-item>}
