@@ -3,6 +3,7 @@
 - [x] 优化『结构化表单』组件
   - 增加表单项校验能力
   - 补充作用域插槽能力
+  - 将【重置】表单的能力挂载在表单实例上。
   - demo 路径：左侧菜单 - 表单相关 - 结构化表单
   - 组件路径: **src\components\structuredForm\entry.jsx**
 
@@ -11,6 +12,11 @@
 - [x] 卡片化 el-table 表格组件，某项目组的需求从标准化的 table 变更为卡片化的 table.
   - demo 路径：左侧菜单 - 练习场 - 卡片化表格
   - 组件路径: **src\assets\css\el-table.scss**
+
+### 2024-07-04
+
+- [x] 新增基于**src\pages**文件夹结构自动生成路由条目之能力
+  - 相关代码路径: **src\router\index.js**
 
 ### 2024-07-03
 

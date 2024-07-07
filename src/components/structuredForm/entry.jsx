@@ -1,4 +1,4 @@
-import { isRef, h, reactive, defineComponent, resolveComponent, watch, toRaw, unref } from 'vue';
+import { h, reactive, defineComponent, resolveComponent, watch, toRaw, unref } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElSwitch, ElDatePicker } from 'element-plus';
 import ElxSelect from './ElxSelect.vue';
 import ElxCheckboxGroup from './ElxCheckboxGroup.vue';
@@ -38,14 +38,14 @@ const structuredForm = defineComponent({
       });
     };
 
-    const exposeOption = { reset };
-
-    const formOptions = { ...props.formOptions };
-    const formRef = (el) => {
-      Object.assign(exposeOption, unref(el));
+    const { ref, ...restFormOptions } = props.formOptions;
+    // 代理回调版本的Ref
+    const proxyRef = (el) => {
+      // 将【重置】表单的逻辑挂载在组件实例上。
+      !!el && Object.assign(el, { reset });
+      typeof ref === 'function' && ref(el);
     };
-    Object.assign(formOptions, { ref: formRef });
-    ctx.expose(exposeOption);
+    const formOptions = { ...restFormOptions, ref: proxyRef };
     const watchOption = {
       immediate: true,
     };
