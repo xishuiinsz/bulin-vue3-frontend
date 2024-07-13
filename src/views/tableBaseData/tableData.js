@@ -1,7 +1,7 @@
 import { h, reactive } from 'vue';
 import { ElImage, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import { User } from '@element-plus/icons-vue';
-import openCommonDialog from '@u/commonDialog/index.js';
+import openCommonDialog from '@u/commonDialog/index.jsx';
 import detailsForm from './detailsForm.vue';
 
 // 操作列之“编辑”点击事件
@@ -12,7 +12,9 @@ const handleEdit = (row) => {
   };
   const params = {
     title: '编辑',
-    content: h(detailsForm, { close: closeEvt, initialFormData: { ...row } }),
+    slots: {
+      default: () => h(detailsForm, { close: closeEvt, initialFormData: { ...row } }),
+    },
   };
   dialogInstance = openCommonDialog(params);
 };
@@ -37,7 +39,10 @@ export const tableColumnList = [
     prop: 'name',
     label: '用户名',
     header: (row) =>
-      h('span', { class: 'd-flex align-items-center' }, [row.label, h(User, { class: 'pl8', style: { width: '16px', height: '16px' } })]),
+      h('span', { class: 'd-flex align-items-center' }, [
+        row.label,
+        h(User, { class: 'pl8', style: { width: '16px', height: '16px' } }),
+      ]),
   },
   { prop: 'money', label: '账户余额', sortable: true, default: (row) => `￥${row.money}` },
   {
@@ -45,7 +50,8 @@ export const tableColumnList = [
     label: '头像(查看大图)',
     className: 'thumb-column',
     width: 120,
-    default: (row) => h(ElImage, { class: 'table-td-thumb', src: row.thumb, 'preview-src-list': [row.thumb], 'preview-teleported': true }),
+    default: (row) =>
+      h(ElImage, { class: 'table-td-thumb', src: row.thumb, 'preview-src-list': [row.thumb], 'preview-teleported': true }),
   },
   { prop: 'address', label: '地址' },
   {
@@ -71,7 +77,7 @@ export const tableColumnList = [
               handleEdit(row);
             },
           },
-          () => '编辑'
+          () => '编辑',
         ),
         h(
           ElButton,
@@ -82,7 +88,7 @@ export const tableColumnList = [
               handleDelete(row, tableDataList);
             },
           },
-          () => '删除'
+          () => '删除',
         ),
       ]),
   },

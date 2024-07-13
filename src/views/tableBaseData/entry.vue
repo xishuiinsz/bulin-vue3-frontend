@@ -22,24 +22,6 @@
                     :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
             </div>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" v-model="editVisible" width="30%">
-            <el-form label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="editVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEdit">确 定</el-button>
-                </span>
-            </template>
-        </el-dialog>
     </div>
 </template>
 
