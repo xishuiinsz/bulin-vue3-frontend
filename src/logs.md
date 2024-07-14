@@ -1,7 +1,13 @@
+### 2024-07-14
+
+- [x] 优化命令式 ElTooltip 能力
+  - demo 路径：左侧菜单 - 练习场 - js调用Tooltip
+  - 组件路径: **src\imperatives\showTooltip.js**
+
 ### 2024-07-13
 
-- [x] 优化命令式ElDialog能力
-  - js和jsx版本同时提供
+- [x] 优化命令式 ElDialog 能力
+  - js 和 jsx 版本同时提供
   - demo 路径：左侧菜单 - 基础表格 - 操作 - 编辑
   - 组件路径: **src\utils\commonDialog**
 
@@ -78,57 +84,4 @@
   onMounted(() => {
     logs.value = marked(logsMarkdown);
   });
-  ```
-
-### 2023-02-18
-
-#### 新特性
-
-- 基于 js 计算动态显示 tooltip
-  - 基于@floating-ui/dom 等插件,
-  - 摘录代码如下
-  ```javascript
-  const mouseenterHandler = ({ target }) => {
-    if (target.clientWidth < target.scrollWidth) {
-      const placement = 'bottom';
-      const text = target.innerText;
-      const tooltip = document.createElement('div');
-      tooltip.className = 'el-popper is-light';
-      tooltip.textContent = text;
-      const arrowEl = document.createElement('div');
-      arrowEl.setAttribute('data-popper-arrow', '');
-      arrowEl.className = 'el-popper__arrow';
-      tooltip.appendChild(arrowEl);
-      document.body.appendChild(tooltip);
-      target.addEventListener('mouseleave', () => {
-        setTimeout(() => tooltip.remove(), 300);
-      });
-      function applyStyles(data) {
-        const { x = 0, y = 0, strategy = 'fixed', middlewareData } = data;
-        console.log(middlewareData);
-        if (middlewareData.arrow) {
-          const { x, y } = middlewareData.arrow;
-          Object.assign(arrowEl.style, {
-            left: x != null ? `${x}px` : '',
-            top: y != null ? `${y}px` : '',
-          });
-        }
-        tooltip.setAttribute('data-popper-placement', placement);
-        Object.assign(tooltip.style, {
-          position: strategy,
-          left: `${x}px`,
-          top: `${y}px`,
-        });
-      }
-      computePosition(target, tooltip, {
-        middleware: [
-          offset(0),
-          arrow({
-            element: arrowEl,
-          }),
-        ],
-        placement,
-      }).then(applyStyles);
-    }
-  };
   ```
