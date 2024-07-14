@@ -15,6 +15,14 @@
       <div @mouseenter="showTooltip($event.target)" style="max-width: 200px" class="text-nowrap overflow-hidden text-truncate">
         超长文本超长文本超长文本超长文本超长文本超长文本
       </div>
+      <el-divider border-style="dashed" />
+      <div
+        @mouseenter="showTooltip($event.target, { effect: 'light' })"
+        style="max-width: 200px"
+        class="text-nowrap overflow-hidden text-truncate"
+      >
+        超长文本超长文本超长文本超长文本超长文本超长文本
+      </div>
       <h1 class="mt-4">设置不同的zoom</h1>
       <div>
         <el-button @click="setZoom(0.75)" type="primary">0.75倍zoom</el-button>
