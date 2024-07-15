@@ -1,7 +1,7 @@
 import { h, reactive } from 'vue';
 import { ElImage, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import { User } from '@element-plus/icons-vue';
-import openCommonDialog from '@u/commonDialog/index.jsx';
+import showDialog from '@/imperatives/showDialog.jsx';
 import detailsForm from './detailsForm.vue';
 
 // 操作列之“编辑”点击事件
@@ -16,7 +16,7 @@ const handleEdit = (row) => {
       default: () => h(detailsForm, { close: closeEvt, initialFormData: { ...row } }),
     },
   };
-  dialogInstance = openCommonDialog(params);
+  dialogInstance = showDialog(params);
 };
 
 // 删除操作

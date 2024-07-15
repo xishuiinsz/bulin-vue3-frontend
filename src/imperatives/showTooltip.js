@@ -18,7 +18,11 @@ const showTooltip = (target, options = {}) => {
     const vnode = h(ElTooltip, props);
     render(vnode, document.body);
     const hideAfter = options['hide-after'] || options['hideAfter'];
-    hideAfter !== 0 && target.addEventListener('mouseleave', () => render(null, document.body));
+    const destroy = () => {
+      render(null, document.body);
+    };
+    hideAfter !== 0 && target.addEventListener('mouseleave', destroy);
+    target.addEventListener('click', destroy);
   }
 };
 

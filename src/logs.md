@@ -9,7 +9,7 @@
 - [x] 优化命令式 ElDialog 能力
   - js 和 jsx 版本同时提供
   - demo 路径：左侧菜单 - 基础表格 - 操作 - 编辑
-  - 组件路径: **src\utils\commonDialog**
+  - 组件路径: **src\imperatives\showDialog.jsx**
 
 ### 2024-07-06
 
