@@ -8,6 +8,7 @@
 
 - [x] 优化命令式 ElDialog 能力
   - js 和 jsx 版本同时提供
+  - 另起app用来挂载Eldialog，以确保devTools能调试它。 - 20240717
   - demo 路径：左侧菜单 - 基础表格 - 操作 - 编辑
   - 组件路径: **src\imperatives\showDialog.jsx**
 
