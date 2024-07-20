@@ -1,5 +1,10 @@
 ### 2024-07-14
 
+- [x] 调试并封装一种文本省略号不在尾部的UI效果。
+  - demo 路径：左侧菜单 - 练习场 - 多行文本尾部的加载更多
+  - 组件路径: **src\imperatives\src\components\loadMoreAfterTail.vue**
+### 2024-07-14
+
 - [x] 优化命令式 ElTooltip 能力
   - demo 路径：左侧菜单 - 练习场 - js调用Tooltip
   - 组件路径: **src\imperatives\showTooltip.js**

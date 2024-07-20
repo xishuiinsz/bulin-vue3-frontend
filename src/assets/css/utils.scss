@@ -1,0 +1,18 @@
+$width-list: 100, 200, 300, 400, 500;
+@each $i in $width-list {
+  .w#{$i} {
+    width: #{$i}px;
+  }
+}
+$height-list: 24, 60, 80, 100;
+@each $i in $height-list {
+  .h#{$i} {
+    height: #{$i}px;
+  }
+}
+$font-size-list: 14, 18, 20;
+@each $i in $font-size-list {
+  .fs#{$i} {
+    font-size: #{$i}px;
+  }
+}
