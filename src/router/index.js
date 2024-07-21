@@ -94,14 +94,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "imgWaterfall" */ '@/views/imgWaterfall/imgWaterfall.vue'),
       },
       {
-        path: 'sortArray',
-        name: 'SortArray',
-        meta: {
-          title: '数组冒泡排序',
-        },
-        component: () => import(/* webpackChunkName: "sortArray" */ '@/views/SortArray/SortArray.vue'),
-      },
-      {
         path: 'getNodeById',
         name: 'GetNodeById',
         meta: {

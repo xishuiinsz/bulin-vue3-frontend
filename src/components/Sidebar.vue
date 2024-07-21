@@ -121,20 +121,12 @@ const items = [
         title: '图片瀑布流',
       },
       {
-        index: '/myComponents/sortArray',
-        title: '数组冒泡排序',
-      },
-      {
         index: '/myComponents/getNodeById',
         title: '节点处理',
       },
       {
         index: '/myComponents/echartsAndVue',
         title: 'echarts中Tip引入Vue组件',
-      },
-      {
-        index: '/myComponents/barChart',
-        title: '柱状图Tip引入Vue组件',
       },
       {
         index: '/myComponents/tinymceDemo',

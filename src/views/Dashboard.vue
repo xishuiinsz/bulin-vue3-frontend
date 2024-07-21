@@ -20,11 +20,11 @@
           </div>
           <div class="user-info-list">
             上次登录时间：
-            <span>2019-11-01</span>
+            <span>2024-07-20</span>
           </div>
           <div class="user-info-list">
             上次登录地点：
-            <span>东莞</span>
+            <span>武汉</span>
           </div>
         </el-card>
         <el-card
@@ -58,11 +58,6 @@
           <template #header>
             <div class="clearfix">
               <span>更新日志</span>
-              <el-button
-                style="float: right; padding: 3px 0"
-                :text="true"
-                >添加</el-button
-              >
             </div>
           </template>
 
