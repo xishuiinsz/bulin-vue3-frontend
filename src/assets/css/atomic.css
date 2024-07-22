@@ -22,3 +22,6 @@
 .width-fit-content {
   width: fit-content !important;
 }
+.ml8 {
+  margin-left: 8px !important;
+}

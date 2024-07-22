@@ -9,11 +9,11 @@
         </span>
       </div>
     </div>
-    <div class="container w-100 h-100 flex-fill d-flex gap-4">
-      <div class="w500 h60 fs20">
+    <div class="container w-100 h-100 flex-fill d-flex gap-5">
+      <div class="w500 h54 fs20 lh28">
         <loadMoreAfterTail>
           <template #placeholder>
-            <el-tag type="success">进行中</el-tag>
+            <el-tag class="ml8" type="success">进行中</el-tag>
           </template>
           浮动元素是如何定位的
           正如我们前面提到的那样，当一个元素浮动之后，它会被移出正常的文档流，然后向左或者向右平移，一直平移直到碰到了所处的容sfsdffasdfasdfadsfasdfas然后向左或者向右平移，一直平移直到碰到了所处的容sfsdffa
