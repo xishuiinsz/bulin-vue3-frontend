@@ -29,6 +29,7 @@
 ### 2024-07-05
 
 - [x] 卡片化 el-table 表格组件，某项目组的需求从标准化的 table 变更为卡片化的 table.
+  - 完善了卡片化风格，借用el-table--scrollable-y类名、has伪类选择器实现了分页器的动态shadow效果。- 20240726
   - demo 路径：左侧菜单 - 练习场 - 卡片化表格
   - 组件路径: **src\assets\css\el-table.scss**
 

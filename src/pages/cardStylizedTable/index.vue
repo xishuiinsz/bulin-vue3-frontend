@@ -9,8 +9,8 @@
         </span>
       </div>
     </div>
-    <div class="container w-100 h-100 flex-fill">
-      <el-table class="card-stylized-table" :data="tableData" height="275" style="width: 100%">
+    <div class="container table-container w-100 h-100 flex-fill">
+      <el-table class="card-stylized-table" :data="tableData.slice(0, pageSize)" :max-height="maxHeight" style="width: 100%">
         <el-table-column fixed prop="date" label="Date" width="150" />
         <el-table-column prop="name" label="Name" width="120" />
         <el-table-column prop="state" label="State" width="120" />
@@ -24,57 +24,40 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        class="p-4 justify-content-end"
+        background
+        :page-sizes="[10, 20, 50, 100, 200, 300, 400]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length"
+        v-model:current-page="currentPage2"
+        v-model:page-size="pageSize"
+      >
+        条/页
+      </el-pagination>
     </div>
   </div>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { tableData } from './data';
 const route = useRoute();
 const router = useRouter();
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-    tag: 'Home',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-    tag: 'Office',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-    tag: 'Home',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    state: 'California',
-    city: 'Los Angeles',
-    address: 'No. 189, Grove St, Los Angeles',
-    zip: 'CA 90036',
-    tag: 'Office',
-  },
-];
-const handleClick = data => {
-
-}
+const handleClick = (data) => {};
+const currentPage2 = ref(1);
+const pageSize = ref(20);
+const maxHeight = computed(() => {
+  const pageHeaderHeight = '70px';
+  return 900;
+});
 </script>
 <style lang="scss" scoped>
 .card-style-table {
+  .table-container:has(.el-table.el-table--scrollable-y) {
+    .el-pagination {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+  }
 }
 </style>

@@ -1,55 +1,71 @@
-@mixin card-row($bg: #fff) {
+@mixin card-row($height: 48px, $bg: #fff) {
   position: absolute;
-  left: 0;
-  top: calc((100% - 40px) / 2);
+  left: 50%;
+  top: 50%;
   content: '';
-  display: inline-block;
-  width: 100%;
-  height: 40px;
+  width: calc(100% - 8px);
+  height: $height;
+  transform: translate(-50%, -50%);
   background-color: $bg;
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 6px 8px 0 rgba(0, 0, 0, 0.1);
 }
+$tbody-row-height: 64px;
 .el-table {
   &.card-stylized-table {
     --el-table-tr-bg-color: transparent;
     .el-table__inner-wrapper {
       .el-table__header-wrapper {
+        .el-table__header {
+          tr {
+            height: 58px;
+            position: relative;
+            background-color: transparent;
+            .el-table__cell {
+              background-color: transparent !important;
+              .cell {
+                height: 40px;
+                background-color: #f5f7fa;
+              }
+            }
+            &::after {
+              @include card-row(40px, #f5f7fa);
+            }
+          }
+        }
       }
       .el-table__body-wrapper {
         .el-table__body {
           .el-table__row {
-            height: 56px;
+            height: 64px;
             position: relative;
+            .el-table__cell {
+              border-bottom: none;
+              .cell {
+                height: 46px;
+                background-color: #fff;
+              }
+            }
             &::after {
               @include card-row();
             }
             &.hover-row {
-              > td.el-table__cell {
-                background-color: var(--el-table-tr-bg-color);
-              }
-              &::after {
-                @include card-row(var(--el-table-row-hover-bg-color));
+              background-color: transparent;
+            }
+            &:hover {
+              background-color: transparent;
+              .el-table__cell {
+                background-color: transparent;
               }
             }
           }
         }
       }
-    }
-    tr {
-      &:hover {
-        background-color: var(--el-table-tr-bg-color);
+      .el-table__cell {
+        .cell {
+          display: flex;
+          align-items: center;
+        }
       }
-    }
-    td.el-table__cell {
-      border-bottom: none;
-      &.el-table-fixed-column--left {
-        // background-color: #fff;
-      }
-    }
-  }
-  tr {
-    &:hover {
-      background-color: var(--el-table-tr-bg-color);
     }
   }
 }
