@@ -10,14 +10,20 @@
       </div>
     </div>
     <div class="container w-100 h-100 flex-fill">
-      <div class="card w-25">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde ipsum error sint! Illum pariatur reiciendis possimus
-          aspernatur eius dolore optio saepe sapiente quaerat alias, iste autem facilis nisi beatae quod?
-          <div class="text-end">
-            <el-button type="primary">删除</el-button>
+      <div class="d-flex gap-3">
+        <div :data-id="item.customerId" class="card" v-for="item in tableData">
+          <div class="card-header d-flex justify-content-between gap-2">
+            <span class="text-nowrap">{{ item.company || '依规不展示' }}</span>
+            <el-popconfirm @confirm="deleteRow(item)" title="确认要删除这条数据吗？">
+              <template #reference>
+                <el-button type="danger" size="small" :icon="Delete" circle />
+              </template>
+            </el-popconfirm>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ item.firstName + ' ' + item.lastName }}</h5>
+            <p class="card-text">{{ item.phone }}</p>
+            <a :href="`mailto:${item.email}`" class="btn btn-primary">email</a>
           </div>
         </div>
       </div>
@@ -25,9 +31,40 @@
   </div>
 </template>
 <script setup>
-const deleteRow = (num) => {
-  console.log(num);
+import { ref, reactive, onMounted, toRaw, h } from 'vue';
+import { fetchCustomerData, deleteCustomerData } from '@i';
+import { Delete } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import useAnimateRemove from './useAnimateRemove';
+const query = {
+  address: '',
+  name: '',
+  pageIndex: 1,
+  pageSize: 10,
 };
+const tableData = ref([]);
+const pageTotal = ref(0);
+// 获取表格数据
+const getData = () => {
+  fetchCustomerData(query).then((res) => {
+    tableData.value = res?.list || [];
+    pageTotal.value = res?.pageTotal ?? 0;
+  });
+};
+const { removeByAnimate } = useAnimateRemove();
+
+const deleteRow = async (row) => {
+  const resp = await deleteCustomerData({
+    customerId: row.customerId,
+  });
+  if (resp && resp.code === '0') {
+    removeByAnimate(`[data-id="${row.customerId}"]`, getData);
+  } else {
+    ElMessage.error(resp.msg || '删除失败');
+  }
+};
+
+onMounted(getData);
 </script>
 <style lang="scss" scoped>
 .animation-by-rem-ele {

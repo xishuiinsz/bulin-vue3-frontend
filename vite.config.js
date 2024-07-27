@@ -54,14 +54,14 @@ export default defineConfig({
     hmr: true,
     proxy: {
       '/api': {
-        target: 'http://localhost.aliyun.com:3000',
+        target: 'http://localhost.bulin.com:3000',
         changeOrigin: true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '');
         },
       },
       '/map': {
-        target: 'https://geo.datav.aliyun.com',
+        target: 'https://geo.datav.bulin.com',
         changeOrigin: true,
         rewrite: (path) => {
           return path.replace(/^\/map/, '');
