@@ -56,10 +56,6 @@ a {
   padding: 10px 0;
 }
 
-.el-table th {
-  background-color: #f5f7fa !important;
-}
-
 .pagination {
   margin: 20px 0;
   text-align: right;
@@ -72,10 +68,6 @@ a {
 
 .el-button + .el-tooltip {
   margin-left: 10px;
-}
-
-.el-table tr:hover {
-  background: #f6faff;
 }
 
 .mgb20 {
