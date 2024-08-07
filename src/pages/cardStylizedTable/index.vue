@@ -1,5 +1,5 @@
 <template>
-  <div class="card-style-table w-100 h-100 d-flex flex-column">
+  <div class="card-style-table-container w-100 h-100 d-flex flex-column">
     <div class="crumbs">
       <div class="el-breadcrumb" aria-label="Breadcrumb" role="navigation">
         <span class="el-breadcrumb__item" aria-current="page"></span>
@@ -10,14 +10,14 @@
       </div>
     </div>
     <div class="container table-container w-100 h-100 flex-fill">
-      <el-table class="card-stylized-table" :data="tableData.slice(0, pageSize)" :max-height="maxHeight" style="width: 100%">
-        <el-table-column fixed prop="date" label="Date" width="150" />
+      <el-table class="card-style-table" :data="tableData.slice(0, pageSize)" :max-height="maxHeight" style="width: 100%">
+        <el-table-column prop="date" label="Date" width="150" />
         <el-table-column prop="name" label="Name" width="120" />
         <el-table-column prop="state" label="State" width="120" />
         <el-table-column prop="city" label="City" width="150" />
         <el-table-column prop="address" label="Address" width="600" />
-        <el-table-column prop="zip" label="Zip" width="120" />
-        <el-table-column fixed="right" label="Operations" min-width="120">
+        <el-table-column prop="zip" label="Zip" width="150" />
+        <el-table-column label="Operations" min-width="150">
           <template #default>
             <el-button link type="primary" size="small" @click="handleClick">Detail</el-button>
             <el-button link type="primary" size="small">Edit</el-button>

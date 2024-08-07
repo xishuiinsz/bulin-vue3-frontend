@@ -1,37 +1,41 @@
 .el-table {
-  &.card-stylized-table {
+  &.card-style-table {
     --el-table-tr-bg-color: transparent;
-    --el-table-border: 0 solid var(--el-table-border-color);
+    --el-table-border-color: transparent;
     --el-table-row-hover-bg-color: transparent;
     --el-table-header-bg-color: transparent;
+    --el-table-bg-color: transparent;
     $header-bg-color: #f5f7fa;
     $tbody-bg-color: #fff;
     $keep-distance: 4px;
     @mixin card-row($height: 48px, $bg: #fff) {
+      display: block;
       position: absolute;
-      left: 50%;
-      top: 50%;
+      box-sizing: border-box;
+      left: $keep-distance;
+      right: $keep-distance;
       content: '';
       border-radius: 4px;
       width: calc(100% - $keep-distance);
       height: $height;
-      transform: translate(-50%, -50%);
+      transform: translateY($keep-distance);
       background-color: $bg;
       box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.15);
     }
     .el-table__inner-wrapper {
-      &::before {
-        content: none;
+      tr {
+        position: relative;
+        .el-table__cell {
+          padding: 0 20px;
+          .cell {
+          }
+        }
       }
       .el-table__header-wrapper {
         .el-table__header {
           tr {
-            position: relative;
             .el-table__cell {
-              .cell {
-                min-height: 32px;
-                background-color: $header-bg-color;
-              }
+              height: 48px;
             }
             &::after {
               @include card-row(40px, $header-bg-color);
@@ -42,38 +46,13 @@
       .el-table__body-wrapper {
         .el-table__body {
           .el-table__row {
-            position: relative;
             .el-table__cell {
-              .cell {
-                min-height: 48px;
-                background-color: $tbody-bg-color;
-              }
+              height: 64px;
             }
-
             &::after {
               @include card-row(48px, $tbody-bg-color);
             }
-            &:hover {
-              .el-table__cell {
-                .cell {
-                  background-color: $header-bg-color;
-                }
-              }
-            }
           }
-        }
-      }
-      .el-table__cell {
-        &:first-child {
-          padding-left: $keep-distance;
-        }
-        &:last-child {
-          padding-right: $keep-distance;
-        }
-        .cell {
-          display: flex;
-          align-items: center;
-          padding: 0 20px;
         }
       }
     }

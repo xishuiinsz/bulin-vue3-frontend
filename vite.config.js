@@ -61,8 +61,12 @@ export default defineConfig({
         },
       },
       '/map': {
-        target: 'https://geo.datav.bulin.com',
+        target: 'https://geo.datav.aliyun.com',
         changeOrigin: true,
+        bypass(req, res, options) {
+          const proxyURL = options.target + options.rewrite(req.url);
+          console.log('proxyURL: ', proxyURL);
+        },
         rewrite: (path) => {
           return path.replace(/^\/map/, '');
         },

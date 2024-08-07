@@ -66,6 +66,7 @@ export const tableColumnList = [
   {
     prop: 'action',
     label: '操作',
+    minWidth: '50',
     default: (row) =>
       h('div', { class: 'buttons-wrap' }, [
         h(
