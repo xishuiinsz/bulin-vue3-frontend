@@ -1,5 +1,8 @@
 import { h, reactive, defineComponent, resolveComponent } from 'vue';
-
+const defaultTableOptions = {
+  style: { width: '100%' },
+  'show-overflow-tooltip': true,
+};
 const structuredTable = defineComponent({
   name: 'structuredTable',
   props: {
@@ -16,18 +19,19 @@ const structuredTable = defineComponent({
 });
 function render(ctx, cache, $props, $setup, $data, $options) {
   const { tableOptions, tableColumnList } = $props;
-  const _tableOptions = { style: { width: '100%' }, 'show-overflow-tooltip': true, ...tableOptions };
+  const _tableOptions = { ...defaultTableOptions, ...tableOptions };
   return (
     <el-table {..._tableOptions}>
       {tableColumnList.map((item) => {
+        const { header: headerSlot, default: defaultSlot, ...columnProps } = item;
         const slots = {};
-        if (item.default) {
-          Object.assign(slots, { default: (scope) => item.default(scope.row, scope) });
+        if (defaultSlot) {
+          Object.assign(slots, { default: (scope) => defaultSlot(scope.row, scope) });
         }
-        if (item.header) {
-          Object.assign(slots, { header: (scope) => item.header(item) });
+        if (headerSlot) {
+          Object.assign(slots, { header: (scope) => headerSlot(item) });
         }
-        return <el-table-column {...item}>{slots}</el-table-column>;
+        return <el-table-column {...columnProps}>{slots}</el-table-column>;
       })}
     </el-table>
   );

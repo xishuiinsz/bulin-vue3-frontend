@@ -33,7 +33,15 @@ const handleDelete = (row, tableDataList) => {
     .catch(() => {});
 };
 
+const selectionChange = (rows) => {
+  console.log('selectionChange rows:', rows);
+};
+const filterChange = (data) => {
+  console.log('filterChange data:', data);
+};
+
 export const tableColumnList = [
+  { type: 'selection', width: 55 },
   { prop: 'id', label: 'ID', width: 55 },
   {
     prop: 'name',
@@ -41,7 +49,7 @@ export const tableColumnList = [
     header: (row) =>
       h('span', { class: 'd-flex align-items-center' }, [
         row.label,
-        h(User, { class: 'pl8', style: { width: '16px', height: '16px' } }),
+        h(User, { class: 'ml8', style: { width: '16px', height: '16px' } }),
       ]),
   },
   { prop: 'money', label: '账户余额', sortable: true, default: (row) => `￥${row.money}` },
@@ -133,3 +141,10 @@ export const tableDataList = reactive([
     thumb: 'https://lin-xin.gitee.io/images/post/notice.png',
   },
 ]);
+
+export const tableOptions = {
+  border: true,
+  data: tableDataList,
+  onSelectionChange: selectionChange,
+  onFilterChange: filterChange,
+};
