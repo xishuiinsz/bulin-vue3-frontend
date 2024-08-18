@@ -1,27 +1,33 @@
+### 2024-08-18
+
+- [x] 新增命令式 ElDrawer 能力
+  - demo 路径：左侧菜单 - 基础表格 - 【用户名】列
+  - 组件路径: **src\imperatives\showDrawer.js**
+
 ### 2024-07-27
 
 - [x] 数据删除动画
   - demo 路径：左侧菜单 - 练习场 - 数据删除动画
   - 组件路径: **src\pages\animationByRemEle**
-  - 此demo需要开启**https://github.com/xishuiinsz/bulin-express.git**后台工程配合实现效果。
+  - 此 demo 需要开启**https://github.com/xishuiinsz/bulin-express.git**后台工程配合实现效果。
 
 ### 2024-07-20
 
-- [x] 调试并封装一种文本省略号不在尾部的UI效果。
+- [x] 调试并封装一种文本省略号不在尾部的 UI 效果。
   - demo 路径：左侧菜单 - 练习场 - 多行文本尾部的加载更多
   - 组件路径: **src\imperatives\src\components\loadMoreAfterTail.vue**
 
 ### 2024-07-14
 
 - [x] 优化命令式 ElTooltip 能力
-  - demo 路径：左侧菜单 - 练习场 - js调用Tooltip
+  - demo 路径：左侧菜单 - 练习场 - js 调用 Tooltip
   - 组件路径: **src\imperatives\showTooltip.js**
 
 ### 2024-07-13
 
 - [x] 优化命令式 ElDialog 能力
   - js 和 jsx 版本同时提供
-  - 另起app用来挂载Eldialog，以确保devTools能调试它。 - 20240717
+  - 另起 app 用来挂载 Eldialog，以确保 devTools 能调试它。 - 20240717
   - demo 路径：左侧菜单 - 基础表格 - 操作 - 编辑
   - 组件路径: **src\imperatives\showDialog.jsx**
 
@@ -37,7 +43,7 @@
 ### 2024-07-05
 
 - [x] 卡片化 el-table 表格组件，某项目组的需求从标准化的 table 变更为卡片化的 table.
-  - 完善了卡片化风格，借用el-table--scrollable-y类名、has伪类选择器实现了分页器的动态shadow效果。- 20240726
+  - 完善了卡片化风格，借用 el-table--scrollable-y 类名、has 伪类选择器实现了分页器的动态 shadow 效果。- 20240726
   - demo 路径：左侧菜单 - 练习场 - 卡片化表格
   - 组件路径: **src\assets\css\el-table.scss**
 

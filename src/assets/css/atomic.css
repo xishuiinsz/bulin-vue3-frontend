@@ -25,3 +25,6 @@
 .ml8 {
   margin-left: 8px !important;
 }
+.cursor-pointer {
+  cursor: pointer !important;
+}

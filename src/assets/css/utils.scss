@@ -22,3 +22,11 @@ $font-size-list: 14, 18, 20;
     font-size: #{$i}px !important;
   }
 }
+
+$text-color-list: #919264, #0d6efd, #1c1e20;
+@each $i in $text-color-list {
+  $color: str-slice('' + $i, 2, 9);
+  .color-#{$color} {
+    color: #{$i} !important;
+  }
+}

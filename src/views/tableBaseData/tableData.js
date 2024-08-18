@@ -2,6 +2,8 @@ import { h, reactive } from 'vue';
 import { ElImage, ElButton, ElMessage, ElMessageBox } from 'element-plus';
 import { User } from '@element-plus/icons-vue';
 import showDialog from '@/imperatives/showDialog.jsx';
+import showDrawer from '@/imperatives/showDrawer.js';
+import editForm from './editForm.vue';
 import detailsForm from './detailsForm.vue';
 
 // 操作列之“编辑”点击事件
@@ -13,7 +15,7 @@ const handleEdit = (row) => {
   const params = {
     title: '编辑',
     slots: {
-      default: () => h(detailsForm, { close: closeEvt, initialFormData: { ...row } }),
+      default: () => h(editForm, { close: closeEvt, initialFormData: { ...row } }),
     },
   };
   dialogInstance = showDialog(params);
@@ -40,6 +42,18 @@ const filterChange = (data) => {
   console.log('filterChange data:', data);
 };
 
+const nameClick = (data) => {
+  let drawerInstance = null;
+  const params = {
+    title: '用户详情',
+    size: 600,
+    slots: {
+      default: () => h(detailsForm, { close: drawerInstance?.destroy, initialFormData: { ...data } }),
+    },
+  };
+  drawerInstance = showDrawer(params);
+};
+
 export const tableColumnList = [
   { type: 'selection', width: 55 },
   { prop: 'id', label: 'ID', width: 55 },
@@ -51,6 +65,7 @@ export const tableColumnList = [
         row.label,
         h(User, { class: 'ml8', style: { width: '16px', height: '16px' } }),
       ]),
+    default: (row) => h('span', { class: 'cursor-pointer color-0d6efd', onClick: () => nameClick(row) }, row.name),
   },
   { prop: 'money', label: '账户余额', sortable: true, default: (row) => `￥${row.money}` },
   {
