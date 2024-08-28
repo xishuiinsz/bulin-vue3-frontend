@@ -12,15 +12,15 @@
     </div>
     <div class="container">
       <h1>js如何调用ElTooltip组件</h1>
-      <div @mouseenter="showTooltip($event.target)" style="max-width: 200px" class="text-nowrap overflow-hidden text-truncate">
-        超长文本超长文本超长文本超长文本超长文本超长文本
-      </div>
-      <el-divider border-style="dashed" />
       <div
         @mouseenter="showTooltip($event.target, { effect: 'light' })"
         style="max-width: 200px"
         class="text-nowrap overflow-hidden text-truncate"
       >
+        超长文本超长文本超长文本超长文本超长文本超长文本
+      </div>
+      <el-divider border-style="dashed" />
+      <div @mouseenter="showTooltip($event.target)" style="max-width: 200px;outline: 1px solid green;" class="text-nowrap overflow-hidden text-truncate">
         超长文本超长文本超长文本超长文本超长文本超长文本
       </div>
       <h1 class="mt-4">设置不同的zoom</h1>

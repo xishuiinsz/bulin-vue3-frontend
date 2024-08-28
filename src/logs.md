@@ -22,6 +22,7 @@
 - [x] 优化命令式 ElTooltip 能力
   - demo 路径：左侧菜单 - 练习场 - js 调用 Tooltip
   - 组件路径: **src\imperatives\showTooltip.js**
+  - 优化【消除body上的zoom导致的tooltip错位】- 20240828
 
 ### 2024-07-13
 
