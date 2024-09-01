@@ -1,5 +1,5 @@
 import { ElDrawer } from 'element-plus';
-import registerImperatives from './index';
+import registerImperatives from '@/imperatives';
 
 const showDrawer = (params) => {
   const { slots, onClose, ...restParams } = params;
