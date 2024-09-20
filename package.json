@@ -19,7 +19,6 @@
     "element-plus": "^2.7.4",
     "gsap": "^3.11.5",
     "highlight.js": "^11.6.0",
-    "jsdoc": "^4.0.2",
     "lodash": "^4.17.21",
     "marked": "^4.0.18",
     "md-editor-v3": "^2.2.0",
@@ -44,7 +43,8 @@
     "eslint-plugin-vue": "^9.3.0",
     "sass": "^1.54.5",
     "typescript": "^5.4.5",
-    "vite": "^5.2.10"
+    "vite": "^5.2.10",
+    "jsdoc": "^4.0.2"
   },
   "browserslist": [
     "> 1%",
