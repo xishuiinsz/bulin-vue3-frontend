@@ -1,3 +1,10 @@
+### 2024-09-22
+
+- [x] 通过拦截Echarts实例中setOption方法来实现图表中字体大小与屏幕大小自适应的能力。
+  - demo 路径：左侧菜单 - 练习场 - echarts中Tip引入Vue组件
+  - 组件路径: **src\views\EchartsAndVue\EchartsAndVue.vue**
+  - 通用逻辑: **src\echarts\index.js**
+  
 ### 2024-09-20
 
 - [x] 新增输入表单模拟器组件，尝试解决当表格中渲染大批量表单组件时不流畅的问题。
