@@ -1,4 +1,4 @@
-$width-list: 100, 200, 300, 400, 500;
+$width-list: 100, 200, 300, 400, 500, 1312, 1600;
 @each $i in $width-list {
   .w#{$i} {
     width: #{$i}px !important;
