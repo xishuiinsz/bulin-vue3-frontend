@@ -13,6 +13,8 @@ import {
   TransformComponent,
   LegendComponent,
   ToolboxComponent,
+  MarkLineComponent,
+  MarkPointComponent,
 } from 'echarts/components';
 
 // 标签自动布局，全局过渡动画等特性
@@ -21,6 +23,8 @@ import { LabelLayout, UniversalTransition } from 'echarts/features';
 // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
 import { CanvasRenderer } from 'echarts/renderers';
 import { isPlainObject } from 'lodash';
+import { onMounted, shallowRef } from 'vue';
+import type { EChartsType } from 'echarts';
 // 注册必须的组件
 echarts.use([
   TitleComponent,
@@ -35,6 +39,8 @@ echarts.use([
   LineChart,
   LegendComponent,
   ToolboxComponent,
+  MarkLineComponent,
+  MarkPointComponent,
 ]);
 
 const fieldsList = ['fontSize'];
@@ -72,6 +78,19 @@ export const instanceInterceptor = (instance) => {
   };
   Object.assign(rest, { setOption: setOptionCustom });
   return rest;
+};
+
+export const useEcharts = ({ options, params }) => {
+  const chartRef = shallowRef(null);
+  let chartInstance = null;
+  const renderChart = () => {
+    if (!chartInstance) {
+      chartInstance = echarts.init(chartRef.value);
+    }
+    chartInstance.setOption(options);
+  };
+  onMounted(renderChart);
+  return { chartRef, renderChart, chartInstance };
 };
 
 // 导出

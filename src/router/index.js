@@ -107,7 +107,7 @@ const routes = [
         meta: {
           title: 'echarts中Tip引入Vue组件',
         },
-        component: () => import(/* webpackChunkName: "echartsAndVue" */ '@/views/EchartsAndVue/EchartsAndVue.vue'),
+        component: () => import(/* webpackChunkName: "echartsAndVue" */ '@/views/EchartsAndVue/entry.vue'),
       },
       {
         path: 'chinaMap2D',
@@ -115,7 +115,7 @@ const routes = [
         meta: {
           title: '2D中国地图',
         },
-        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap2D/index.vue'),
+        component: () => import(/* webpackChunkName: "chinaMap2D" */ '@/views/echarts/chinaMap2D/index.vue'),
       },
       {
         path: 'chinaMap3D',
@@ -123,7 +123,7 @@ const routes = [
         meta: {
           title: '3D中国地图',
         },
-        component: () => import(/* webpackChunkName: "barChart" */ '@/views/echarts/chinaMap3D/index.vue'),
+        component: () => import(/* webpackChunkName: "chinaMap2D" */ '@/views/echarts/chinaMap3D/index.vue'),
       },
       {
         path: 'tinymceDemo',
